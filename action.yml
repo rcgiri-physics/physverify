@@ -1,0 +1,81 @@
+name: physverify
+description: Check that a physics simulation solves the right equations at the order it claims (manufactured solutions, convergence order, exactness).
+author: Ram Chandra Giri
+branding:
+  icon: check-circle
+  color: blue
+
+inputs:
+  specs:
+    description: Spec files or glob patterns, separated by spaces. Patterns are expanded by physverify, so quote nothing.
+    default: "**/verify_*.py"
+  python-version:
+    description: Python version to set up. Leave empty to use the Python already on the runner (for example one your job set up with its dependencies).
+    default: "3.12"
+  install:
+    description: Extra arguments for `pip install` to install your own code and its dependencies, for example `-e .` or `-r requirements.txt`. Leave empty if the job installed them already.
+    default: ""
+  version:
+    description: physverify version to install from PyPI (for example `0.3.0`). Empty installs the copy of physverify at the ref of this action.
+    default: ""
+  working-directory:
+    description: Folder to run in.
+    default: "."
+  html-report:
+    description: Name of the uploaded HTML report artifact (with convergence plots). Empty uploads nothing.
+    default: physverify-report
+
+outputs:
+  json:
+    description: Path of the JSON results file.
+    value: ${{ steps.run.outputs.json }}
+
+runs:
+  using: composite
+  steps:
+    - if: inputs.python-version != ''
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Install physverify
+      shell: bash
+      env:
+        PV_VERSION: ${{ inputs.version }}
+        PV_ACTION_PATH: ${{ github.action_path }}
+      run: |
+        if [ -n "$PV_VERSION" ]; then
+          python -m pip install "physverify==$PV_VERSION"
+        else
+          python -m pip install "$PV_ACTION_PATH"
+        fi
+
+    - name: Install the code under test
+      if: inputs.install != ''
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        PV_INSTALL: ${{ inputs.install }}
+      run: |
+        set -f
+        python -m pip install $PV_INSTALL
+
+    - name: Run physverify
+      id: run
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        PV_SPECS: ${{ inputs.specs }}
+        PV_OUT: ${{ runner.temp }}/physverify
+      run: |
+        set -f  # physverify expands the patterns itself, the same way on every runner
+        mkdir -p "$PV_OUT"
+        echo "json=$PV_OUT/physverify.json" >> "$GITHUB_OUTPUT"
+        physverify run $PV_SPECS --json "$PV_OUT/physverify.json" --html "$PV_OUT/physverify.html" --markdown "$GITHUB_STEP_SUMMARY"
+
+    - if: always() && inputs.html-report != ''
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.html-report }}
+        path: ${{ runner.temp }}/physverify/physverify.html
+        if-no-files-found: ignore
