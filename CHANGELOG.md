@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- **Major tag `v0`.** A workflow moves `v0` to each new release, so `uses: rcgiri-physics/physverify@v0` follows the newest 0.x version; `@v0.3.1` and other full versions stay fixed.
+- **Dependabot** opens a pull request each month when an action used by `action.yml` or the workflows has a new version.
+
 ## 0.3.1 (2026-10-20)
 
 For running physverify on every push ([docs/ci.md](docs/ci.md)):

@@ -1,0 +1,12 @@
+# Opens a pull request when an action used in the workflows or in action.yml
+# (setup-python, upload-artifact, checkout, ...) has a new version. CI tests
+# action.yml on all three OSes, so a green pull request is safe to merge.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
