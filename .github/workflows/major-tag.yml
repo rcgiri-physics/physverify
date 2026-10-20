@@ -1,0 +1,37 @@
+name: major tag
+
+# Keeps the major tag (v0, later v1) on the newest release, so users who write
+# `uses: rcgiri-physics/physverify@v0` get fixes without editing their
+# workflow. Users who pin a full version (@v0.3.1) are not affected.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to point the major tag at, for example v0.3.1
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  move:
+    if: github.event_name == 'workflow_dispatch' || !github.event.release.prerelease
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Point the major tag at the release
+        env:
+          TAG: ${{ github.event.release.tag_name || inputs.tag }}
+        run: |
+          if ! [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "not a release tag: $TAG"
+            exit 1
+          fi
+          major="${TAG%%.*}"
+          git tag -f "$major" "$TAG^{commit}"
+          git push -f origin "refs/tags/$major"
+          echo "$major now points at $TAG ($(git rev-parse --short "$TAG^{commit}"))"

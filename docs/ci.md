@@ -38,6 +38,8 @@ jobs:
           install: -e .              # your package and its dependencies
 ```
 
+Which tag to use: `@v0.3.1` runs exactly that version until you change it. `@v0` always runs the newest 0.x release, so you get fixes (and new checks, which can turn a passing job red) without editing the workflow.
+
 The job fails when any check is not PASS or EXACT, or when no spec matches. The result table appears on the run's summary page, and an HTML report with convergence plots is uploaded as an artifact.
 
 Inputs:
