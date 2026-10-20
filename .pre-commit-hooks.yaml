@@ -1,0 +1,10 @@
+- id: physverify
+  name: physverify
+  description: Run physverify spec files (manufactured solutions, convergence order, exactness).
+  entry: physverify run
+  language: python
+  # The checks depend on the solver as much as on the spec, so run on every
+  # commit that touches Python and pass the specs in `args`.
+  pass_filenames: false
+  types: [python]
+  args: ["**/verify_*.py"]

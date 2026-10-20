@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+For running physverify on every push ([docs/ci.md](docs/ci.md)):
+
+- **GitHub Action** (`action.yml`): `uses: rcgiri-physics/physverify@<tag>` runs the spec files, fails the job when a check fails or no spec matches, writes the result table to the run's summary page and uploads the HTML report. CI runs it on Linux, Windows and macOS against the example, correct and with a seeded bug.
+- **`physverify init`.** Writes a starter spec for a fixed-step ODE solver: manufactured solution, step counts for the claimed order and the exactness check filled in, the equations and a starting state left as TODO. Every check reports ERROR until the equations are written.
+- **`physverify run --markdown FILE`** appends a Markdown result table (for `$GITHUB_STEP_SUMMARY`). `run` now expands glob patterns itself (`"**/verify_*.py"`), so they work in any shell, and exits 2 when a pattern matches nothing.
+- **pre-commit hook** (`.pre-commit-hooks.yaml`) and **`CITATION.cff`**.
+
 From batches 5 and 6 of the corpus study: the 60 newest small repositories whose README says the work is complete (32 tested, 6 confirmed bugs in 5), then 20 picked because they are quick to test (16 tested, 1 confirmed bug) ([results/corpus/SUMMARY.md](results/corpus/SUMMARY.md)).
 
 - **`studies.balance_check`.** Checks an exact budget at every resolution (total heat with insulated walls, heat gained from a known source or flux) and says when the mismatch shrinks with resolution: a scheme can converge and still not conserve. A zero-flux wall made by copying the neighbour value lost 8.5% of the heat in a real code whose own test passed.

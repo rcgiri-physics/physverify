@@ -103,6 +103,28 @@ def to_text(outcomes) -> str:
     return "\n".join(lines)
 
 
+def to_markdown(outcomes, source: str = "") -> str:
+    """A Markdown table, for a CI job summary ($GITHUB_STEP_SUMMARY) or a pull-request comment."""
+
+    def cell(text) -> str:
+        return str(text).replace("|", "\\|").replace("\n", " ")
+
+    s = summary(outcomes)
+    mark = "✅" if s["not_ok"] == 0 else "❌"
+    lines = [f"### {mark} physverify: {s['ok']} of {s['total']} checks passed", ""]
+    if source:
+        lines += [f"Spec: `{cell(source)}`", ""]
+    lines += ["| Family | Status | Check | Observed order | Message |", "|---|---|---|---|---|"]
+    for o in outcomes:
+        observed = ""
+        if isinstance(o.result, OrderResult) and math.isfinite(o.result.fitted):
+            observed = f"{o.result.fitted:.2f} (expected {o.result.expected:g})"
+        lines.append(
+            f"| {cell(o.check.family)} | {cell(o.result.status)} | {cell(o.check.label)} | {observed} | {cell(o.result.message)} |"
+        )
+    return "\n".join(lines) + "\n"
+
+
 def _svg_plot(result: OrderResult, width=220, height=150) -> str:
     """Log-log plot of error against step size, with a line of the expected slope."""
     pts = [(h, e) for h, e in zip(result.hs, result.errors) if h > 0 and e > 0 and math.isfinite(e)]

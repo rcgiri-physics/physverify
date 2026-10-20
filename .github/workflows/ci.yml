@@ -20,3 +20,34 @@ jobs:
           python-version: ${{ matrix.python }}
       - run: python -m pip install -e ".[dev]"
       - run: python -m pytest -q
+
+  action:
+    # The GitHub Action in action.yml, on the example: it must pass on the
+    # correct solver and fail on a broken one.
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./
+        with:
+          specs: examples/verify_*.py
+          html-report: physverify-report-${{ matrix.os }}
+      - name: Break the example solver
+        shell: bash
+        run: sed -i.bak 's/damping = 2.0 \* GAMMA/damping = 2.0 * GAMMA * 1.1/' examples/damped_oscillator.py
+      - id: broken
+        uses: ./
+        continue-on-error: true
+        with:
+          specs: examples/verify_damped_oscillator.py
+          python-version: ""
+          html-report: ""
+      - name: The broken solver must fail
+        if: steps.broken.outcome != 'failure'
+        shell: bash
+        run: |
+          echo "physverify passed a solver with a 10% damping error"
+          exit 1

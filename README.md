@@ -68,6 +68,14 @@ You should see a list of checks, all passing. Now open `examples/damped_oscillat
 
 To check your own code you write a short "spec" file. It tells physverify two things: the equations your code is meant to solve (written independently of your code), and how to run your code. [examples/verify_damped_oscillator.py](https://github.com/rcgiri-physics/physverify/blob/main/examples/verify_damped_oscillator.py) is a complete example to copy.
 
+To start a spec for your own ODE solver, let physverify write one:
+
+```bash
+physverify init verify_solver.py --solver mysolver --order 4
+```
+
+Then fill in the two places marked TODO: the equations, written from the physics, and a starting state.
+
 Other ways to run it:
 
 ```bash
@@ -75,6 +83,20 @@ physverify run my_spec.py --html report.html   # a web page with convergence plo
 physverify run my_spec.py --json -             # machine-readable output
 pytest my_spec.py                              # each check becomes a pytest test
 ```
+
+## Run it on every push
+
+Add physverify to your GitHub Actions workflow. The job fails when a check fails, just like a broken unit test:
+
+```yaml
+      - uses: actions/checkout@v4
+      - uses: rcgiri-physics/physverify@v0.3.0
+        with:
+          specs: tests/verify_*.py
+          install: -e .
+```
+
+The results table appears on the run's summary page. [docs/ci.md](https://github.com/rcgiri-physics/physverify/blob/main/docs/ci.md) covers the options, pre-commit and pytest.
 
 ## What it can and cannot do
 
@@ -91,10 +113,15 @@ pytest my_spec.py                              # each check becomes a pytest tes
 - [docs/technical.md](https://github.com/rcgiri-physics/physverify/blob/main/docs/technical.md): full details, benchmark tables, limits and related work.
 - [docs/patch.md](https://github.com/rcgiri-physics/physverify/blob/main/docs/patch.md): what the exact "patch" checks assume.
 - [docs/ising.md](https://github.com/rcgiri-physics/physverify/blob/main/docs/ising.md): checks for Monte Carlo codes.
+- [docs/ci.md](https://github.com/rcgiri-physics/physverify/blob/main/docs/ci.md): `physverify init`, the GitHub Action, pre-commit and pytest.
 - [docs/agent.md](https://github.com/rcgiri-physics/physverify/blob/main/docs/agent.md): using it with an AI coding assistant.
 - [CHANGELOG.md](https://github.com/rcgiri-physics/physverify/blob/main/CHANGELOG.md)
 
 Run the project's own tests with `pip install -e .[dev]` then `python -m pytest -q` (about 1.5 minutes).
+
+## Citing
+
+If physverify helps your work, please cite it: GitHub's "Cite this repository" button uses [CITATION.cff](https://github.com/rcgiri-physics/physverify/blob/main/CITATION.cff).
 
 ## Licence
 
