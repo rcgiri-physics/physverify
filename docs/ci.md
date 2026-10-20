@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: rcgiri-physics/physverify@v0.3.0
+      - uses: rcgiri-physics/physverify@v0.3.1
         with:
           specs: tests/verify_*.py   # default: **/verify_*.py
           install: -e .              # your package and its dependencies
@@ -47,7 +47,7 @@ Inputs:
 | `specs` | `**/verify_*.py` | Spec files or glob patterns, separated by spaces. |
 | `install` | empty | Arguments for `pip install` for your own code, for example `-e .` or `-r requirements.txt`. |
 | `python-version` | `3.12` | Python to set up. Empty uses the Python already on the runner, for example one your job set up with its own dependencies. |
-| `version` | empty | physverify version from PyPI. Empty installs the copy at the action's ref, so `@v0.3.0` runs physverify 0.3.0. |
+| `version` | empty | physverify version from PyPI. Empty installs the copy at the action's ref, so `@v0.3.1` runs physverify 0.3.1. |
 | `working-directory` | `.` | Folder to run in. |
 | `html-report` | `physverify-report` | Name of the uploaded HTML report. Empty uploads nothing. |
 
@@ -66,7 +66,7 @@ If your job already sets up an environment (conda, a compiled extension), set `p
 # .pre-commit-config.yaml
 repos:
   - repo: https://github.com/rcgiri-physics/physverify
-    rev: v0.3.0
+    rev: v0.3.1
     hooks:
       - id: physverify
         args: ["tests/verify_*.py"]

@@ -5,7 +5,7 @@ type: software
 authors:
   - family-names: Giri
     given-names: Ram Chandra
-version: 0.2.0
+version: 0.3.0
 date-released: "2026-10-20"
 license: MIT
 repository-code: https://github.com/rcgiri-physics/physverify

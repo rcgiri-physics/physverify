@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.0 (2026-10-20)
+## Unreleased
 
 For running physverify on every push ([docs/ci.md](docs/ci.md)):
 
@@ -8,6 +8,8 @@ For running physverify on every push ([docs/ci.md](docs/ci.md)):
 - **`physverify init`.** Writes a starter spec for a fixed-step ODE solver: manufactured solution, step counts for the claimed order and the exactness check filled in, the equations and a starting state left as TODO. Every check reports ERROR until the equations are written.
 - **`physverify run --markdown FILE`** appends a Markdown result table (for `$GITHUB_STEP_SUMMARY`). `run` now expands glob patterns itself (`"**/verify_*.py"`), so they work in any shell, and exits 2 when a pattern matches nothing.
 - **pre-commit hook** (`.pre-commit-hooks.yaml`) and **`CITATION.cff`**.
+
+## 0.3.0 (2026-10-20)
 
 From batches 5 and 6 of the corpus study: the 60 newest small repositories whose README says the work is complete (32 tested, 6 confirmed bugs in 5), then 20 picked because they are quick to test (16 tested, 1 confirmed bug) ([results/corpus/SUMMARY.md](results/corpus/SUMMARY.md)).
 
