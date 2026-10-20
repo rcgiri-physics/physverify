@@ -2,7 +2,7 @@
 
 **A tool that checks whether a physics simulation is solving the right equations correctly, not just running without errors.**
 
-Status: early version (0.2.0). It has been tried on 68 public physics repositories (see below), but nobody besides the author has used it yet, so feedback is very welcome.
+Status: early version (0.3.0). It has been tried on 68 public physics repositories (see below), but nobody besides the author has used it yet, so feedback is very welcome.
 
 ## The problem it addresses
 
