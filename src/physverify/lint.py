@@ -237,7 +237,9 @@ _NUMPY_DEPRECATED = {"trapz": "np.trapezoid", "in1d": "np.isin", "row_stack": "n
 # module path -> name -> replacement (all removed)
 _SCIPY = {
     "scipy.integrate": {"simps": "scipy.integrate.simpson", "trapz": "scipy.integrate.trapezoid",
-                        "cumtrapz": "scipy.integrate.cumulative_trapezoid", "romb": None},
+                        "cumtrapz": "scipy.integrate.cumulative_trapezoid",
+                        # SciPy 1.15 removed romberg and quadrature; romb (on samples) is still there
+                        "romberg": "scipy.integrate.quad", "quadrature": "scipy.integrate.quad"},
     "scipy.misc": {"*": "scipy.datasets, scipy.special or numpy (scipy.misc was removed)"},
 }
 _SHIMMED = {"distutils"}  # still importable wherever setuptools is installed, so only a NOTE
@@ -310,7 +312,7 @@ def scan_api(path: Path, tree, rel: str) -> list[Finding]:
                                        f"import {a.name}: use {_PY_REMOVED[top]}"))
                 if a.name == "scipy.misc":
                     out.append(Finding("api", WARN, rel, n.lineno, "scipy.misc has been removed from SciPy"))
-        if isinstance(n, ast.Attribute) and n.attr in ("simps", "cumtrapz") and isinstance(n.value, ast.Attribute) \
+        if isinstance(n, ast.Attribute) and n.attr in _SCIPY["scipy.integrate"] and isinstance(n.value, ast.Attribute) \
                 and n.value.attr == "integrate":
             out.append(Finding("api", WARN, rel, n.lineno, f"scipy.integrate.{n.attr} has been removed from SciPy;"
                                                            f" use {_SCIPY['scipy.integrate'][n.attr]}"))

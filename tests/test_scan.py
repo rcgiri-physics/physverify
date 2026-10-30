@@ -452,6 +452,22 @@ def test_removed_numpy_scipy_and_python_features(tmp_path):
     assert not [x for x in f if x.line == 10]
 
 
+def test_scipy_romb_is_not_removed_but_romberg_is(tmp_path):
+    # SciPy 1.15 removed romberg and quadrature; romb still exists (it gave 4 false WARNs on a corpus repository)
+    _write(tmp_path, "integ.py", '''
+        import scipy.integrate as si
+        import scipy
+        from scipy.integrate import romb, quad
+        from scipy.integrate import romberg
+        a = romb([1.0, 2.0, 3.0])
+        b = scipy.integrate.quadrature
+        c = scipy.integrate.romb
+        ''')
+    f = _by_stage(scan(tmp_path)[0], "api")
+    assert [x.line for x in f] == [5, 7]
+    assert all("scipy.integrate.quad" in x.message for x in f)
+
+
 def test_literal_typos(tmp_path):
     _write(tmp_path, "lit.py", '''
         import numpy as np
