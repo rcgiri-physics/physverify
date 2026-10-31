@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- **`scan`:** the snippet-folder rule no longer applies inside a package (a folder with `__init__.py`), where a name defined in a sibling module but never imported is a real NameError; in 0.7.0 it hid such WARNs.
+
 ## 0.7.0 (2026-10-31)
 
 From the daily corpus sessions of October 2026 (tests in `tests/test_helpers_2026_10.py`, `tests/test_scan.py`, `tests/test_batch8_lessons.py`):

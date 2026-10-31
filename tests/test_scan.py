@@ -726,3 +726,13 @@ def test_probe_call_copies_array_inputs():
     y1, _ = f.call({"u": u})
     y2, _ = f.call({"u": u})
     assert np.all(u == 0) and np.all(y1 == 1) and np.all(y2 == 1)
+
+
+def test_snippet_rule_does_not_hide_a_missing_import_in_a_package(tmp_path):
+    (tmp_path / "pkg").mkdir()
+    _write(tmp_path, "pkg/__init__.py", "")
+    _write(tmp_path, "pkg/a.py", "def make(n):\n    return n\n")
+    _write(tmp_path, "pkg/b.py", "def f():\n    return make(3)\n")
+    _write(tmp_path, "pkg/c.py", "def g():\n    return make(4)\n")
+    names = _by_stage(scan(tmp_path)[0], "names")
+    assert sorted(f.level for f in names) == [WARN, WARN]

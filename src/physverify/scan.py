@@ -1117,17 +1117,18 @@ def scan(path, *, stages=STAGES) -> tuple[list[Finding], list[str]]:
                     grids = {id(g): g for n in div[3] for g in by_name.get(n, {}).get(rel_g, [])}
                     findings += _grid_findings(list(grids.values()), [div], rel_d, rel_g, seen)
     if "names" in stages:
-        findings = _snippet_folders(findings, parsed)
+        findings = _snippet_folders(findings, parsed, root if root.is_dir() else root.parent)
     return findings, unparsed
 
 
 _SNIPPET_FILES = 3
 
 
-def _snippet_folders(findings, parsed):
+def _snippet_folders(findings, parsed, root=None):
     """A folder of tutorial snippets meant to be pasted together uses in one file the names defined in another
     (corpus repo L204). When most undefined names of a folder with several such files are defined in a sibling file,
-    report the folder once as a NOTE instead of one WARN per name."""
+    report the folder once as a NOTE instead of one WARN per name. Not in a package (a folder with __init__.py):
+    there a name defined in a sibling module but never imported raises NameError (corpus repos L086, L174)."""
     def folder(rel):
         return str(Path(rel).parent)
     defined = {}
@@ -1142,6 +1143,8 @@ def _snippet_folders(findings, parsed):
     drop, notes = set(), []
     for d, fs in by_folder.items():
         files = {f.path for f in fs}
+        if root is not None and (Path(root) / d / "__init__.py").exists():
+            continue  # in a package, a name defined in a sibling module but not imported is a real NameError
         # a subfolder of snippets may continue the files one level up (python/qutip/x.py after python/x.py)
         siblings = {**defined.get(str(Path(d).parent), {}), **defined.get(d, {})} if d != "." else defined.get(d, {})
         if len(siblings) < _SNIPPET_FILES:
