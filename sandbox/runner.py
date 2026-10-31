@@ -132,6 +132,49 @@ def add_version_stubs(root: Path) -> list:
     return written_
 
 
+def dist_names(root: Path) -> list:
+    """The repository's own distribution names, from pyproject.toml, setup.cfg and setup.py."""
+    import re
+    names = []
+    for f, pat in (("pyproject.toml", r"""^\s*name\s*=\s*["']([^"']+)["']"""), ("setup.cfg", r"^\s*name\s*=\s*(\S+)"),
+                   ("setup.py", r"""\bname\s*=\s*["']([^"']+)["']""")):
+        p = root / f
+        if p.is_file():
+            m = re.search(pat, p.read_text(encoding="utf-8", errors="replace"), re.M)
+            if m:
+                names.append(m.group(1))
+    return list(dict.fromkeys(names))
+
+
+SITE = """import importlib.metadata as _md, os
+_own = {n.lower().replace("_", "-") for n in os.environ.get("PHYSVERIFY_SOURCE_DISTS", "").split(",") if n}
+_version = _md.version
+def version(name):
+    try:
+        return _version(name)
+    except _md.PackageNotFoundError:
+        if name.lower().replace("_", "-") in _own:
+            return "0+source"
+        raise
+_md.version = version
+"""
+
+
+def metadata_shim(root: Path) -> list:
+    """A source checkout is not installed, so `importlib.metadata.version("pkg")` in pkg/__init__.py raises
+    PackageNotFoundError before any physics runs (corpus repos L171, L173, L225). A sitecustomize on the path
+    answers "0+source" for the repository's own distribution names only, and only when it is not installed."""
+    names = dist_names(root)
+    if not names:
+        return []
+    site = Path("/tmp/pv-site")
+    site.mkdir(exist_ok=True)
+    (site / "sitecustomize.py").write_text(SITE, encoding="utf-8")
+    os.environ["PYTHONPATH"] = os.pathsep.join(p for p in (str(site), os.environ.get("PYTHONPATH", "")) if p)
+    os.environ["PHYSVERIFY_SOURCE_DISTS"] = ",".join(names)
+    return names
+
+
 def main(argv) -> int:
     src = Path(os.environ.get("PHYSVERIFY_REPO_SRC", "/repo-src"))
     dst = Path(os.environ.get("PHYSVERIFY_REPO", "/tmp/repo"))
@@ -143,6 +186,11 @@ def main(argv) -> int:
         if stubs:
             print(f"physverify sandbox: wrote placeholder version file{'s' if len(stubs) > 1 else ''} {', '.join(stubs)} "
                   "(generated from git at build time, absent from a source checkout)", file=sys.stderr)
+    if os.environ.get("PHYSVERIFY_NO_METADATA_SHIM") != "1":
+        shimmed = metadata_shim(dst)
+        if shimmed:
+            print(f"physverify sandbox: importlib.metadata.version answers 0+source for {', '.join(shimmed)} "
+                  "when not installed (a source checkout)", file=sys.stderr)
     before = snapshot(dst)
     rc = subprocess.call([sys.executable, *argv], env={**os.environ, "PHYSVERIFY_REPO": str(dst)})
     changed = written(before, snapshot(dst))

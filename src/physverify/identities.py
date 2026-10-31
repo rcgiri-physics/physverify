@@ -157,3 +157,103 @@ def check_unitary(matrix, *, atol: float = 1e-10) -> Result:
     eye = np.eye(m.shape[-1])
     prod = np.einsum("...ji,...jk->...ik", m.conj(), m)
     return _verdict("unitarity M^H M = I", [("matrix", prod, np.broadcast_to(eye, prod.shape))], 0.0, atol)
+
+
+def _passes(outcome, rtol: float, atol: float) -> tuple[bool, str]:
+    """A test outcome as (passed, detail): a Result, a bool, or a (got, ref) pair compared within tolerance."""
+    if isinstance(outcome, Result):
+        return outcome.ok, outcome.message
+    if isinstance(outcome, tuple) and len(outcome) == 2:
+        excess, err, _where, _g, _r = _worst(outcome[0], outcome[1], rtol, atol)
+        return excess <= 0, f"|difference| = {err:.3g}"
+    return bool(outcome), ""
+
+
+def vary_one(test: Callable, defaults: dict, changes: dict, *, rtol: float = 1e-9, atol: float = 0.0) -> Result:
+    """Re-run a test that passes at the default parameters with one parameter changed at a time.
+
+    `test(**params)` returns a Result, a bool, or a (got, ref) pair with the reference from the physics.
+    `defaults` are the usual values (often symmetric ones: Lx = Ly, nx = ny, zero boundary data, s polarisation,
+    vacuum); `changes` maps a parameter to a value, or a list of values, to try instead while the others keep
+    their defaults. FAIL names each change that breaks the test.
+
+    In the 2026-10 corpus sessions 7 of the confirmed bugs passed every check at the example values and
+    appeared only when one parameter left them: a y-derivative scaled with Lx (only when Lx != Ly), a
+    Neumann row that dropped the boundary value (only when g != 0), the p-polarisation path of a grating
+    solver, an inertia formula right for rectangles only, a factor that cancels for low-loss media.
+    """
+    ok, detail = _passes(test(**defaults), rtol, atol)
+    if not ok:
+        return Result(FAIL, f"fails already at the defaults {defaults}" + (f": {detail}" if detail else ""))
+    broken, tried = [], 0
+    for name, values in changes.items():
+        if name not in defaults:
+            raise ValueError(f"{name} is not one of the default parameters")
+        for v in values if isinstance(values, (list, tuple)) else [values]:
+            tried += 1
+            try:
+                ok, detail = _passes(test(**{**defaults, name: v}), rtol, atol)
+            except Exception as exc:  # noqa: BLE001 - an exception fails that change, not the helper
+                ok, detail = False, f"{type(exc).__name__}: {exc}"
+            if not ok:
+                broken.append(f"{name} = {v!r}" + (f" ({detail})" if detail else ""))
+    if broken:
+        return Result(FAIL, f"passes at the defaults but fails when one parameter changes: {'; '.join(broken)}")
+    return Result(PASS, f"passes at the defaults and with each of {tried} one-parameter changes ({', '.join(changes)})")
+
+
+_FACTORS = {"2": 2.0, "1/2": 0.5, "pi": np.pi, "1/pi": 1 / np.pi, "2 pi": 2 * np.pi, "1/(2 pi)": 1 / (2 * np.pi),
+            "sqrt(2)": np.sqrt(2), "1/sqrt(2)": 1 / np.sqrt(2), "4 pi": 4 * np.pi, "1/(4 pi)": 1 / (4 * np.pi),
+            "-1": -1.0, "4": 4.0, "1/4": 0.25, "3": 3.0, "1/3": 1 / 3}
+
+
+def check_scale(got, ref, *, rtol: float = 1e-6, min_correlation: float = 0.999) -> Result:
+    """The output has the right size, not only the right shape: got = k * ref with k = 1.
+
+    Fits the single factor k (least squares) and the correlation of got with ref. A correlation near 1
+    with k != 1 is a scale or units error (a missing 1/(2 dx), a missing time step, a factor 1/2); the
+    message names a nearby simple factor (2, pi, sqrt 2, ...) or gives k to match against a grid spacing
+    or a sampling rate. In the 2026-10 corpus sessions the ratio alone pointed to the bug in four
+    repositories. A low correlation means the shape itself is wrong, and a plain comparison says more.
+    """
+    g = np.ravel(np.asarray(got, dtype=complex))
+    r = np.ravel(np.asarray(ref, dtype=complex))
+    if g.shape != r.shape:
+        raise ValueError(f"shapes differ: got {np.shape(got)}, reference {np.shape(ref)}")
+    rr = np.vdot(r, r).real
+    if rr == 0:
+        raise ValueError("the reference is zero everywhere, so no scale can be fitted")
+    k = np.vdot(r, g) / rr
+    gg = np.vdot(g, g).real
+    corr = abs(np.vdot(r, g)) / np.sqrt(rr * gg) if gg > 0 else 0.0
+    kshow = f"{k.real:.6g}" if abs(k.imag) <= 1e-12 * abs(k) else f"{k:.6g}"
+    if corr < min_correlation:
+        return Result(FAIL, f"output and reference differ in shape, not only in scale (correlation {corr:.4f},"
+                            f" best factor {kshow}); compare them directly")
+    if abs(k - 1) <= rtol:
+        return Result(PASS, f"output = {kshow} x reference (correlation {corr:.6f})")
+    near = [n for n, v in _FACTORS.items() if abs(k - v) <= 1e-3 * abs(v)]
+    hint = f", which is {near[0]}" if near else ""
+    return Result(FAIL, f"output = {kshow} x reference{hint} (correlation {corr:.6f}): the shape is right but the scale"
+                        " is not; look for a missing factor (grid spacing, time step, sampling rate, 2, pi) or a units slip")
+
+
+def check_vec_convention(superop, f: Callable, x, *, expected: str | None = None, atol: float = 1e-10) -> Result:
+    """Which vectorisation a superoperator follows: superop @ vec(X) == vec(f(X)), with vec in C (row-major)
+    or F (column-major) order.
+
+    Kronecker constructions of Liouvillians and other superoperators depend on the convention
+    (vec(A X B) = (B^T kron A) vec(X) holds for column stacking); code that builds S for one and reshapes
+    with the other gives a wrong but well-formed answer (corpus repo L204). With `expected` ('C' or 'F'),
+    FAIL unless S follows it; without, PASS when S follows either, and say which.
+    """
+    S = np.asarray(superop)
+    X = np.asarray(x)
+    want = np.asarray(f(X))
+    match = [o for o in ("C", "F") if np.allclose(S @ X.ravel(order=o), want.ravel(order=o), atol=atol, rtol=0)]
+    if not match:
+        return Result(FAIL, "the superoperator matches f(X) in neither C (row-major) nor F (column-major) vectorisation")
+    which = " and ".join(match)
+    if expected is not None and expected.upper() not in match:
+        return Result(FAIL, f"the superoperator follows {which}-order vectorisation, not the expected {expected.upper()}")
+    return Result(PASS, f"the superoperator follows {which}-order vectorisation (row-major is C, column-major is F)")

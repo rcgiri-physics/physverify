@@ -619,3 +619,110 @@ def test_test_functions_are_not_inverse_pairs(tmp_path):
         """)
     f = _by_stage(scan(tmp_path)[0], "pairs")
     assert len(f) == 1 and "c2k" in f[0].message
+
+
+# --- rules from the 2026-10 daily corpus sessions ------------------------------------------------------
+
+def test_generator_passed_to_vstack_is_a_warn(tmp_path):
+    _write(tmp_path, "s.py", '''
+        import numpy as np
+        a = np.vstack(np.ones(3) * k for k in range(4))
+        b = np.vstack([np.ones(3) * k for k in range(4)])
+    ''')
+    api = _by_stage(scan(tmp_path)[0], "api")
+    assert [(f.level, f.line) for f in api] == [(WARN, 3)]
+    assert "generator" in api[0].message
+
+
+def test_copy_false_on_a_buffer_is_quiet(tmp_path):
+    _write(tmp_path, "b.py", '''
+        import numpy as np
+        def f(shared_buffer, x):
+            a = np.array(shared_buffer, dtype="B", copy=False)
+            b = np.array(x, copy=False)
+            return a, b
+    ''')
+    api = _by_stage(scan(tmp_path)[0], "api")
+    assert [f.line for f in api] == [5]
+
+
+def test_cell_centred_linspace_is_quiet(tmp_path):
+    _write(tmp_path, "c.py", '''
+        import numpy as np
+        def axis(dmin, dmax, dn, cells):
+            if cells:
+                dd = (dmax - dmin) / dn
+                return np.linspace(dmin + dd / 2.0, dmax - dd / 2.0, dn)
+            return np.linspace(dmin, dmax, dn)
+    ''')
+    assert not _by_stage(scan(tmp_path)[0], "grid")
+
+
+def test_lowercase_py3_branch_is_not_a_missing_name(tmp_path):
+    _write(tmp_path, "v.py", '''
+        import sys
+        py3 = sys.version_info[0] == 3
+        if py3:
+            val = input("x: ")
+        else:
+            val = raw_input("x: ")
+    ''')
+    assert not _by_stage(scan(tmp_path)[0], "names")
+
+
+def test_unparseable_loose_script_is_a_note(tmp_path):
+    (tmp_path / "misc").mkdir()
+    _write(tmp_path, "misc/old.py", "print 'hello'\n")
+    _write(tmp_path, "pkg.py", "print 'hello'\n")
+    names = {f.path.replace("\\", "/"): f.level for f in _by_stage(scan(tmp_path)[0], "names")}
+    assert names == {"misc/old.py": NOTE, "pkg.py": WARN}
+
+
+def test_fitted_coefficients_and_standard_atmosphere_are_not_constants(tmp_path):
+    _write(tmp_path, "fit.py", '''
+        def f(x):
+            return 1.2 + 2.71439 * x + 0.3 * x**2 + 0.01 * x**3 + 0.002 * x**4
+    ''')
+    _write(tmp_path, "coesa.py", '''
+        """1976 US Standard Atmosphere."""
+        coesaRu = 8.31432
+    ''')
+    _write(tmp_path, "gas.py", "R = 8.31432\n")
+    consts = {f.path for f in _by_stage(scan(tmp_path)[0], "constants")}
+    assert consts == {"gas.py"}
+
+
+def test_snippet_folder_is_one_note(tmp_path):
+    (tmp_path / "tut").mkdir()
+    _write(tmp_path, "tut/a.py", "import numpy as np\ndef make(n):\n    return np.eye(n)\n")
+    _write(tmp_path, "tut/b.py", "S = make(3)\nprint(helper(S))\n")
+    _write(tmp_path, "tut/c.py", "def helper(x):\n    return x\nprint(make(2), S)\n")
+    _write(tmp_path, "tut/d.py", "S = make(4)\nprint(helper(S))\n")
+    names = _by_stage(scan(tmp_path)[0], "names")
+    assert [f.level for f in names] == [NOTE] and "snippets" in names[0].message
+
+
+def test_download_at_import_is_a_note(tmp_path):
+    _write(tmp_path, "d.py", '''
+        from urllib.request import urlretrieve
+        urlretrieve("https://example.org/bin", "bin")
+        def later():
+            urlretrieve("https://example.org/x", "x")
+    ''')
+    api = _by_stage(scan(tmp_path)[0], "api")
+    assert [(f.level, f.line) for f in api] == [(NOTE, 3)]
+
+
+def test_probe_call_copies_array_inputs():
+    import numpy as np
+    from physverify.probes import _Fn
+    import ast
+    def step(u):
+        u += 1.0
+        return u
+    node = ast.parse("def step(u): pass").body[0]
+    f = _Fn("step", step, node, None)
+    u = np.zeros(3)
+    y1, _ = f.call({"u": u})
+    y2, _ = f.call({"u": u})
+    assert np.all(u == 0) and np.all(y1 == 1) and np.all(y2 == 1)

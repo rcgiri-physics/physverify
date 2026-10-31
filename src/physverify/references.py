@@ -222,6 +222,25 @@ def inhour_stable_period(rho: float, Lambda: float, beta_i, lambda_i) -> float:
     return 1 / _bisect(f, -lam.min() * (1 - 1e-12), -1e-14)
 
 
+# --- optics ------------------------------------------------------------------------------------------
+
+
+def zernike_osa(n: int, m: int, rho, theta):
+    """Zernike polynomial Z_n^m in the OSA/ANSI convention (ANSI Z80.28; Thibos et al. 2002): N R_n^|m|(rho)
+    times cos(m theta) for m >= 0 and sin(|m| theta) for m < 0, with N = sqrt(2 (n + 1) / (1 + delta_m0)), so
+    that the mean of Z^2 over the unit disk is 1. Noll's ordering uses the same normalisation. Two corpus repos
+    needed it (L173 right, L208 normalised as sqrt(n + 1) for every m)."""
+    am = abs(m)
+    if n < 0 or am > n or (n - am) % 2:
+        raise ValueError("Zernike indices need n >= |m| and n - |m| even")
+    rho = np.asarray(rho, dtype=float)
+    radial = sum((-1) ** k * math.factorial(n - k)
+                 / (math.factorial(k) * math.factorial((n + am) // 2 - k) * math.factorial((n - am) // 2 - k))
+                 * rho ** (n - 2 * k) for k in range((n - am) // 2 + 1))
+    norm = math.sqrt(2 * (n + 1) / (1 + (m == 0)))
+    return norm * radial * (np.cos(m * theta) if m >= 0 else np.sin(am * theta))
+
+
 REFERENCES = {
     "ising2d_exact": "2D Ising energy, magnetisation, heat capacity by enumeration (L <= 4)",
     "heisenberg_open_chain": "classical Heisenberg open chain, energy per spin",
@@ -240,4 +259,5 @@ REFERENCES = {
     "kerr_isco": "Kerr innermost stable circular orbit",
     "schwarzschild_deflection": "exact light deflection by a Schwarzschild black hole",
     "inhour_stable_period": "asymptotic reactor period from the inhour equation (either sign of rho)",
+    "zernike_osa": "Zernike polynomial, OSA/ANSI normalisation (mean square 1 on the unit disk)",
 }

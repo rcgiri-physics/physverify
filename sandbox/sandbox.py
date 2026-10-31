@@ -2,7 +2,8 @@
 
     python -I sandbox/sandbox.py build [--stack latest]                 # --stack latest: newest NumPy/SciPy, tag :latest-stack
     python -I sandbox/sandbox.py fetch  <id> <git-url> <commit>   # clone on the host, no hooks, no checkout of LFS
-    python -I sandbox/sandbox.py deps   <id> [package ...]        # optional: wheels-only install, network on
+    python -I sandbox/sandbox.py deps   [--clean] <id> [package ...]  # optional: wheels-only install, network on;
+                                                                 # --clean empties deps/<id> first
     python -I sandbox/sandbox.py run    [--read-only-repo] [--py314-shim] <id> <script> [args ...]  # network off
 
 Folders (under %LOCALAPPDATA%/physverify-corpus or $PHYSVERIFY_CORPUS):
@@ -79,7 +80,7 @@ def timed(args, name, limit, keep=None):
     """Run docker with a time limit. With a list `keep`, the output is shown as it comes and also kept there."""
     if keep is None:
         try:
-            return docker(args, timeout=limit)
+            return oom_note(docker(args, timeout=limit))
         except subprocess.TimeoutExpired:
             subprocess.run(["docker", "kill", name], capture_output=True)
             print(f"killed after {limit} s")
@@ -100,6 +101,15 @@ def timed(args, name, limit, keep=None):
     if expired and rc != 0:
         print(f"killed after {limit} s")
         return 124
+    return oom_note(rc)
+
+
+def oom_note(rc):
+    """Exit code 137 is SIGKILL; with no time limit reached it is almost always the 2 GB memory limit, and
+    the container then dies with no message of its own."""
+    if rc == 137:
+        print("physverify sandbox: the run was killed (exit 137), most likely by the 2 GB memory limit;"
+              " use smaller grids or fewer stored frames")
     return rc
 
 
@@ -145,7 +155,7 @@ def fetch(repo_id, url, commit):
     return 0
 
 
-def deps(repo_id, packages=()):
+def deps(repo_id, packages=(), clean=False):
     """Install the repo's requirements.txt, or the named packages, into deps/<id>, wheels only, so no setup.py runs.
 
     The image's own packages are passed as constraints: a dependency that needs a different NumPy fails here
@@ -160,6 +170,11 @@ def deps(repo_id, packages=()):
         print("no requirements.txt and no packages named; nothing to install")
         return 0
     name = f"pv-deps-{repo_id}"
+    if clean:
+        # pip --target leaves files of an earlier version in place, so a downgrade does not take
+        import shutil
+        shutil.rmtree(folder("deps", repo_id))
+        print(f"removed the old {folder('deps', repo_id)}")
     # pip unpacks wheels in /tmp: give this step more room than a run gets
     lockdown = [a if not a.startswith("--tmpfs=/tmp") else "--tmpfs=/tmp:rw,nosuid,nodev,size=4g" for a in LOCKDOWN]
     # one wheel cache for all repos, so a large package (JAX: 10 minutes) is downloaded once; it holds only
@@ -236,6 +251,8 @@ def main(argv):
             return build()
     if cmd == "fetch" and len(rest) == 3:
         return fetch(*rest)
+    if cmd == "deps" and rest[:1] == ["--clean"] and len(rest) >= 2:
+        return deps(rest[1], rest[2:], clean=True)
     if cmd == "deps" and len(rest) >= 1:
         return deps(rest[0], rest[1:])
     if cmd == "run":

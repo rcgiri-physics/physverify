@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+From the daily corpus sessions of October 2026 (tests in `tests/test_helpers_2026_10.py`, `tests/test_scan.py`, `tests/test_batch8_lessons.py`):
+
+- **`identities.vary_one(test, defaults, changes)`:** reruns a test that passes at the defaults with one parameter changed at a time and names each change that breaks it. 7 of the confirmed bugs in those sessions were hidden by symmetric example values (Lx = Ly, nx = ny, zero boundary data, one polarisation).
+- **`identities.check_scale(got, ref)`:** fits got = k ref and reports k when the shape is right but the size is not (a missing grid spacing, time step or factor 1/2).
+- **`stencils.check_stencil`:** consistency, scale and order of a finite-difference stencil from its Taylor moments, exact for integer and Fraction weights.
+- **`fluxes.check_flux`:** consistency, supersonic upwinding and mirror symmetry of a numerical flux.
+- **`identities.check_vec_convention`** (row- or column-major vectorisation of a superoperator) and **`references.zernike_osa`** (OSA/ANSI normalisation).
+- New docs page: Hidden defaults, scale, stencils and fluxes; more entries in Convergence-study pitfalls.
+- **`scan`:** a generator passed to `np.vstack`, `np.stack` or `np.concatenate` is a WARN (TypeError since NumPy 1.24; one missed bug). Fewer false alarms: `np.array(buffer, copy=False)` on a buffer; a spacing next to a cell-centred `linspace(a + d/2, b - d/2, n)`; names used under a lowercase `py3` flag; a file that does not parse in `misc/`, `scripts/` or `examples/` is a NOTE; near-constants that are coefficients of a long fitted sum, or the 1976 Standard Atmosphere's R; a folder of snippets that use each other's names is one NOTE. New NOTE: a download that runs when a module is imported.
+- **`scan --run`:** each probe call gets copies of its array inputs, so a solver that updates its arrays in place cannot change the next probe's inputs.
+- **Sandbox:** `importlib.metadata.version` answers `0+source` for the repository's own package in a source checkout; exit 137 is reported as the likely memory limit; `deps --clean` empties the deps folder first.
+
 ## 0.6.0 (2026-10-26)
 
 - **New: `physverify scan PATH --run`**, the first probes of Phase 2 of the scan plan (ROADMAP.md). They call the code, so use them on trusted code or in the sandbox: `smoke` (scripts run to the end, the project's tests collect), `deadargs` (an argument that changes nothing), `edges` (silent NaN at zero, negative or odd-size inputs), `branches` (a jump where `if x < a` switches formula) `roundtrip` (inverse pairs), `siblings` (two versions of one computation, and `method=` options, that should agree), `known` (cumulative trapezoid integrals, running means and autocorrelations against a slow direct loop) and `monotone` (the direction a named law or the docstring fixes). Each file is probed in its own process with `--timeout`; anything that runs out of time is SKIP, not passed. Tests in `tests/test_probes.py`. Measured on all 626 corpus repositories in the sandbox (results/corpus/FEATURES.md): `smoke` found scripts that stop on errors in their own code, `branches` J400's jump; the other six found no real defect, so `--run` alone runs only `smoke` and `branches`, and the rest are experimental, run with `--only`.

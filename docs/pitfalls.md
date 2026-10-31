@@ -51,3 +51,19 @@ A check that requires "error below 1e-6 at the finest step" depends on the probl
 ## Start-up transients
 
 When fitting a decay or relaxation rate from a run that starts from equilibrium, skip the start-up transient. In one real code, fitting from t = 0 gave a viscosity 2% off; skipping the transient gave 0.01%.
+
+## A check that passes only at the example values
+
+Symmetric defaults hide bugs: an aspect ratio of 1, equal grid sizes, zero boundary data, one polarisation, a lossless medium. In the October 2026 corpus sessions 7 confirmed bugs passed at the example values and failed as soon as one parameter changed. Rerun a passing check with each such parameter changed on its own (`identities.vary_one`).
+
+## Spec mistakes seen in the October 2026 sessions
+
+Each of these made a correct code look wrong until the spec was fixed:
+
+- A reference code can be wrong outside its comfortable range: a digital-filter Hankel transform was several percent off for a source far above the receiver compared with its separation; a direct quadrature of the kernel settled it.
+- A perturbative quantity computed to a fixed loop order differs from a higher-order reference at the size of the next term; read the order first.
+- "Transit time" in orbit codes is usually conjunction, not the time of minimum sky separation.
+- Tabulated saturation data may be the full (Maxwell) solution while a code uses the auxiliary equations, which differ at 1e-5 to 4e-4.
+- With an even pixel count the optical axis of a discrete Fourier transform lies between pixels; the brightest pixel is not the centre.
+- Libraries that use JAX may compute in float32 internally even with 64-bit mode switched on; set tolerances for float32.
+- Angles in degrees, cell-centred against node-centred grids, and absolute against signed deviations: read the docstring before writing the reference.

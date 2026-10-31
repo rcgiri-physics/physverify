@@ -261,3 +261,21 @@ def test_sandbox_stack_hint():
     hint = sb.stack_hint(out)
     assert "numpy >=2.5.1" in hint and "scipy <2 and >=1.18.1" in hint and "--stack latest" in hint
     assert sb.stack_hint("ERROR: No matching distribution found for pydy") == ""
+
+
+# --- sandbox: importlib.metadata in a source checkout (daily corpus sessions, 2026-10) ---
+
+def test_runner_metadata_shim_answers_for_own_package_only(tmp_path, monkeypatch):
+    import subprocess
+    import sys
+    r = _runner()
+    (tmp_path / "pyproject.toml").write_text('[project]\nname = "my_pkg"\n', encoding="utf-8")
+    assert r.dist_names(tmp_path) == ["my_pkg"]
+    site = tmp_path / "site"
+    site.mkdir()
+    (site / "sitecustomize.py").write_text(r.SITE, encoding="utf-8")
+    code = ("import importlib.metadata as m\nprint(m.version('my-pkg'))\n"
+            "try:\n    m.version('not-a-package-xyz')\nexcept m.PackageNotFoundError:\n    print('raised')\n")
+    env = {**__import__("os").environ, "PYTHONPATH": str(site), "PHYSVERIFY_SOURCE_DISTS": "my_pkg"}
+    out = subprocess.run([sys.executable, "-c", code], env=env, capture_output=True, text=True, cwd=tmp_path)
+    assert out.stdout.split() == ["0+source", "raised"]

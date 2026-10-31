@@ -125,9 +125,13 @@ class _Fn:
         with warnings.catch_warnings(), contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
             warnings.simplefilter("ignore")
             import numpy as np
+            # many solvers update their arrays in place; each call gets its own copies, so one probe cannot
+            # change the inputs of the next, and a returned input array is not changed by a later call
+            args = {k: v.copy() if isinstance(v, np.ndarray) else v for k, v in args.items()}
             with np.errstate(all="ignore"):
                 y = self.fn(**args)
-        return _as_array(y), time.perf_counter() - t0
+            y = _as_array(y)
+        return (y.copy() if isinstance(y, np.ndarray) else y), time.perf_counter() - t0
 
 
 def _guesses(f: _Fn):

@@ -876,6 +876,16 @@ def _own_grids_and_divs(scope):
             den_names = _names(node.right)
             if den_names:  # x / 2 cannot be a grid spacing with a named number of points
                 divs.append((node, node.lineno, den_names))
+    # dd = (b - a) / n; linspace(a + dd/2, b - dd/2, n): cell centres, whose spacing really is (b - a) / n
+    half = {_src(x.left) for node in nodes if isinstance(node, ast.Call)
+            and (node.func.attr if isinstance(node.func, ast.Attribute) else getattr(node.func, "id", "")) == "linspace"
+            and node.args and isinstance(node.args[0], ast.BinOp) and isinstance(node.args[0].op, ast.Add)
+            for x in [node.args[0].right] if isinstance(x, ast.BinOp) and isinstance(x.op, ast.Div)
+            and isinstance(x.right, ast.Constant) and x.right.value == 2}
+    if half:
+        cell = {id(n.value) for n in nodes if isinstance(n, ast.Assign) and len(n.targets) == 1
+                and _src(n.targets[0]) in half}
+        divs = [d for d in divs if id(d[0]) not in cell]
     if periodic:
         # a spacing L / M next to its own periodic grid of M points is right; do not pair it with grids elsewhere
         divs = [d for d in divs if not any(_src(d[0].right) == _src(m) or _src(d[0].right) == f"({_src(m)})"
@@ -964,6 +974,39 @@ _DEFINED = {"N_A", "R (gas constant)", "sigma (Stefan-Boltzmann)", "astronomical
 _DEFINED_REL = 1e-3
 
 
+_FIT_TERMS = 4
+
+
+def _fit_coefficients(tree) -> set[int]:
+    """Numbers that are coefficients in a sum of at least four numeric products (a fitted formula such as
+    c0 + c1*x + c2*x**2 + ...): their values come from the fit, not from a constant (corpus repos L171, L174)."""
+    out, seen = set(), set()
+    for n in all_nodes(tree):
+        if not (isinstance(n, ast.BinOp) and isinstance(n.op, (ast.Add, ast.Sub))) or id(n) in seen:
+            continue
+        terms, todo = [], [n]
+        while todo:
+            t = todo.pop()
+            if isinstance(t, ast.BinOp) and isinstance(t.op, (ast.Add, ast.Sub)):
+                seen.add(id(t))
+                todo += [t.left, t.right]
+            else:
+                terms.append(t.operand if isinstance(t, ast.UnaryOp) else t)
+        products = [t for t in terms if isinstance(t, ast.BinOp) and isinstance(t.op, ast.Mult)
+                    and any(isinstance(c, ast.Constant) for c in (t.left, t.right))]
+        if len(products) >= _FIT_TERMS:
+            out |= {id(c) for t in terms for c in ([t] if isinstance(t, ast.Constant) else [t.left, t.right] if isinstance(t, ast.BinOp) else [])
+                    if isinstance(c, ast.Constant)}
+    return out
+
+
+def _source_names(tree) -> str:
+    """Identifiers and docstrings of a file, to read what it says it implements."""
+    words = [n.id for n in all_nodes(tree) if isinstance(n, ast.Name)]
+    words += [n.value for n in all_nodes(tree) if isinstance(n, ast.Constant) and isinstance(n.value, str) and len(n.value) < 2000]
+    return " ".join(words)
+
+
 def scan_constants(path: Path, tree, rel: str) -> list[Finding]:
     """Near-miss constants, one finding per constant and file, with the lines where they occur."""
     from . import constants
@@ -972,11 +1015,14 @@ def scan_constants(path: Path, tree, rel: str) -> list[Finding]:
     # numbers in long literal tables are data (measurements, reference values), not constants typed by hand
     tabulated = {id(e) for n in all_nodes(tree) if isinstance(n, (ast.List, ast.Tuple)) and len(n.elts) >= _TABLE_MIN
                  for e in n.elts}
+    fitted = _fit_coefficients(tree)
+    # the 1976 US Standard Atmosphere defines its own R* = 8.31432 J/(mol K) (corpus repo L168)
+    standard_atm = bool(re.search(r"coesa|ussa|1976|standard[ _]atmosphere", Path(rel).name + " " + _source_names(tree), re.I))
     hits = {}
     for node in all_nodes(tree):
         if not (isinstance(node, ast.Constant) and isinstance(node.value, (int, float)) and not isinstance(node.value, bool)):
             continue
-        if id(node) in tabulated:
+        if id(node) in tabulated or id(node) in fitted:
             continue
         try:
             v = float(node.value)
@@ -986,6 +1032,8 @@ def scan_constants(path: Path, tree, rel: str) -> list[Finding]:
         if not hit:
             continue
         name, ref, r, comment = hit
+        if name == "R (gas constant)" and standard_atm:
+            continue
         assigned = names.get(id(node), set())
         short_int = isinstance(node.value, int) and constants._digits(v) < 6  # 149597870691 is no accident
         if name == "g" or short_int or constants._digits(v) < 3:
@@ -1068,7 +1116,44 @@ def scan(path, *, stages=STAGES) -> tuple[list[Finding], list[str]]:
                 for rel_g in sorted({r for n in div[3] for r in by_name.get(n, {})} - {rel_d}):
                     grids = {id(g): g for n in div[3] for g in by_name.get(n, {}).get(rel_g, [])}
                     findings += _grid_findings(list(grids.values()), [div], rel_d, rel_g, seen)
+    if "names" in stages:
+        findings = _snippet_folders(findings, parsed)
     return findings, unparsed
+
+
+_SNIPPET_FILES = 3
+
+
+def _snippet_folders(findings, parsed):
+    """A folder of tutorial snippets meant to be pasted together uses in one file the names defined in another
+    (corpus repo L204). When most undefined names of a folder with several such files are defined in a sibling file,
+    report the folder once as a NOTE instead of one WARN per name."""
+    def folder(rel):
+        return str(Path(rel).parent)
+    defined = {}
+    for rel, tree in parsed:
+        names = {n.name for n in tree.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))}
+        names |= {t.id for n in tree.body if isinstance(n, ast.Assign) for t in n.targets if isinstance(t, ast.Name)}
+        defined.setdefault(folder(rel), {})[rel] = names
+    undefined = [f for f in findings if f.stage == "names" and f.level == WARN and "never defined" in f.message]
+    by_folder = {}
+    for f in undefined:
+        by_folder.setdefault(folder(f.path), []).append(f)
+    drop, notes = set(), []
+    for d, fs in by_folder.items():
+        files = {f.path for f in fs}
+        # a subfolder of snippets may continue the files one level up (python/qutip/x.py after python/x.py)
+        siblings = {**defined.get(str(Path(d).parent), {}), **defined.get(d, {})} if d != "." else defined.get(d, {})
+        if len(siblings) < _SNIPPET_FILES:
+            continue
+        found = [f for f in fs if any(f.message.split()[0] in names for rel, names in siblings.items() if rel != f.path)]
+        if 2 * len(found) >= len(fs):
+            drop |= {id(f) for f in fs}
+            notes.append(Finding("names", NOTE, sorted(files)[0], min(f.line for f in fs),
+                                 f"{len(fs)} undefined names in {len(files)} files of {d or '.'}, most of them defined in a"
+                                 " sibling file: this looks like a folder of snippets meant to be run together, so they are"
+                                 " not reported one by one"))
+    return [f for f in findings if id(f) not in drop] + notes
 
 
 def extract_tables(path) -> list[dict]:

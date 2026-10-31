@@ -31,6 +31,8 @@ Output:
 
 Values may be real or complex, scalars or arrays; a non-finite value is a FAIL.
 
+For a test that passes only at symmetric example values, for output of the right shape but the wrong size, and for stencils and numerical fluxes, see [Hidden defaults, scale, stencils and fluxes](defaults-scale-stencils.md).
+
 ## What these checks cannot tell you
 
 A round trip or a sibling comparison uses two pieces of the code under test, so it passes when both share the same mistake. Use them to find inconsistencies, and keep at least one check against a reference written from the physics. A derivative check settles whether a derivative matches its function, not whether the function is right.

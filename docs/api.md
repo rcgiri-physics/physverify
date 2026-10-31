@@ -49,8 +49,19 @@ The functions most specs need. Each has a docstring with the details: `help(phys
 | `check_identity([(label, lhs, rhs), ...])` | Identities computed from the physics. |
 | `check_unitary(M)` | `M^H M = I`. |
 | `fd_derivative`, `laplacian_fd` | Finite-difference helpers. |
+| `vary_one(test, defaults, changes)` | A test that passes at the defaults still passes with each parameter changed on its own. |
+| `check_scale(got, ref)` | The output is 1 times the reference; names the factor when it is not. |
+| `check_vec_convention(S, f, X)` | Row- or column-major vectorisation of a superoperator. |
 
-See [Identities and round trips](checks/identities.md).
+See [Identities and round trips](checks/identities.md) and [Hidden defaults, scale, stencils and fluxes](checks/defaults-scale-stencils.md).
+
+## Stencils and fluxes (`physverify.stencils`, `physverify.fluxes`)
+
+| Name | What it does |
+|---|---|
+| `check_stencil(offsets, weights, deriv, claimed=None, divisor=1)` | Consistency, scale and order of a finite-difference stencil from its Taylor moments. |
+| `stencil_moments`, `stencil_order` | The moments and the order on their own. |
+| `check_flux(flux, physical, states, upwind_pairs=(), downwind_pairs=(), mirror=None)` | Consistency, upwinding and mirror symmetry of a numerical flux. |
 
 ## Runge-Kutta tables (`physverify.butcher`)
 

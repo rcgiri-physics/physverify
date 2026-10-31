@@ -81,7 +81,8 @@ def _version_branch(node) -> bool:
     if not isinstance(node, ast.If):
         return False
     test = ast.unparse(node.test)
-    return "version_info" in test or bool(re.search(r"\bPY[23]\b|\bPY2K\b|six\.PY", test))
+    # also lowercase flags (`py3 = sys.version_info[0] == 3; if py3:`), as in corpus repo L212
+    return "version_info" in test or bool(re.search(r"\b(?:is_)?PY[23]K?\b|six\.PY", test, re.I))
 
 
 def _guarded(tree) -> set[int]:
@@ -198,7 +199,13 @@ def parse_finding(rel: str, exc: Exception, source: str = "") -> Finding:
     if re.search(r"\{\{.*\}\}|\{%.*%\}", source):
         return Finding("names", NOTE, rel, line, f"the file does not parse, but looks like a template ({{{{ }}}} or {{% %}}): {msg}")
     why = " (Python 2 code)" if "print" in msg and "parenthes" in msg else ""
-    return Finding("names", WARN, rel, line, f"the file does not parse{why}: {msg}")
+    # a loose script in misc/, scripts/ or examples/ is not part of the package (corpus repo L164): one look, not a defect
+    loose = bool(set(Path(rel).parts[:-1]) & _LOOSE_DIRS)
+    return Finding("names", NOTE if loose else WARN, rel, line,
+                   f"the file does not parse{why}: {msg}" + ("; it is outside the package, in a folder of loose scripts" if loose else ""))
+
+
+_LOOSE_DIRS = {"misc", "scripts", "script", "examples", "example", "old", "legacy", "attic", "archive", "sandbox"}
 
 
 # --- removed APIs -----------------------------------------------------------------------------------
@@ -261,8 +268,42 @@ def _aliases(tree, module: str) -> set[str]:
     return out
 
 
-def scan_api(path: Path, tree, rel: str) -> list[Finding]:
+_STACKERS = {"stack", "vstack", "hstack", "dstack", "column_stack", "row_stack", "concatenate"}
+
+
+def _src_text(node) -> str:
+    try:
+        return ast.unparse(node)
+    except Exception:
+        return ""
+
+
+_DOWNLOADS = {"urlretrieve", "urlopen", "download", "download_file", "hf_hub_download"}
+
+
+def _import_time_downloads(tree, rel) -> list[Finding]:
+    """A download in the module body runs on import, so the module cannot be imported without a network
+    (corpus repo L102 fetched binaries at import). Calls inside functions or a __main__ block are not reported."""
     out = []
+    for stmt in tree.body:
+        if isinstance(stmt, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            continue
+        if isinstance(stmt, ast.If) and "__main__" in ast.unparse(stmt.test):
+            continue
+        for n in ast.walk(stmt):
+            if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)):
+                break
+            if isinstance(n, ast.Call):
+                fn = n.func.attr if isinstance(n.func, ast.Attribute) else getattr(n.func, "id", "")
+                via_requests = fn == "get" and isinstance(n.func, ast.Attribute) and getattr(n.func.value, "id", "") == "requests"
+                if fn in _DOWNLOADS or via_requests:
+                    out.append(Finding("api", NOTE, rel, n.lineno, f"{ast.unparse(n.func)}(...) runs when the module is"
+                                                                   " imported, so importing it needs a network connection"))
+    return out
+
+
+def scan_api(path: Path, tree, rel: str) -> list[Finding]:
+    out = _import_time_downloads(tree, rel)
     np_names = _aliases(tree, "numpy")
     guarded = _guarded(tree)  # try: np.float_ except AttributeError: ... is a compatibility shim
     for n in all_nodes(tree):
@@ -288,10 +329,17 @@ def scan_api(path: Path, tree, rel: str) -> list[Finding]:
         # np.array(x, copy=False)
         if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and n.func.attr == "array" \
                 and isinstance(n.func.value, ast.Name) and n.func.value.id in np_names:
+            first = n.args[0] if n.args else None
+            # a buffer (memoryview, an MPI shared buffer) needs no copy, so copy=False works there (corpus repo L209)
+            buffer = first is not None and bool(re.search(r"buf|memoryview", _src_text(first), re.I))
             for k in n.keywords:
-                if k.arg == "copy" and isinstance(k.value, ast.Constant) and k.value.value is False:
+                if k.arg == "copy" and isinstance(k.value, ast.Constant) and k.value.value is False and not buffer:
                     out.append(Finding("api", WARN, rel, n.lineno, "np.array(..., copy=False) raises ValueError in NumPy 2"
                                                                    " whenever a copy is needed (a list, a number); use np.asarray"))
+        # np.vstack(x for x in ...): stacking functions need a sequence; a generator raises TypeError since NumPy 1.24
+        if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and n.func.attr in _STACKERS                 and isinstance(n.func.value, ast.Name) and n.func.value.id in np_names                 and n.args and isinstance(n.args[0], ast.GeneratorExp):
+            out.append(Finding("api", WARN, rel, n.lineno, f"{n.func.value.id}.{n.func.attr} is given a generator, which"
+                                                           " raises TypeError since NumPy 1.24; pass a list ([... for ...])"))
         # scipy and Python modules that were removed
         if isinstance(n, ast.ImportFrom) and n.module:
             for mod, names in _SCIPY.items():
