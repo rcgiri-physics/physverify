@@ -26,6 +26,8 @@ The functions most specs need. Each has a docstring with the details: `help(phys
 | `trajectory_order_study(runs, exact, t_compare, order, period=None)` | From whole trajectories, at one fixed time. |
 | `check_order(hs, errors, expected, atol=None)` | The verdict from step sizes and errors; `atol` adds an accuracy requirement on the finest grid, reported apart from the order. |
 | `check_exact(hs, errors)` | The verdict when every error should be at round-off. |
+| `fit_order_error(hs, errors)` | The fitted order and its standard error. |
+| `gci(f_fine, f_medium, f_coarse, r)` | Grid convergence index (Roache; Celik et al. 2008): observed order, Richardson extrapolate, error band. |
 
 ## Other checks (`physverify.studies`)
 
@@ -65,7 +67,7 @@ See [Identities and round trips](checks/identities.md) and [Hidden defaults, sca
 
 ## Runge-Kutta tables (`physverify.butcher`)
 
-`check_tableau`, `tableau_order`, `order_residuals`, `linear_order`, `stage_order`, `stability_function`, `stability_polynomials`, `r_infinity`, `a_stability_margin`, `is_stiffly_accurate`. See [Runge-Kutta tables](checks/runge-kutta.md).
+`check_tableau` (with `embedded=`, `claimed_embedded=`, `symplectic=`), `square_tableau`, `symplectic_residual`, `TABLES`, `compare_tableau`, `tableau_order`, `order_residuals`, `linear_order`, `stage_order`, `stability_function`, `stability_polynomials`, `r_infinity`, `a_stability_margin`, `is_stiffly_accurate`. See [Runge-Kutta tables](checks/runge-kutta.md).
 
 ## Loading code (`physverify.loaders`)
 

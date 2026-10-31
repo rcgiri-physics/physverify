@@ -19,6 +19,34 @@ def fit_order(hs, errors) -> float:
     return float(np.polyfit(np.log(hs), np.log(errors), 1)[0])
 
 
+def fit_order_error(hs, errors) -> tuple[float, float]:
+    """(order, standard error): the least-squares slope of log(error) against log(h) and its standard error
+    from the scatter about the line (needs at least three points; two give an error of nan). A fitted 3.9 with
+    standard error 0.05 supports order 4; 3.9 with 0.6 supports nothing yet."""
+    x, y = np.log(np.asarray(hs, float)), np.log(np.asarray(errors, float))
+    if x.size < 3:
+        return fit_order(hs, errors), float("nan")
+    (slope, icpt), = [np.polyfit(x, y, 1)]
+    resid = y - (slope * x + icpt)
+    se = float(np.sqrt(np.sum(resid ** 2) / (x.size - 2) / np.sum((x - x.mean()) ** 2)))
+    return float(slope), se
+
+
+def gci(f_fine: float, f_medium: float, f_coarse: float, r: float, *, safety: float = 1.25) -> dict:
+    """Grid convergence index of three solutions on grids refined by the constant ratio r (Roache 1994;
+    Celik et al., J. Fluids Eng. 130, 078001, 2008): the observed order p = ln(e32/e21) / ln r, the Richardson
+    extrapolate, and GCI_fine = safety |e21 / f_fine| / (r^p - 1), a relative error band on the fine solution.
+    Oscillatory convergence (e21 and e32 of opposite sign) is reported, and then p is nan."""
+    e21, e32 = f_medium - f_fine, f_coarse - f_medium
+    if e21 == 0 or e32 == 0 or e21 * e32 < 0:
+        return {"order": float("nan"), "extrapolated": float("nan"), "gci_fine": float("nan"),
+                "oscillatory": e21 * e32 < 0, "converged": e21 == 0}
+    p = np.log(abs(e32 / e21)) / np.log(r)
+    ext = f_fine + (f_fine - f_medium) / (r ** p - 1)
+    g = safety * abs(e21 / f_fine) / (r ** p - 1) if f_fine != 0 else float("nan")
+    return {"order": float(p), "extrapolated": float(ext), "gci_fine": float(g), "oscillatory": False, "converged": False}
+
+
 def effective_floor(floor: float, scale: float, rel: float = 1e-13) -> float:
     """Round-off grows with the size of the solution, so the noise floor does too.
 

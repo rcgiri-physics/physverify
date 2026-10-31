@@ -6,8 +6,8 @@ authors:
   - family-names: Giri
     given-names: Ram Chandra
     orcid: "https://orcid.org/0009-0008-7149-7938"
-version: 0.6.0
-date-released: 2026-10-26
+version: 0.7.0
+date-released: 2026-10-31
 license: MIT
 doi: 10.5281/zenodo.23534512
 identifiers:

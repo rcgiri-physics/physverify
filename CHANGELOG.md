@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.7.0 (2026-10-31)
 
 From the daily corpus sessions of October 2026 (tests in `tests/test_helpers_2026_10.py`, `tests/test_scan.py`, `tests/test_batch8_lessons.py`):
 
@@ -12,6 +12,9 @@ From the daily corpus sessions of October 2026 (tests in `tests/test_helpers_202
 - New docs page: Hidden defaults, scale, stencils and fluxes; more entries in Convergence-study pitfalls.
 - **`scan`:** a generator passed to `np.vstack`, `np.stack` or `np.concatenate` is a WARN (TypeError since NumPy 1.24; one missed bug). Fewer false alarms: `np.array(buffer, copy=False)` on a buffer; a spacing next to a cell-centred `linspace(a + d/2, b - d/2, n)`; names used under a lowercase `py3` flag; a file that does not parse in `misc/`, `scripts/` or `examples/` is a NOTE; near-constants that are coefficients of a long fitted sum, or the 1976 Standard Atmosphere's R; a folder of snippets that use each other's names is one NOTE. New NOTE: a download that runs when a module is imported.
 - **`scan --run`:** each probe call gets copies of its array inputs, so a solver that updates its arrays in place cannot change the next probe's inputs.
+- **Real tableaux in `check_tableau`:** tables stored as s x (s - 1), or with an FSAL stage of weight 0, are padded first (`square_tableau`); `embedded=` and `claimed_embedded=` check the error-estimate weights (sum to 1, order), including SciPy's error weights over the extra FSAL stage; `symplectic=` checks b_i a_ij + b_j a_ji = b_i b_j (`symplectic_residual`). `butcher.TABLES` ships RK4, Bogacki-Shampine 3(2), Dormand-Prince 5(4), the implicit midpoint rule and 2-stage Gauss, and `compare_tableau` checks a code's copy against them. Tested against SciPy's RK23 and RK45.
+- **Uncertainty on the observed order:** `order.fit_order_error` gives the fitted order with its standard error; `order.gci` the grid convergence index of Roache and Celik et al. from three solutions.
+- **Is the reference independent?** `physverify run` prints a note when a reference-like function in a spec (`exact`, `reference`, `analytic`, `expected`, `*_ref`) uses a module the spec imports as the code under test (`physverify.specscan`).
 - **Sandbox:** `importlib.metadata.version` answers `0+source` for the repository's own package in a source checkout; exit 137 is reported as the likely memory limit; `deps --clean` empties the deps folder first.
 
 ## 0.6.0 (2026-10-26)

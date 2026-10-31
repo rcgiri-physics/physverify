@@ -206,9 +206,39 @@ def is_stiffly_accurate(A, b, *, tol: float = 1e-12) -> bool:
     return bool(np.max(np.abs(np.asarray(A, float)[-1] - np.asarray(b, float))) <= tol)
 
 
+def square_tableau(A, b, c=None):
+    """(A, b, c) with A made square: a table stored as s x (s - 1) (the last column of an explicit table is
+    zero and is often left out) or with an extra FSAL stage that has weight 0 in b is padded with zeros.
+    Explicit FSAL tables (Dormand-Prince, Bogacki-Shampine) then check like any other."""
+    A = np.atleast_2d(np.asarray(A, dtype=float))
+    b = np.asarray(b, dtype=float)
+    n = max(A.shape[0], A.shape[1], b.size)
+    full = np.zeros((n, n))
+    full[:A.shape[0], :A.shape[1]] = A
+    bb = np.zeros(n)
+    bb[:b.size] = b
+    if c is not None:
+        cc = np.zeros(n)
+        cc[:np.size(c)] = np.asarray(c, dtype=float)
+        if np.size(c) < n:
+            cc[np.size(c):] = full[np.size(c):].sum(axis=1)
+        c = cc
+    return full, bb, c
+
+
+def symplectic_residual(A, b) -> float:
+    """max |b_i a_ij + b_j a_ji - b_i b_j|: zero exactly for a symplectic Runge-Kutta method (Sanz-Serna 1988;
+    Hairer, Lubich and Wanner, Geometric Numerical Integration, Thm. VI.4.3). Gauss methods are symplectic;
+    no explicit Runge-Kutta method is."""
+    A, b, _ = square_tableau(A, b)
+    M = b[:, None] * A + (b[:, None] * A).T - np.outer(b, b)
+    return float(np.max(np.abs(M)))
+
+
 def check_tableau(A, b, c=None, *, claimed: int, label: str = "", tol: float = 1e-8, max_order: int | None = None,
                   claimed_linear: int | None = None, claimed_stage: int | None = None, a_stable: bool | None = None,
-                  l_stable: bool | None = None, stiffly_accurate: bool | None = None) -> Result:
+                  l_stable: bool | None = None, stiffly_accurate: bool | None = None, embedded=None,
+                  claimed_embedded: int | None = None, symplectic: bool | None = None) -> Result:
     """PASS when the table has at least the claimed order and every other stated property; FAIL otherwise.
 
     The default tolerance 1e-8 accepts coefficients typed with 9 or 10 digits (a real package had
@@ -223,8 +253,13 @@ def check_tableau(A, b, c=None, *, claimed: int, label: str = "", tol: float = 1
     a_stable        |R(z)| <= 1 on Re z <= 0; see `a_stability_margin`
     l_stable        A-stable and R(inf) = 0
     stiffly_accurate  b equals the last row of A
+    symplectic      b_i a_ij + b_j a_ji = b_i b_j; see `symplectic_residual`
     True means "the method has it" and False means "the method does not"; a mismatch either way fails.
+    embedded        the weights of the embedded (error-estimate) method; with `claimed_embedded`, its order
+                    is checked too, and the error weights b - embedded must sum to 0.
+    A table stored as s x (s - 1), or with an FSAL stage of weight 0, is padded first (`square_tableau`).
     """
+    A, b, c = square_tableau(A, b, c)
     top = max_order or claimed + 1
     res = order_residuals(A, b, top)
     p = tableau_order(A, b, max_order=top, tol=tol)
@@ -292,6 +327,78 @@ def check_tableau(A, b, c=None, *, claimed: int, label: str = "", tol: float = 1
         else:
             notes.append(f"{'' if has else 'not '}stiffly accurate as stated")
 
+    if embedded is not None:
+        Ae = A
+        if np.size(embedded) > A.shape[0]:
+            # error weights over one more stage (SciPy's E): the FSAL stage, evaluated at y_{n+1}, has row b
+            Ae = np.vstack([np.hstack([A, np.zeros((A.shape[0], 1))]), np.append(b, 0.0)])
+        Ae, be, _ = square_tableau(Ae, embedded)
+        if abs(be.sum() - 1) > tol:
+            fails.append(f"embedded weights sum to {be.sum():.10g}, not 1 (so b - embedded does not sum to 0)")
+        if claimed_embedded is not None:
+            pe = tableau_order(Ae, be, max_order=claimed_embedded + 1, tol=tol)
+            if pe < claimed_embedded:
+                fails.append(f"claims embedded order {claimed_embedded} but the embedded weights satisfy the order"
+                             f" conditions only up to {pe}")
+            else:
+                notes.append(f"embedded order {pe}" + (f" (claimed {claimed_embedded})" if pe > claimed_embedded else " confirmed"))
+    if symplectic is not None:
+        r = symplectic_residual(A, b)
+        has = r <= tol
+        if has != symplectic:
+            fails.append(f"stated {'' if symplectic else 'not '}symplectic, but max |b_i a_ij + b_j a_ji - b_i b_j| = {r:.1e}")
+        else:
+            notes.append(f"{'' if has else 'not '}symplectic as stated")
+
     if fails:
         return Result(FAIL, prefix + "; ".join(fails + notes))
     return Result(PASS, prefix + "; ".join(notes))
+
+
+# Published tables, for comparing a code's copy against them (exact rationals as floats).
+_S3 = np.sqrt(3.0)
+TABLES = {
+    "rk4": dict(A=[[0, 0, 0, 0], [0.5, 0, 0, 0], [0, 0.5, 0, 0], [0, 0, 1, 0]], b=[1 / 6, 1 / 3, 1 / 3, 1 / 6],
+                c=[0, 0.5, 0.5, 1], order=4),
+    # Bogacki and Shampine 1989; SciPy's RK23 (embedded order 2, FSAL)
+    "bogacki_shampine_3_2": dict(A=[[0, 0, 0, 0], [1 / 2, 0, 0, 0], [0, 3 / 4, 0, 0], [2 / 9, 1 / 3, 4 / 9, 0]],
+                                 b=[2 / 9, 1 / 3, 4 / 9, 0], c=[0, 1 / 2, 3 / 4, 1], order=3,
+                                 embedded=[7 / 24, 1 / 4, 1 / 3, 1 / 8], embedded_order=2),
+    # Dormand and Prince 1980; SciPy's RK45 and MATLAB's ode45 (embedded order 4, FSAL)
+    "dormand_prince_5_4": dict(
+        A=[[0, 0, 0, 0, 0, 0, 0],
+           [1 / 5, 0, 0, 0, 0, 0, 0],
+           [3 / 40, 9 / 40, 0, 0, 0, 0, 0],
+           [44 / 45, -56 / 15, 32 / 9, 0, 0, 0, 0],
+           [19372 / 6561, -25360 / 2187, 64448 / 6561, -212 / 729, 0, 0, 0],
+           [9017 / 3168, -355 / 33, 46732 / 5247, 49 / 176, -5103 / 18656, 0, 0],
+           [35 / 384, 0, 500 / 1113, 125 / 192, -2187 / 6784, 11 / 84, 0]],
+        b=[35 / 384, 0, 500 / 1113, 125 / 192, -2187 / 6784, 11 / 84, 0], c=[0, 1 / 5, 3 / 10, 4 / 5, 8 / 9, 1, 1],
+        order=5, embedded=[5179 / 57600, 0, 7571 / 16695, 393 / 640, -92097 / 339200, 187 / 2100, 1 / 40],
+        embedded_order=4),
+    "implicit_midpoint": dict(A=[[0.5]], b=[1.0], c=[0.5], order=2),
+    "gauss_legendre_4": dict(A=[[1 / 4, 1 / 4 - _S3 / 6], [1 / 4 + _S3 / 6, 1 / 4]], b=[0.5, 0.5],
+                             c=[0.5 - _S3 / 6, 0.5 + _S3 / 6], order=4),
+}
+
+
+def _drop_fsal(A, b, tol: float = 1e-14):
+    """Without a last FSAL stage (row equal to b, weight 0 in b): codes store such tables with or without it."""
+    if A.shape[0] > 1 and abs(b[-1]) <= tol and np.allclose(A[-1, :-1], b[:-1], atol=tol, rtol=0):
+        return A[:-1, :-1], b[:-1]
+    return A, b
+
+
+def compare_tableau(A, b, name: str, *, tol: float = 1e-10) -> Result:
+    """A code's copy of a published table (one of `TABLES`) has the published coefficients."""
+    ref = TABLES[name]
+    A1, b1 = _drop_fsal(*square_tableau(A, b)[:2])
+    A2, b2 = _drop_fsal(*square_tableau(ref["A"], ref["b"])[:2])
+    if A1.shape != A2.shape:
+        return Result(FAIL, f"{name}: {A1.shape[0]} stages, the published table has {A2.shape[0]}")
+    dA, db = np.abs(A1 - A2), np.abs(b1 - b2)
+    if max(dA.max(), db.max()) <= tol:
+        return Result(PASS, f"{name}: coefficients match the published table to {tol:g}")
+    i, j = np.unravel_index(int(np.argmax(dA)), dA.shape)
+    where = f"A[{i}][{j}] off by {dA[i, j]:.3g}" if dA.max() >= db.max() else f"b[{int(np.argmax(db))}] off by {db.max():.3g}"
+    return Result(FAIL, f"{name}: coefficients differ from the published table, largest at {where}")

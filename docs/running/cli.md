@@ -72,7 +72,7 @@ Exit code 1 if there is any WARN, 0 otherwise, 2 for a bad path or stage name. F
 
 ### `physverify scan --run`: probes that call the code
 
-New in 0.6.0 (unreleased). **This runs the code**: use it only on code you trust, or inside the sandbox (`sandbox/README.md`).
+New in 0.6.0. **This runs the code**: use it only on code you trust, or inside the sandbox (`sandbox/README.md`).
 
 ```bash
 physverify scan path/to/project --run

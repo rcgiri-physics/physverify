@@ -1,6 +1,6 @@
 # Roadmap
 
-What may come after 0.6.0. Release 0.5.0 (2026-10-24) added `physverify scan` with the Phase 1 static checks, and 0.6.0 (2026-10-26) the Phase 2 probes, `scan --run`; see the changelog. Next is Phase 3 of the scan plan below. Nothing here is promised or scheduled; the order is a rough guess at what would help users most. Suggestions are welcome as GitHub issues.
+What may come after 0.7.0. Release 0.5.0 (2026-10-24) added `physverify scan` with the Phase 1 static checks, 0.6.0 (2026-10-26) the Phase 2 probes, `scan --run`, and 0.7.0 (2026-10-31) the checks from the daily corpus sessions; see the changelog. Next is Phase 3 of the scan plan below. Nothing here is promised or scheduled; the order is a rough guess at what would help users most. Suggestions are welcome as GitHub issues.
 
 
 ## Principles
@@ -105,10 +105,10 @@ This shows how often each check is useful, not just that it can find a bug, and 
 - **Whole PDE order studies from SymPy.** `physverify.symbolic` already derives source terms; the next step is to run the full study from an equation written as text.
 - **IMEX / additive Runge-Kutta coupling conditions.** Check the conditions that link the explicit and implicit tables of an IMEX pair (bi-coloured trees), not only each table on its own. Also the order of embedded error estimators.
 - **Stochastic checks that stop early.** Stop sampling as soon as the result is decisive, so slow Monte Carlo codes fit inside a time budget.
-- **Uncertainty on the observed order.** Report the fitted order with a standard error (and the grid convergence index of Roache and Celik et al.), pick the points of the fit from the data instead of the last four, and estimate the round-off floor from the scatter, so a PASS states how sure it is.
-- **Real tableaux in `check_tableau`.** Accept FSAL tables whose `A` is n by n-1 (as in SciPy's `RK45`), ship SciPy's `RK23`, `RK45` and `DOP853` tables, and add an argument for the order of the embedded error estimate.
-- **Is the reference independent?** Warn when a spec's reference imports the module it checks or copies its constants; today nothing catches the mistake the docs warn about most.
-- **Long-time behaviour.** A symplecticity check on the tableau (b_i a_ij + b_j a_ji = b_i b_j) and energy drift against time, to tell symplectic from dissipative integrators.
+- **Uncertainty on the observed order.** Done in 0.7.0: `fit_order_error` and `gci`. Still to do: report the standard error in `check_order` itself, pick the points of the fit from the data instead of the last four, and estimate the round-off floor from the scatter.
+- **Real tableaux in `check_tableau`.** Done in 0.7.0 (FSAL shapes, embedded order, shipped tables). Still to do: DOP853 and other high-order tables, and dense-output (interpolant) order.
+- **Is the reference independent?** Done in 0.7.0 for references that call the code under test. Still to do: references that copy its constants.
+- **Long-time behaviour.** The symplecticity check on the tableau is done in 0.7.0. Still to do: energy drift against time, to tell symplectic from dissipative integrators in a run.
 - **Units in comparisons.** Most adapter mistakes in batch 8 were units or coordinate origins. An optional units-aware comparison (via pint, when installed) that refuses to compare quantities of different dimension.
 
 ## Documentation website

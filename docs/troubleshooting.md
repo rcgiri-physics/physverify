@@ -62,3 +62,7 @@ Code review finds candidates quickly, but in the same study two of the strongest
 ## Still stuck?
 
 Open an issue with your spec and the output ([bug report template](https://github.com/rcgiri-physics/physverify/issues/new?template=bug_report.md)). Questions about whether a result is right are welcome too.
+
+## "physverify: note: the reference ... uses ..."
+
+`physverify run` read the spec before running it and found a function whose name says it is a reference (`exact`, `reference`, `analytic`, `expected`, `*_ref`) using a module the spec imports as the code under test. A reference computed with the solver passes even when the solver is wrong. Derive it from the physics, or, if the use is safe (a table of constants, a unit), say so in a comment; the note does not change the verdict.

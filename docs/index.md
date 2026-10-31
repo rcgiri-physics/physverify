@@ -14,7 +14,7 @@ physverify demo
 **Run it on every push:** add the [GitHub Action](ci.md) to your workflow; a failed check fails the job.
 
 ```yaml
-      - uses: rcgiri-physics/physverify@v0.6.0
+      - uses: rcgiri-physics/physverify@v0.7.0
         with:
           specs: tests/verify_*.py
 ```
@@ -63,4 +63,4 @@ Each check reports **PASS**, **FAIL**, **EXACT** (reproduced to round-off), **IN
 
 If physverify helps your work, please cite it: [doi:10.5281/zenodo.23534512](https://doi.org/10.5281/zenodo.23534512) (all versions; each release also has its own DOI on Zenodo).
 
-physverify is actively evolving (version 0.6.0), welcoming contributions and test cases from the computational physics community. Status: under active development and maintenance, tested on a growing corpus of public physics codes; releases come at milestones. See [how to help](https://github.com/rcgiri-physics/physverify/blob/main/CONTRIBUTING.md) and [GitHub issues](https://github.com/rcgiri-physics/physverify/issues).
+physverify is actively evolving (version 0.7.0), welcoming contributions and test cases from the computational physics community. Status: under active development and maintenance, tested on a growing corpus of public physics codes; releases come at milestones. See [how to help](https://github.com/rcgiri-physics/physverify/blob/main/CONTRIBUTING.md) and [GitHub issues](https://github.com/rcgiri-physics/physverify/issues).

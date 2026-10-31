@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "physverify"
-version = "0.6.0"
+version = "0.7.0"
 description = "Verification checks for physics simulation code: manufactured solutions, order-of-accuracy studies and a seeded-bug benchmark."
 readme = "README.md"
 requires-python = ">=3.10"

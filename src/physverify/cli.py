@@ -61,6 +61,9 @@ def _cmd_run(args) -> int:
             print(f"physverify: {spec}: checks() returned no checks, so nothing was tested", file=sys.stderr)
             return 2
         outcomes += run_checks(checks, args.budget)
+        from .specscan import reference_notes
+        for note in reference_notes(spec):
+            print(f"physverify: note: {note}", file=sys.stderr)
     source = ", ".join(str(Path(s)) for s in args.specs)
     if args.json == "-":
         print(to_json(outcomes, source))

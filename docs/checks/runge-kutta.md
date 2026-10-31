@@ -36,9 +36,15 @@ A convergence test on y' = -y (the "Dahlquist" test equation) measures the **lin
 
 The default tolerance (1e-8) accepts coefficients typed with 9 or 10 digits. When a missing order is only a matter of too few digits, the message says so and suggests a tolerance to retry with.
 
+## Real tables: FSAL, embedded weights, symplecticity
+
+Codes store explicit tables in several shapes: SciPy's `RK45` keeps `A` as 6 x 5 and its error weights over a seventh (FSAL) stage. `check_tableau` pads such tables first (`square_tableau`), so they check as given. `embedded=` takes the weights of the embedded method (or SciPy-style error weights added to `b`), which must sum to 1, and `claimed_embedded=` checks their order. `symplectic=True` checks b_i a_ij + b_j a_ji = b_i b_j, which holds for the Gauss methods and for no explicit method (Hairer, Lubich and Wanner, *Geometric Numerical Integration*, Thm. VI.4.3).
+
+`physverify.butcher.TABLES` holds RK4, Bogacki-Shampine 3(2), Dormand-Prince 5(4), the implicit midpoint rule and 2-stage Gauss with their orders, and `compare_tableau(A, b, "dormand_prince_5_4")` points to the first coefficient of a code's copy that differs from the published one, with or without the FSAL stage.
+
 ## Lower-level functions
 
-`tableau_order`, `linear_order`, `stage_order`, `stability_function`, `r_infinity`, `a_stability_margin` and `is_stiffly_accurate` in `physverify.butcher` return the numbers themselves.
+`tableau_order`, `linear_order`, `symplectic_residual`, `stage_order`, `stability_function`, `r_infinity`, `a_stability_margin` and `is_stiffly_accurate` in `physverify.butcher` return the numbers themselves.
 
 ## Not yet covered
 
