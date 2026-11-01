@@ -34,7 +34,7 @@ runs:
   using: composite
   steps:
     - if: inputs.python-version != ''
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v7
       with:
         python-version: ${{ inputs.python-version }}
 
@@ -74,7 +74,7 @@ runs:
         physverify run $PV_SPECS --json "$PV_OUT/physverify.json" --html "$PV_OUT/physverify.html" --markdown "$GITHUB_STEP_SUMMARY"
 
     - if: always() && inputs.html-report != ''
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: ${{ inputs.html-report }}
         path: ${{ runner.temp }}/physverify/physverify.html

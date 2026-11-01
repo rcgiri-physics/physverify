@@ -20,8 +20,8 @@ jobs:
           - {os: ubuntu-latest, python: "3.12"}
           - {os: ubuntu-latest, python: "3.13"}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python }}
       - run: python -m pip install -e ".[dev]"
@@ -34,8 +34,8 @@ jobs:
     # data file fails here instead of on PyPI.
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - run: python -m pip install build
@@ -56,8 +56,8 @@ jobs:
     # the documentation must build without warnings (broken links, missing snippets)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - run: python -m pip install -e ".[docs]"
@@ -72,7 +72,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ./
         with:
           specs: examples/verify_*.py
