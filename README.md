@@ -21,6 +21,21 @@ Five AI reviewers (three Claude models, Qwen 3.8 Flash and GPT 5.6 Terra) review
 
 So AI review finds many real defects, including ones earlier testing missed, but a claim is not a finding until something runs. The counts hold for this sample only and are not a bug rate for physics code. The labels come from two automated checkers following written rules, not from people. Tables: `scripts/study100.py` regenerates them from the per-claim file, released with the preprint ([doi:10.5281/zenodo.24224433](https://doi.org/10.5281/zenodo.24224433)).
 
+## Confirmed by maintainers
+
+Some defects confirmed or fixed by the projects' own maintainers after a report:
+
+| Project | What was found | Outcome |
+|---|---|---|
+| [SymPy](https://github.com/sympy/sympy/issues/30810) | three units differ from their exact definitions | confirmed against primary sources |
+| [Astropy](https://github.com/astropy/astropy/issues/20681) | "surface tension" registered as J m² instead of J/m² | confirmed; fix in progress |
+| [PyGMT](https://github.com/GenericMappingTools/pygmt/issues/4960) | strings with a space treated as datetimes | fixed |
+| [EinsteinPy](https://github.com/einsteinpy/einsteinpy/issues/705) | de Sitter scale factor on a spatial coordinate | fixed |
+| [TESPy](https://github.com/oemof/tespy/issues/1127) | entropy pressure term with the wrong units | fixed |
+| [qmat](https://github.com/Parallel-in-Time/qmat/issues/23) | Runge-Kutta schemes labelled one order too high | fixed; now uses `physverify.butcher` in CI |
+
+[The full list](https://rcgiri-physics.github.io/physverify/confirmed/) has more projects and the details.
+
 ## Try it
 
 ```bash
