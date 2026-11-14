@@ -19,7 +19,7 @@ Five AI reviewers (three Claude models, Qwen 3.8 Flash and GPT 5.6 Terra) review
 - Nine of the ten wrong claims came from one model. Where a reading was recorded before the run (20 claims), the run changed 3 verdicts.
 - Against the 67 defects reported earlier, the reviewers named 36 to 49; `physverify scan`, which reads code without running it, named 11.
 
-So AI review finds many real defects, including ones earlier testing missed, but a claim is not a finding until something runs. The counts hold for this sample only and are not a bug rate for physics code. The labels come from two automated checkers following written rules, not from people. Tables: `scripts/study100.py` regenerates them from the per-claim file, which is released with the preprint (in preparation).
+So AI review finds many real defects, including ones earlier testing missed, but a claim is not a finding until something runs. The counts hold for this sample only and are not a bug rate for physics code. The labels come from two automated checkers following written rules, not from people. Tables: `scripts/study100.py` regenerates them from the per-claim file, released with the preprint ([doi:10.5281/zenodo.24224433](https://doi.org/10.5281/zenodo.24224433)).
 
 ## Try it
 

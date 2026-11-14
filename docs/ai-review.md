@@ -13,7 +13,7 @@ In a study on 100 public physics repositories (November 2026), five AI reviewers
 | wrong: the code is right | 10 (9 from one model) |
 | could not be settled | 18 |
 
-Where a reading was recorded before the run (20 claims), the run changed 3 verdicts. 32 of the 33 defects have been reported to their maintainers. The counts describe this sample only and are not a bug rate; the labels come from two automated checkers following written rules, not from people. `scripts/study100.py` regenerates the tables from the per-claim file released with the preprint (in preparation).
+Where a reading was recorded before the run (20 claims), the run changed 3 verdicts. 32 of the 33 defects have been reported to their maintainers. The counts describe this sample only and are not a bug rate; the labels come from two automated checkers following written rules, not from people. `scripts/study100.py` regenerates the tables from the per-claim file released with the preprint ([doi:10.5281/zenodo.24224433](https://doi.org/10.5281/zenodo.24224433)).
 
 physverify is the step after the review: each claim becomes a check that runs the code against a reference written from the physics.
 
