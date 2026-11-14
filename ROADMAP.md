@@ -1,6 +1,6 @@
 # Roadmap
 
-What may come after 0.7.0. Release 0.5.0 (2026-10-24) added `physverify scan` with the Phase 1 static checks, 0.6.0 (2026-10-26) the Phase 2 probes, `scan --run`, and 0.7.0 (2026-10-31) the checks from the daily corpus sessions; see the changelog. Next is Phase 3 of the scan plan below. Nothing here is promised or scheduled; the order is a rough guess at what would help users most. Suggestions are welcome as GitHub issues.
+What may come after 0.7.0. Release 0.5.0 (2026-10-24) added `physverify scan` with the Phase 1 static checks, 0.6.0 (2026-10-26) the Phase 2 probes, `scan --run`, and 0.7.0 (2026-10-31) the checks from the daily corpus sessions; see the changelog. Since November 2026 the work goes into confirming suspected defects; `scan` is kept working but gets no new rules (decided 2026-11-14). Nothing here is promised or scheduled; the order is a rough guess at what would help users most. Suggestions are welcome as GitHub issues.
 
 
 ## Principles
@@ -27,20 +27,23 @@ A pilot on 20 corpus repositories (10 with a reported defect, 10 tested clean; 2
 
 On the 10 repositories with defects, the reviewer also raised further claims; after a check, 13 were real physics or numerics problems that no other method had found (5 of them confirmed by a sandbox run so far), and several others were wrong. Two strong suspicions from reading were wrong when run.
 
+The pilot grew into a study on 100 repositories with five AI reviewers (2026-11): on the 50 tested clean, 119 review claims were each checked by a run; 40 changed a result (33 distinct defects in 19 repositories), 51 were real but minor, 10 were wrong and 18 could not be settled. Against 67 earlier defects the reviewers named 36 to 49 and `scan` 11. Details on the [AI review page](docs/ai-review.md); counts within that sample only.
+
 So static rules will not catch up with a reader: most physics defects are a wrong sign or factor in ordinary-looking code. What a reader cannot do is settle whether a suspicion is true. That is what physverify does well: run the code against a reference written from the physics and give a verdict with its reason. From here the plan is:
 
 1. **Confirmation first.** `physverify confirm`: turn one suspected defect (from a person or an AI reviewer) into a check against an independent reference, run it in the sandbox, and record the verdict (confirmed, rejected, or not decidable). Cheaper references (a declarative spec, more exact pairs) serve the same goal.
 2. **Deeper runtime checks** for ODE/PDE time integration, convergence and conservation, as before.
-3. **`scan` stays a fast, safe first pass.** It gains rules for patterns that were confirmed on real code, in batches, and is not tuned towards a detection target.
+3. **`scan` stays a fast, safe first pass, frozen in scope.** It keeps working and gets fixes, but no new rules or stages (2026-11-14: #17, #18, #19, #20 and #55 closed as not planned).
 4. **Evidence:** measure whether physverify helps reviewers and coding agents, with false alarms reported next to detections.
 
 Open issues in this order (nothing is scheduled):
 
-- **First:** #54 `physverify confirm`; #32 declarative spec; #31 does physverify help coding agents; #28 `physverify mutate`; #30 held-out and outside-written bugs; #8, #9, #25 trust in the order checks and the seeded-bug misses; #24 2D/3D heat; #26 IMEX; #27 units; #36 agent skill.
-- **Next:** #19 Phase 3 steppers without a spec; #20 dependencies before `scan --run`; #29 findings ledger; #33 related work (add the AI-review comparison); #38 C/C++/Fortran bridge.
-- **When convenient:** #55 scan rules from the pilot; #14, #15, #16 scan in CI; #17 notebooks; #18 stencil literals; #11, #12, #13 CI and typing; #21, #22, #23 refactors; #34, #35, #37 docs and packaging.
+- **First:** #54 `physverify confirm`; #32 declarative spec; #31 does physverify help coding agents; #28 `physverify mutate`; #30 held-out and outside-written bugs; #8, #9, #25 trust in the order checks and the seeded-bug misses; #36 agent skill.
+- **When convenient:** #14, #15, #16 scan in CI (for the existing rules); #11, #12, #13 CI and typing; #21, #23 refactors; #37 packaging.
+- **Deferred** (label `deferred`, not planned for 1.0): #24 2D/3D heat; #26 IMEX; #27 units; #38 C/C++/Fortran bridge.
+- **Done:** #22 benchmark out of the package; #29 findings ledger ([LEDGER.md](results/corpus/LEDGER.md)); #33, #34, #35 docs.
 
-The sections below are the October plan; the targets there are kept as a record, not as goals.
+The sections below are the October plan for `scan`; it stopped growing on 2026-11-14, and the targets there are kept as a record, not as goals.
 
 ## Now: improve the tool, not the number of repositories tested
 

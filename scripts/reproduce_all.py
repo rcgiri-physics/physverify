@@ -1,4 +1,4 @@
-"""Regenerate every benchmark table in results/ from a clean checkout.
+"""Regenerate every benchmark table in results/ (and the corpus ledger) from a clean checkout.
 
     python scripts/reproduce_all.py          # seeded-bug matrix, catalogue, comparison (deterministic)
     python scripts/reproduce_all.py --slow   # also the Monte Carlo (Ising) matrix, several minutes
@@ -18,6 +18,7 @@ STEPS = [
     ["-m", "pvbench.matrix", "results/detection_matrix.md"],
     ["-m", "pvbench.compare", "results/comparison.md"],
     ["scripts/make_figures.py"],
+    ["scripts/corpus_ledger.py"],
 ]
 SLOW = [["-m", "pvbench.ising_matrix", "results/ising_matrix.md"]]
 
