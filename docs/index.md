@@ -11,7 +11,6 @@ physverify demo
 
 ![A claim and a reference from the physics go into the smallest run that tells them apart; the run gives a verdict](images/claim-to-verdict.svg)
 
-![The check loop: your solver and an independent description of the physics go in; physverify runs it at several resolutions, measures the error and reports a verdict with a reason](images/check-loop.svg)
 
 **Run it on every push:** add the [GitHub Action](ci.md) to your workflow; a failed check fails the job.
 
