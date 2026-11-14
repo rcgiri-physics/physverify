@@ -1,6 +1,6 @@
 # physverify
 
-**Check that a physics simulation solves the right equations, at the accuracy it claims, not just that it runs.**
+**Confirm physics claims by running the code: a suspected bug becomes a run against a reference from the physics, and a verdict with the numbers.**
 
 A simulation can run, draw nice plots and still be wrong: a minus sign in the wrong place, a factor of 2 missing, a time step that is off by one. Ordinary tests often miss these, because nobody knows the exact answer for a real simulation. physverify uses standard ideas from numerical analysis to check such code anyway, and explains each result in plain words.
 
@@ -8,6 +8,8 @@ A simulation can run, draw nice plots and still be wrong: a minus sign in the wr
 pip install physverify
 physverify demo
 ```
+
+![A claim and a reference from the physics go into the smallest run that tells them apart; the run gives a verdict](images/claim-to-verdict.svg)
 
 ![The check loop: your solver and an independent description of the physics go in; physverify runs it at several resolutions, measures the error and reports a verdict with a reason](images/check-loop.svg)
 
@@ -51,9 +53,12 @@ Each check reports **PASS**, **FAIL**, **EXACT** (reproduced to round-off), **IN
 
 ## Does it work?
 
-- On 37 bugs added one at a time to five small solvers, it caught 35, with no false alarms on the bug-free versions. The bugs and the checks were written by the same person, so this shows the tool works as designed; it is not a promise about other code.
-- It was tried on more than 500 public physics repositories in a locked-down container and found confirmed bugs in some of them. The counts describe that sample only; see [Results on real code](results.md).
-- In a pilot on 20 of those repositories, an AI reviewer found more of the known defects than `physverify scan`, but also raised alarms on most of the repositories that had been tested clean. Running checks against references from the physics is what told the real claims from the false ones; see [Checking an AI code review](ai-review.md).
+- **Confirming review claims (100 repositories, 2026-11):** five AI reviewers reviewed 100 public physics repositories. On the 50 that earlier testing had found clean, 119 review claims were each checked by a run: 40 changed a result (33 distinct defects in 19 repositories), 51 were real but minor, 10 were wrong and 18 could not be settled. So review finds real defects that testing missed, and a run is what tells them from the wrong ones. Counts within this sample only; see [Checking an AI code review](ai-review.md).
+
+![Of 119 claims checked on repositories tested clean: 40 changed a result, 51 were real but minor, 10 were wrong, 18 stayed open](images/claim-outcomes.svg)
+
+- **Seeded bugs:** of 37 bugs added one at a time to five small solvers, it caught 35, with no false alarms on the bug-free versions. The bugs and the checks were written by the same person, so this shows the tool works as designed; it is not a promise about other code.
+- **Public repositories:** it was tried on more than 500 public physics repositories in a locked-down container and found confirmed bugs in some of them; see [Results on real code](results.md).
 
 ## Where to go next
 

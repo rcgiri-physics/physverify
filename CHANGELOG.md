@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- **Docs rewrite around confirming claims:** README and home page lead with turning a suspected defect into a run and a verdict, and with the 100-repository study of AI review claims (counts within that sample); new figures `docs/images/claim-to-verdict.svg` and `claim-outcomes.svg`; the AI-review and results pages replace the 20-repository pilot with the study; ROADMAP records that `scan` keeps working but gets no new rules.
+- **Corpus ledger** (issue #29): `results/corpus/ledger.csv` has one row per reported defect of batches 1-8 (IDs only) and `funnel.csv` one row per batch; `scripts/corpus_ledger.py` (run by `reproduce_all.py`, checked by `tests/test_corpus_ledger.py`) generates `results/corpus/LEDGER.md`, so its totals cannot go stale.
+- `scripts/study100.py`: the paired comparison of every method on the same posted defects replaces the Claude-vs-Qwen kappa table.
 - **Fixed false verdicts found in a review** (tests in `tests/test_correctness_fixes.py`; each reproduced before the fix):
   - `load_spec` re-imports solver modules from the spec's folder, so the MCP server no longer returns a stale PASS after the solver is edited.
   - The noise floor shrinks for solutions smaller than 1, and `invariant_study` measures drift relative to the invariant itself, so an Euler stepper on an energy of 1e-21 is no longer EXACT. **Behaviour change:** an invariant that is zero only up to round-off (a total momentum of 1e-17) now FAILs with a hint; pass the new `qscale` argument with the size of its terms.

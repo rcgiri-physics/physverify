@@ -1,12 +1,42 @@
-# physverify
+# physverify: confirm physics claims by running the code
 
 [![tests](https://github.com/rcgiri-physics/physverify/actions/workflows/ci.yml/badge.svg)](https://github.com/rcgiri-physics/physverify/actions/workflows/ci.yml) [![PyPI](https://img.shields.io/pypi/v/physverify)](https://pypi.org/project/physverify/) [![Python](https://img.shields.io/pypi/pyversions/physverify)](https://pypi.org/project/physverify/) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23534512.svg)](https://doi.org/10.5281/zenodo.23534512) [![Docs](https://img.shields.io/badge/docs-site-blue)](https://rcgiri-physics.github.io/physverify/)
 
-**Checks that a simulation solves the equations it claims, at the order of accuracy it claims, not just that it runs.**
+**A suspected bug in simulation code is a claim. physverify turns it into a run against a reference written from the physics, and gives a verdict with the numbers.**
 
-physverify is actively evolving (v0.7.0), welcoming contributions and test cases from the computational physics community. Status: under active development and maintenance, tested on a growing corpus of public physics codes; releases come at milestones. Scope: numerical solutions of ODEs and PDEs (time integration, convergence, conservation), plus a few Monte Carlo checks. It needs only NumPy.
+The claim can come from an AI code review, a colleague, a static check or your own doubt. Reading the code again rarely settles it; a run against an exact solution, a conservation law or a convergence order does. physverify supplies those checks for numerical ODE and PDE code (order of convergence, manufactured solutions, conservation, Runge-Kutta tables, exact references, a few Monte Carlo statistics), a sandbox for running code you do not trust, and plain-language verdicts. It needs only NumPy. Current release: 0.7.0 (v0.7.0); actively developed, contributions welcome.
 
-![The check loop: your solver and an independent description of the physics go in; physverify runs the solver at several resolutions, measures the error and reports a verdict with a reason](https://raw.githubusercontent.com/rcgiri-physics/physverify/main/docs/images/check-loop.svg)
+![A claim from a review becomes a run against a reference from the physics, and the run gives a verdict: confirmed, minor, rejected or open](https://raw.githubusercontent.com/rcgiri-physics/physverify/main/docs/images/claim-to-verdict.svg)
+
+## What confirming claims found on 100 repositories
+
+Five AI reviewers (three Claude models, Qwen 3.8 Flash and GPT 5.6 Terra) reviewed 100 public physics repositories with one fixed prompt. Fifty had a defect reported earlier; fifty had been tested and found clean. On the clean fifty, 119 review claims were drawn and each was given a check run in the sandbox:
+
+![Of 119 claims checked on repositories tested clean: 40 changed a result, 51 were real but minor, 10 were wrong, 18 stayed open](https://raw.githubusercontent.com/rcgiri-physics/physverify/main/docs/images/claim-outcomes.svg)
+
+- **40 claims were real defects that change a result:** 33 distinct defects in 19 of the 50 "clean" repositories. 32 have been reported to their maintainers.
+- **51 were real but minor** (invalid input, display, docstrings, code paths the repository never uses), **10 were wrong** and **18 could not be settled.**
+- Nine of the ten wrong claims came from one model. Where a reading was recorded before the run (20 claims), the run changed 3 verdicts.
+- Against the 67 defects reported earlier, the reviewers named 36 to 49; `physverify scan`, which reads code without running it, named 11.
+
+So AI review finds many real defects, including ones earlier testing missed, but a claim is not a finding until something runs. The counts hold for this sample only and are not a bug rate for physics code. The labels come from two automated checkers following written rules, not from people. Tables: `scripts/study100.py` regenerates them from the per-claim file, released with the preprint ([doi:10.5281/zenodo.24224433](https://doi.org/10.5281/zenodo.24224433)).
+
+## Confirmed by maintainers
+
+Some defects confirmed or fixed by the projects' own maintainers after a report:
+
+| Project | What was found | Outcome |
+|---|---|---|
+| [SymPy](https://github.com/sympy/sympy/issues/30810) | three units differ from their exact definitions | confirmed against primary sources |
+| [Astropy](https://github.com/astropy/astropy/issues/20681) | "surface tension" registered as J m² instead of J/m² | confirmed; fix in progress |
+| [PyGMT](https://github.com/GenericMappingTools/pygmt/issues/4960) | strings with a space treated as datetimes | fixed |
+| [EinsteinPy](https://github.com/einsteinpy/einsteinpy/issues/705) | de Sitter scale factor on a spatial coordinate | fixed |
+| [TESPy](https://github.com/oemof/tespy/issues/1127) | entropy pressure term with the wrong units | fixed |
+| [qmat](https://github.com/Parallel-in-Time/qmat/issues/23) | Runge-Kutta schemes labelled one order too high | fixed; now uses `physverify.butcher` in CI |
+
+[The full list](https://rcgiri-physics.github.io/physverify/confirmed/) has more projects and the details.
+
+## Try it
 
 ```bash
 pip install physverify
@@ -17,19 +47,21 @@ The demo checks a correct solver (all checks pass), then the same solver with th
 
 ![Error against step size: the correct solver follows the slope-2 line, the broken one levels off](https://raw.githubusercontent.com/rcgiri-physics/physverify/main/docs/images/convergence.svg)
 
-New to this? [Start here](https://rcgiri-physics.github.io/physverify/start-here/) walks through installation and a first check in about ten minutes, with a prompt to paste if you use an AI coding assistant.
+New to this? [Start here](https://rcgiri-physics.github.io/physverify/start-here/) takes about ten minutes and includes a prompt to paste if you use an AI coding assistant.
 
 ## Use it on your own code
 
-- **Any project, no set-up:** `physverify scan PATH` reads the code (it runs nothing) and flags Runge-Kutta methods that do not have their stated order (written as tables, as class attributes or as stages in code), grid spacings that do not match their grid, near-miss physical constants, undefined names and files that do not parse, NumPy/SciPy/Python features that have been removed, typo-like literals (`1e0 - 5`), unit tables with the wrong dimension, and inverse function pairs worth a round-trip test. `scan --run` (in the sandbox) adds probes that run the code. A clean scan says only that these patterns were not found; it is a quick first pass, not a bug finder.
+- **Suspected bugs from a review (yours or an AI's):** write each claim down, pick a reference that does not come from the code, and run the smallest test that tells the two answers apart. [Checking an AI code review](https://rcgiri-physics.github.io/physverify/ai-review/) walks through it with examples.
 - **An ODE solver:** `physverify init verify_solver.py --solver mysolver --order 4` writes a spec; fill in the equations (from the physics, not from your code) and run `physverify run verify_solver.py`.
-- **A Runge-Kutta table:** `check_tableau(A, b, c, claimed=3)` from `physverify.butcher` checks its order, stage order and stability from the coefficients alone.
-- **Suspected bugs from a review (yours or an AI's):** turn each claim into a run against an independent reference and get a verdict; see [Checking an AI code review](https://rcgiri-physics.github.io/physverify/ai-review/).
 - **Errors you already have:** `check_order(hs, errors, expected=2)` gives PASS, FAIL or INCONCLUSIVE with a reason.
+- **A Runge-Kutta table:** `check_tableau(A, b, c, claimed=3)` from `physverify.butcher` checks order, stage order and stability from the coefficients alone.
+- **Code you have not read yet:** `physverify scan PATH` reads the source, runs nothing, and flags a fixed set of patterns (Runge-Kutta tables below their stated order, grid spacings that do not match their grid, near-miss constants, removed NumPy/SciPy features, undefined names, unit tables with the wrong dimension). A clean scan means only that those patterns were not found. `scan` is kept working but no longer gets new rules; the work now goes into confirming claims.
+
+Code from other people runs only in the [sandbox](https://github.com/rcgiri-physics/physverify/tree/main/sandbox) (no network, read-only repository).
 
 ## Run it in CI
 
-A failed check fails the job, like a broken unit test ([CI guide](https://rcgiri-physics.github.io/physverify/ci/): options, pre-commit, pytest):
+A failed check fails the job, like a broken unit test ([CI guide](https://rcgiri-physics.github.io/physverify/ci/)):
 
 ```yaml
       - uses: rcgiri-physics/physverify@v0.7.0
@@ -39,9 +71,10 @@ A failed check fails the job, like a broken unit test ([CI guide](https://rcgiri
 
 [Getting started](https://rcgiri-physics.github.io/physverify/getting-started/) · [Recipes](https://rcgiri-physics.github.io/physverify/recipes/) · [What a PASS means](https://rcgiri-physics.github.io/physverify/assumptions/) · [Troubleshooting](https://rcgiri-physics.github.io/physverify/troubleshooting/) · [API](https://rcgiri-physics.github.io/physverify/api/)
 
-## Does it catch bugs?
+## Other evidence
 
-Of 37 bugs seeded into five small solvers, it flagged 35 (plain "compare with one answer" tests: 27), with no false alarms. The bugs and checks were written by the same person, so this shows the tool works as designed, not how it does on other people's code. On public physics repositories, 74 defects were reported to authors; 14 of them were found by a physverify check as such, 11 by simply running the code, and the rest by the per-repository test scripts or by reading the code. `physverify scan` alone, with no script, now finds 18 of the 74, up from 2 in its first version, and found 7 new defects in the same repositories ([which found what](https://github.com/rcgiri-physics/physverify/blob/main/results/corpus/FINDINGS_BY_METHOD.md)). In a pilot on 20 of the tested repositories (2026-11-08), an AI reviewer with a short prompt found 8 of 10 known defects where `scan` found 1, but raised alarms on 6 or 7 of 10 repositories tested clean, none of them a physics defect; checks run against the physics told the true claims from the false ones ([Checking an AI code review](https://rcgiri-physics.github.io/physverify/ai-review/)). The counts describe that sample only and are not a bug rate. Details: [results](https://rcgiri-physics.github.io/physverify/results/), and [results/README.md](https://github.com/rcgiri-physics/physverify/blob/main/results/README.md) to regenerate every table.
+- **Seeded bugs:** of 37 bugs added one at a time to five small solvers, the checks flagged 35 (plain "compare with one answer" tests: 27), with no false alarms. The same person wrote the bugs and the checks, so this shows the tool works as designed, not how it does on other code. `python scripts/reproduce_all.py` regenerates the tables.
+- **Earlier corpus testing (October 2026):** of the first 74 defects reported to authors, 14 were found by a physverify check as such, 11 by running the code at all, and the rest by the reference in each repository's test script or by reading; the [ledger](https://github.com/rcgiri-physics/physverify/blob/main/results/corpus/LEDGER.md) lists them by ID. Details: [results](https://rcgiri-physics.github.io/physverify/results/).
 
 ## Limits
 
@@ -49,6 +82,6 @@ Works best for ODEs; PDEs only in 1D so far. Your code needs a way to add a sour
 
 ## Contributing, citing, licence
 
-Help is welcome: a trial report on your own solver, seeded bugs written by someone other than the author, adapters, documentation. See [CONTRIBUTING.md](https://github.com/rcgiri-physics/physverify/blob/main/CONTRIBUTING.md), the [code of conduct](https://github.com/rcgiri-physics/physverify/blob/main/CODE_OF_CONDUCT.md), [SUPPORT.md](https://github.com/rcgiri-physics/physverify/blob/main/SUPPORT.md) for help, [SECURITY.md](https://github.com/rcgiri-physics/physverify/blob/main/SECURITY.md) on running untrusted code, and [AGENTS.md](https://github.com/rcgiri-physics/physverify/blob/main/AGENTS.md) for AI assistants. To cite, use [doi:10.5281/zenodo.23534512](https://doi.org/10.5281/zenodo.23534512) or [CITATION.cff](https://github.com/rcgiri-physics/physverify/blob/main/CITATION.cff). Changes: [CHANGELOG.md](https://github.com/rcgiri-physics/physverify/blob/main/CHANGELOG.md); plans: [ROADMAP.md](https://github.com/rcgiri-physics/physverify/blob/main/ROADMAP.md). The methods are standard and other tools do parts of this, some better (NodePy for Runge-Kutta analysis); see [related work and credits](https://rcgiri-physics.github.io/physverify/related-work/). MIT licence, copyright (c) 2026 Ram Chandra Giri.
+Help is welcome: a trial report on your own solver, seeded bugs written by someone other than the author, adapters, documentation. See [CONTRIBUTING.md](https://github.com/rcgiri-physics/physverify/blob/main/CONTRIBUTING.md), the [code of conduct](https://github.com/rcgiri-physics/physverify/blob/main/CODE_OF_CONDUCT.md), [SUPPORT.md](https://github.com/rcgiri-physics/physverify/blob/main/SUPPORT.md), [SECURITY.md](https://github.com/rcgiri-physics/physverify/blob/main/SECURITY.md) on running untrusted code, and [AGENTS.md](https://github.com/rcgiri-physics/physverify/blob/main/AGENTS.md) for AI assistants. To cite, use [doi:10.5281/zenodo.23534512](https://doi.org/10.5281/zenodo.23534512) or [CITATION.cff](https://github.com/rcgiri-physics/physverify/blob/main/CITATION.cff). Changes: [CHANGELOG.md](https://github.com/rcgiri-physics/physverify/blob/main/CHANGELOG.md); plans: [ROADMAP.md](https://github.com/rcgiri-physics/physverify/blob/main/ROADMAP.md). The methods are standard and other tools do parts of this, some better (NodePy for Runge-Kutta analysis); see [related work and credits](https://rcgiri-physics.github.io/physverify/related-work/). MIT licence, copyright (c) 2026 Ram Chandra Giri.
 
 <!-- mcp-name: io.github.rcgiri-physics/physverify -->
