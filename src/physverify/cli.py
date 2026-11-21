@@ -47,6 +47,7 @@ def expand_specs(patterns) -> list[str]:
 
 
 def _cmd_run(args) -> int:
+    from .checks import SKIP
     from .report import (
         NOTE,
         load_spec,
@@ -90,7 +91,15 @@ def _cmd_run(args) -> int:
     if args.markdown:
         with open(args.markdown, "a", encoding="utf-8") as f:  # append: $GITHUB_STEP_SUMMARY may hold other steps' output
             f.write(to_markdown(outcomes, source))
-    return 1 if any(o.result.failed for o in outcomes) else 0
+    if any(o.result.failed for o in outcomes):
+        return 1
+    skipped = sum(o.result.status == SKIP for o in outcomes)
+    if skipped == len(outcomes):
+        print(f"physverify: all {skipped} check(s) were skipped, so nothing was verified", file=sys.stderr)
+    if skipped and args.strict:
+        print(f"physverify: --strict: {skipped} check(s) skipped; a skipped check counts as a failure", file=sys.stderr)
+        return 1
+    return 0
 
 
 def _cmd_init(args) -> int:
@@ -254,6 +263,8 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--html", metavar="FILE", help="write a self-contained HTML report")
     run.add_argument("--markdown", metavar="FILE", help="append a Markdown table to FILE (for $GITHUB_STEP_SUMMARY)")
     run.add_argument("--quiet", action="store_true", help="no text output")
+    run.add_argument("--strict", action="store_true",
+                     help="exit 1 when any check is skipped (for a CI gate where every check must run)")
     run.add_argument("--budget", type=float, metavar="SECONDS",
                      help="time budget per check: order studies stop adding resolutions when the next would overrun it,"
                           " and a check still running at twice the budget is reported INCONCLUSIVE")

@@ -61,7 +61,7 @@ This writes a spec for `mysolver.integrate` with the step counts filled in. Fill
 physverify run my_spec.py --html report.html   # a web page with convergence plots
 physverify run my_spec.py --json -             # machine-readable output
 physverify run my_spec.py --budget 60          # at most about a minute per check
-pytest my_spec.py                              # each check becomes a pytest test
+pytest verify_solver.py                        # each check becomes a pytest test (the file name must start with verify_)
 ```
 
 ## What if my code has no source-term hook?

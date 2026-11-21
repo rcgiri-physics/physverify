@@ -1,8 +1,18 @@
 # Changelog
 
-## Unreleased
+## 0.9.1 (2026-11-21)
 
+Fixes for checks that could report success when they should not, found by an outside review of 0.9.0. Each case below gave PASS or EXACT in 0.9.0 and now fails with a message that says why.
+
+- **`check_order` with `atol`:** when every error was below the noise floor, the result was EXACT without comparing the finest error with `atol` (errors 5e-13 and 4e-13 with `atol=1e-14` were accepted). `atol` is now enforced there too.
+- **Non-finite coefficients:** `check_tableau` (including `c`, `embedded`, `error_weights`), `check_dense_output`, `check_additive` and `check_rosenbrock` (including `embedded`, `c`, `d` and the dense weights) now fail on NaN or inf coefficients, and on any NaN residual. Before, a NaN could make a condition look satisfied: forward Euler passed with `c=[NaN]`, and dense output with all-NaN weights passed as order 2.
+- **`check_additive` part counts:** the numbers of matrices `As`, weights `bs` and (when given) nodes `cs` must agree. Two matrices with one weight vector passed and were reported as an order-1 pair.
+- **Dense output sampled at both endpoints:** the default thetas for `check_dense_output`, `dense_residuals` and `rosenbrock_dense_residuals` are now 0, 0.1, ..., 1 (were 0.1, ..., 1), so a wrong b(0) fails. The message lists the sampled thetas and says the order holds at those points. **A table with a wrong b(0) that passed in 0.9.0 now fails.**
+- **`physverify run --strict`:** new option; any SKIP exits 1, for a CI gate where every check must run. Without it, a run in which every check was skipped still exits 0 but says on stderr that nothing was verified. The MCP `run_checks` result starts with a warning when no check was executed.
+- **Docs:** pytest collects only files named `verify_*.py` (getting started showed `pytest my_spec.py`, which collected nothing); the CI guide and the exit codes now describe SKIP correctly.
 - Docs: the census tables are published as the dataset runge-kutta-catalog (doi:10.5281/zenodo.24412889); linked from the README, the docs home, the census page and the Runge-Kutta page.
+
+Not addressed: on one restricted Windows runner the reviewer saw a timed-out solver's child process survive `taskkill` (Access denied); GitHub-hosted Windows runs pass.
 
 ## 0.9.0 (2026-11-21)
 

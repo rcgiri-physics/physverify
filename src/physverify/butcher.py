@@ -20,6 +20,33 @@ import numpy as np
 from .checks import FAIL, PASS, Result
 
 
+def _nonfinite(prefix: str, **arrays) -> Result | None:
+    """FAIL naming the inputs that hold NaN or inf, else None. A NaN coefficient makes every comparison with
+    tol False, so without this check a NaN residual could pass as a satisfied condition (review of 0.9.0)."""
+    bad = []
+    for name, x in arrays.items():
+        if x is None or callable(x):
+            continue
+        try:
+            arr = np.asarray(x, dtype=float)
+        except (TypeError, ValueError):
+            continue  # ragged input is left to the shape checks
+        if not np.all(np.isfinite(arr)):
+            bad.append(name)
+    if bad:
+        return Result(FAIL, prefix + f"non-finite coefficients (NaN or inf) in {', '.join(bad)}: invalid input,"
+                                     " no order conditions were checked")
+    return None
+
+
+def _residuals_finite(prefix: str, values) -> Result | None:
+    vals = np.asarray(list(values), dtype=float)
+    if not np.all(np.isfinite(vals)):
+        return Result(FAIL, prefix + "a residual of the order conditions is NaN or inf, so the conditions cannot be"
+                                     " said to hold: check the coefficients for NaN or overflow")
+    return None
+
+
 @cache
 def trees(order: int) -> tuple:
     """All rooted trees with `order` vertices, each a sorted tuple of child subtrees."""
@@ -294,12 +321,18 @@ def check_tableau(A, b, c=None, *, claimed: int, label: str = "", tol: float = 1
                     embedded = b - e.
     A table stored as s x (s - 1), or with an FSAL stage of weight 0, is padded first (`square_tableau`).
     """
+    prefix = f"{label}: " if label else ""
+    bad = _nonfinite(prefix, A=A, b=b, c=c, embedded=embedded, error_weights=error_weights)
+    if bad:
+        return bad
     A, b, c = square_tableau(A, b, c)
     top = max(max_order or claimed + 1, claimed)
     res = order_residuals(A, b, top)
+    bad = _residuals_finite(prefix, res.values())
+    if bad:
+        return bad
     p = tableau_order(A, b, max_order=top, tol=tol)
     shown = ", ".join(f"{q}: {r:.1e}" for q, r in res.items())
-    prefix = f"{label}: " if label else ""
     notes, fails = [], []
     if c is not None:
         rs = float(np.max(np.abs(np.asarray(A, float).sum(axis=1) - np.asarray(c, float))))
@@ -420,6 +453,10 @@ def check_tableau(A, b, c=None, *, claimed: int, label: str = "", tol: float = 1
 # at a single theta. A dense output of order q gives errors O(h^(q+1)) per step, so between steps the result is
 # only as good as min(p, q): the torchdiffeq bosh3 midpoint (order 1) made outputs 4e4 x the tolerance.
 
+# both endpoints: b(0) must reproduce y0 and b(1) the step (an interval from 0.1 missed a wrong b(0); review of 0.9.0)
+DEFAULT_THETAS = np.linspace(0.0, 1.0, 11)
+
+
 def _dense_table(A, n_weights, b=None):
     """A made square, and extended by the FSAL stage (row b) when the weights have one more entry than A has
     stages, as SciPy stores RK45.P. A table stored as s x (s - 1) is padded like `square_tableau`."""
@@ -442,7 +479,7 @@ def dense_residuals(A, b_of_theta, *, max_order: int = 5, thetas=None, b=None) -
     if thetas is None:
         if not callable(b_of_theta):
             raise ValueError("a fixed weight vector is the output at one theta: pass thetas=[theta]")
-        thetas = np.linspace(0.1, 1.0, 10)
+        thetas = DEFAULT_THETAS
     get = b_of_theta if callable(b_of_theta) else (lambda th: b_of_theta)
     sizes = {np.asarray(get(th), dtype=float).size for th in thetas}
     A = _dense_table(A, max(sizes), b)
@@ -456,7 +493,8 @@ def dense_residuals(A, b_of_theta, *, max_order: int = 5, thetas=None, b=None) -
             bw = np.asarray(get(th), dtype=float)
             w[:bw.size] = bw
             for t in trees(q):
-                r = max(r, abs(float(w @ _phi(t, A, e)) - th ** q / _gamma(t)))
+                d = abs(float(w @ _phi(t, A, e)) - th ** q / _gamma(t))
+                r = d if not np.isfinite(d) or not np.isfinite(r) else max(r, d)
         out[q] = r
     return out
 
@@ -476,15 +514,23 @@ def check_dense_output(A, b_of_theta, *, claimed: int, label: str = "", thetas=N
     """PASS when the continuous extension (or one point value, with `thetas=[theta]`) has at least the claimed
     order on every theta given; FAIL with the residuals otherwise. A fixed weight vector needs `thetas=[theta]`
     (ValueError otherwise). Weights over an extra FSAL stage (SciPy's P) need `b`, the step's weights."""
+    prefix = f"{label}: " if label else ""
+    bad = _nonfinite(prefix, A=A, b=b, weights=b_of_theta)
+    if bad:
+        return bad
     res = dense_residuals(A, b_of_theta, max_order=claimed + 1, thetas=thetas, b=b)
+    bad = _residuals_finite(prefix + "dense output: ", res.values())
+    if bad:
+        return bad
+    tested = "theta = " + ", ".join(f"{float(t):g}" for t in (DEFAULT_THETAS if thetas is None else thetas))
     q = max((p for p in range(claimed + 2) if all(res[k] <= tol for k in range(1, p + 1))), default=0)
     shown = ", ".join(f"{p}: {r:.1e}" for p, r in res.items())
-    prefix = f"{label}: " if label else ""
     where = "the point value" if thetas is not None and len(thetas) == 1 else "the dense output"
     if q < claimed:
         return Result(FAIL, prefix + f"{where} should have order {claimed} but its conditions hold only up to {q}"
-                                     f" (largest residual per order: {shown})")
-    return Result(PASS, prefix + f"{where} has order {q if q <= claimed else f'at least {q}'} (claimed {claimed}; {shown})")
+                                     f" (largest residual per order: {shown}; tested at {tested})")
+    return Result(PASS, prefix + f"{where} has order {q if q <= claimed else f'at least {q}'} at the sampled points"
+                                 f" {tested} (claimed {claimed}; {shown})")
 
 
 # --- additive (IMEX, ARK) methods -------------------------------------------------------------------
@@ -543,9 +589,23 @@ def check_additive(As, bs, cs=None, *, claimed: int, label: str = "", tol: float
     If `cs` is given, each part's row sums must equal its c, and the parts' c must agree with each other
     (the usual assumption of the coupling conditions; a pair with different nodes needs more conditions
     than are checked here, so it is reported)."""
+    prefix = f"{label}: " if label else ""
+    if len(As) != len(bs) or (cs is not None and len(cs) != len(As)):
+        counts = f"{len(As)} coefficient matrices and {len(bs)} weight vectors"
+        if cs is not None:
+            counts += f" and {len(cs)} node vectors"
+        return Result(FAIL, prefix + f"{counts}: every part needs its own A and b (and c); invalid input, nothing checked")
+    if len(As) < 1:
+        return Result(FAIL, prefix + "no parts given; nothing checked")
+    bad = _nonfinite(prefix, **{f"A{v + 1}": A for v, A in enumerate(As)}, **{f"b{v + 1}": b for v, b in enumerate(bs)},
+                     **({f"c{v + 1}": c for v, c in enumerate(cs)} if cs is not None else {}))
+    if bad:
+        return bad
     top = max(max_order or claimed + 1, claimed)
     res = additive_order_residuals(As, bs, top)
-    prefix = f"{label}: " if label else ""
+    bad = _residuals_finite(prefix, [x for pair in res.values() for x in pair])
+    if bad:
+        return bad
     p_all = p_pure = 0
     for q, (ra, rp) in res.items():
         if rp <= tol and p_pure == q - 1:
@@ -651,11 +711,11 @@ def rosenbrock_residuals(alpha, gamma, b, max_order: int = 5, *, w_method: bool 
 def rosenbrock_dense_residuals(alpha, gamma, b_of_theta, *, max_order: int = 5, thetas=None,
                                w_method: bool = False) -> dict:
     """{order: largest residual} of the dense output over the thetas (default 0.1, 0.2, ..., 1). `b_of_theta` is
-    a callable theta -> weights, or a fixed vector with `thetas=[theta]` (one point value)."""
+    a callable theta -> weights, or a fixed vector with `thetas=[theta]` (one point value). Default thetas 0, 0.1, ..., 1."""
     if thetas is None:
         if not callable(b_of_theta):
             raise ValueError("a fixed weight vector is the output at one theta: pass thetas=[theta]")
-        thetas = np.linspace(0.1, 1.0, 10)
+        thetas = DEFAULT_THETAS
     get = b_of_theta if callable(b_of_theta) else (lambda th: b_of_theta)
     out = {p: 0.0 for p in range(1, max_order + 1)}
     for th in thetas:
@@ -679,11 +739,19 @@ def check_rosenbrock(alpha, gamma, b, *, claimed: int, label: str = "", w_method
     to first order (Boost.odeint rosenbrock4 stores d4 = +0.0362 for RODAS's -0.0362, 2026).
 
     `dense` with `claimed_dense`: the dense-output weights b(theta) (a callable, or one vector with `thetas=[theta]`),
-    checked for that order at every theta (default 0.1, ..., 1). Codes that store the interpolant in transformed form
+    checked for that order at every theta (default 0, 0.1, ..., 1). Codes that store the interpolant in transformed form
     (Rodas: y0 + theta (y1 - y0) + theta (theta - 1)(...)) must be converted to weights on the k_i first."""
     top = max(max_order or claimed + 1, claimed)
     kind = "W-method" if w_method else "Rosenbrock (exact Jacobian)"
     prefix = f"{label}: " if label else ""
+    bad = _nonfinite(prefix, alpha=alpha, gamma=gamma, b=b, embedded=embedded, c=c, d=d, dense=dense)
+    if bad:
+        return bad
+    if callable(dense):
+        for th in (DEFAULT_THETAS if thetas is None else thetas):
+            bad = _nonfinite(prefix, **{f"dense weights at theta={float(th):g}": dense(th)})
+            if bad:
+                return bad
 
     def order_of(bb):
         res = rosenbrock_residuals(alpha, gamma, bb, top, w_method=w_method)

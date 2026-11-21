@@ -227,7 +227,13 @@ def _run_checks_tool(arguments: dict) -> dict:
         return {"content": [{"type": "text", "text": f"run_checks: {exc}"}], "isError": True}
     report = run_specs_isolated(specs, timeout)
     failed = bool(report["summary"]["not_ok"] or report["load_errors"])
-    text = (failure_summary(report) + "\n\n" if failed else "") + json.dumps(report, indent=2)
+    s = report["summary"]
+    warn = ""
+    if not report["load_errors"] and s["total"] == s.get("skipped", 0):
+        # isError stays False (the tool call itself worked), so say it in the text a reader sees first
+        warn = (f"WARNING: no check was executed ({s['total']} defined, {s.get('skipped', 0)} skipped);"
+                " nothing was verified.\n\n")
+    text = warn + (failure_summary(report) + "\n\n" if failed else "") + json.dumps(report, indent=2)
     return {"content": [{"type": "text", "text": text}], "isError": False}
 
 

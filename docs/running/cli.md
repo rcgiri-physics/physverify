@@ -18,7 +18,7 @@ physverify run my_spec.py --markdown summary.md   # appends a table (for $GITHUB
 physverify run my_spec.py --quiet
 ```
 
-Exit codes: 0 when no check fails (PASS, EXACT or SKIP), 1 when any check fails, is INCONCLUSIVE or raises, 2 when a spec cannot be loaded or a pattern matches nothing.
+Exit codes: 0 when no check fails (PASS, EXACT or SKIP), 1 when any check fails, is INCONCLUSIVE or raises, 2 when a spec cannot be loaded, returns no checks, or a pattern matches nothing. A run in which every check was skipped still exits 0 but says on stderr that nothing was verified; with `--strict`, any SKIP exits 1, for a CI gate where every check must run.
 
 ## SKIP and time budget
 
@@ -116,4 +116,4 @@ Judges one suspected defect: the claim file defines `CLAIM`, a `control()` check
 
 ## pytest
 
-With physverify installed, `pytest my_spec.py` turns each check into a pytest test (SKIP becomes a pytest skip). See [Continuous integration](../ci.md).
+With physverify installed, `pytest verify_my_spec.py` turns each check into a pytest test (SKIP becomes a pytest skip; pytest collects only files whose names start with `verify_`). See [Continuous integration](../ci.md).
