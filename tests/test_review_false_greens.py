@@ -10,7 +10,12 @@ import sys
 from math import nan
 
 from physverify import check_order
-from physverify.butcher import check_additive, check_dense_output, check_rosenbrock, check_tableau
+from physverify.butcher import (
+    check_additive,
+    check_dense_output,
+    check_rosenbrock,
+    check_tableau,
+)
 
 
 def test_atol_enforced_below_floor():
