@@ -5,7 +5,7 @@ from .mms import ManufacturedODE, mms_order_study, zero_source
 from .order import check_exact, check_order, fit_order, pairwise_orders
 from .studies import invariant_study, ode_checks, patch_study, reference_study
 
-__version__ = "0.9.0"
+__version__ = "0.9.1"
 
 __all__ = [
     "Check",
