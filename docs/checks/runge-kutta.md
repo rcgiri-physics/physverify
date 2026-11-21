@@ -52,7 +52,7 @@ Some codes store the error weights b - embedded instead (the local error is h * 
 
 ## Dense output
 
-`check_dense_output(A, b_of_theta, claimed=q)` checks a continuous extension y0 + h sum b_i(theta) k_i: for every tree up to order q and theta in [0, 1], sum b_i(theta) Phi_i(t) = theta^|t| / gamma(t) (Hairer, Norsett and Wanner I, sec. II.6). `b_of_theta` is a function of theta; for one point value, such as the midpoint some codes feed into an interpolating polynomial, pass the weights and `thetas=[0.5]`. Values between steps are only as accurate as this order: a midpoint value of order 1 in a third-order solver made its outputs 4e4 times the tolerance. `dense_order` returns the number. A fixed weight vector needs `thetas=[theta]`; weights over an extra FSAL stage, as SciPy stores `RK45.P`, need `b=`, the step's weights.
+`check_dense_output(A, b_of_theta, claimed=q)` checks a continuous extension y0 + h sum b_i(theta) k_i: for every tree up to order q and theta in [0, 1], sum b_i(theta) Phi_i(t) = theta^|t| / gamma(t) (Hairer, Norsett and Wanner I, sec. II.6). `b_of_theta` is a function of theta; for one point value, such as the midpoint some codes feed into an interpolating polynomial, pass the weights and `thetas=[0.5]`. Values between steps are only as accurate as this order: a midpoint value of order 1 in a third-order solver made its outputs 4e4 times the tolerance. It is checked at sampled points, by default theta = 0, 0.1, ..., 1 (both endpoints included), and the message lists them; pass `thetas=` for others. `dense_order` returns the number. A fixed weight vector needs `thetas=[theta]`; weights over an extra FSAL stage, as SciPy stores `RK45.P`, need `b=`, the step's weights.
 
 ## Rosenbrock and W-methods
 

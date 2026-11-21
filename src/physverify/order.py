@@ -168,6 +168,12 @@ def check_order(
 
     measurable = errs > floor
     if not measurable.any():
+        if atol is not None:
+            base["acceptance"] += f", and finest error at most {atol:g}"
+            if errs[-1] > atol:
+                # the floor decides whether a slope can be measured; atol is the caller's accuracy requirement
+                return OrderResult(FAIL, f"error below the noise floor {floor:g} at every resolution, but the finest"
+                                         f" error {errs[-1]:.3g} is above the absolute tolerance {atol:g}", **base)
         return OrderResult(EXACT, f"error below {floor:g} at every resolution; order not measurable", **base)
 
     h_m, e_m = hs[measurable], errs[measurable]

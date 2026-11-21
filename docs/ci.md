@@ -40,7 +40,7 @@ jobs:
 
 Which tag to use: `@v0.9.0` runs exactly that version until you change it. `@v0` always runs the newest 0.x release, so you get fixes (and new checks, which can turn a passing job red) without editing the workflow.
 
-The job fails when any check is not PASS or EXACT, or when no spec matches. The result table appears on the run's summary page, and an HTML report with convergence plots is uploaded as an artifact.
+The job fails when any check fails, is INCONCLUSIVE or raises, or when no spec matches. A SKIP (an optional dependency missing) does not fail the job; run `physverify run --strict` yourself when every check must execute. The result table appears on the run's summary page, and an HTML report with convergence plots is uploaded as an artifact.
 
 Inputs:
 
