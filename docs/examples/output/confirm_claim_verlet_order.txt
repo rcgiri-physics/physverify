@@ -1,5 +1,5 @@
 rejected (impact: used): the control passed and the check passed
-  control  EXACT        free particle (omega = 0): straight-line motion: error below 1e-12 at every resolution; order not measurable
+  control  EXACT        free particle (omega = 0): straight-line motion: error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)
   check    PASS         velocity Verlet is second order on the harmonic oscillator (omega = 2): observed order 2.00 (expected 2)
 claim: line 13 uses the old acceleration in the velocity update, so the method is only first order (verlet.py:13, from an AI code review (example))
 reference: Hairer, Lubich and Wanner, Geometric Numerical Integration, sec. I.1.4: Stormer-Verlet is second order

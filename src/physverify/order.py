@@ -174,7 +174,8 @@ def check_order(
                 # the floor decides whether a slope can be measured; atol is the caller's accuracy requirement
                 return OrderResult(FAIL, f"error below the noise floor {floor:g} at every resolution, but the finest"
                                          f" error {errs[-1]:.3g} is above the absolute tolerance {atol:g}", **base)
-        return OrderResult(EXACT, f"error below {floor:g} at every resolution; order not measurable", **base)
+        return OrderResult(EXACT, f"error below {floor:g} at every resolution; order not measurable (if the reference"
+                                  " values were computed by the code under test, this shows nothing)", **base)
 
     h_m, e_m = hs[measurable], errs[measurable]
     if len(e_m) < 2:
@@ -204,7 +205,8 @@ def check_order(
     else:
         near_floor = 0
     h_f, e_f = h_m[-fit_points:], e_m[-fit_points:]
-    p = fit_order(h_f, e_f)
+    p, se = fit_order_error(h_f, e_f)
+    distinct = len(np.unique(h_f))
     if p < expected - tol_low:
         msg = f"observed order {p:.2f} is below the expected {expected:g}"
         pairs = pairwise_orders(h_f, e_f)
@@ -222,6 +224,16 @@ def check_order(
     else:
         msg = f"observed order {p:.2f} (expected {expected:g})"
         status = PASS
+        # a PASS is only as strong as the data behind it: say when it is thin
+        if distinct < len(h_f):
+            msg += (f"; the fit used {len(h_f)} points but only {distinct} distinct step sizes (repeated step sizes"
+                    " are not independent evidence)")
+        if distinct <= 2:
+            msg += ("; with two step sizes the line passes through both points, so nothing checks that the error"
+                    " follows a power law: add a third resolution")
+        elif np.isfinite(se) and se > min(tol_low, tol_high):
+            msg += (f"; the standard error of the fitted order ({se:.2f}) is larger than the tolerance, so the data"
+                    " barely constrain it: add resolutions")
     if near_floor:
         msg += (f"; {near_floor} finest resolution(s) within a factor 100 of the noise floor ({floor:.2g}) were left"
                 " out of the fit as round-off")
@@ -236,4 +248,4 @@ def check_order(
             else:
                 msg += f"; the finest error {finest:.3g} is also above the absolute tolerance {atol:g}"
             status = FAIL
-    return OrderResult(status, msg, fitted=p, **base)
+    return OrderResult(status, msg, fitted=p, fitted_se=se, **base)

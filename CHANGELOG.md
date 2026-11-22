@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- **`check_order` says when a PASS rests on little data:** a PASS from only two distinct step sizes, a fit with repeated step sizes, or a fitted order whose standard error is wider than the tolerance now says so in the message. The standard error is in `OrderResult.fitted_se` and in the JSON report as `observed_order_se`. EXACT now notes that it shows nothing if the reference values came from the code under test.
+
 ## 0.9.1 (2026-11-21)
 
 Fixes for checks that could report success when they should not, found by an outside review of 0.9.0. Each case below gave PASS or EXACT in 0.9.0 and now fails with a message that says why.

@@ -98,6 +98,7 @@ def outcome_to_dict(o: Outcome) -> dict:
     if isinstance(o.result, OrderResult):
         d["expected_order"] = _number(o.result.expected)
         d["observed_order"] = _number(o.result.fitted)
+        d["observed_order_se"] = _number(o.result.fitted_se)
         d["h"] = [_number(h) for h in o.result.hs]
         d["error"] = [_number(e) for e in o.result.errors]
         if o.result.acceptance:
