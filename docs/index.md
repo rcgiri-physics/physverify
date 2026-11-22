@@ -57,7 +57,7 @@ Each check reports **PASS**, **FAIL**, **EXACT** (reproduced to round-off), **IN
 
 ![Of 119 claims checked on repositories tested clean: 40 changed a result, 51 were real but minor, 10 were wrong, 18 stayed open](images/claim-outcomes.svg)
 
-- **Seeded bugs:** of 37 bugs added one at a time to five small solvers, it caught 35, with no false alarms on the bug-free versions. The bugs and the checks were written by the same person, so this shows the tool works as designed; it is not a promise about other code.
+- **Seeded bugs:** of 37 bugs added one at a time to five small solvers, it caught all 37 (two of them only after checks were added for those two), with no false alarms on the bug-free versions. The bugs and the checks were written by the same person, so this shows the tool works as designed; it is not a promise about other code.
 - **Public repositories:** it was tried on more than 500 public physics repositories in a locked-down container and found confirmed bugs in some of them; see [Results on real code](results.md).
 
 ## Where to go next

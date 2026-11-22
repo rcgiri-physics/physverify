@@ -1,9 +1,9 @@
 | Strategy | Bugs caught | Missed | False alarms on baselines | Runtime (s) |
 |---|---|---|---|---|
-| plain tests | 27 of 37 | 10 | 0 of 5 | 10.2 |
-| reference only | 26 of 37 | 11 | 0 of 5 | 16.1 |
-| convergence only | 27 of 37 | 10 | 0 of 5 | 9.3 |
-| full suite | 35 of 37 | 2 | 0 of 5 | 29.6 |
+| plain tests | 27 of 37 | 10 | 0 of 5 | 7.3 |
+| reference only | 28 of 37 | 9 | 0 of 5 | 13.5 |
+| convergence only | 27 of 37 | 10 | 0 of 5 | 16.4 |
+| full suite | 37 of 37 | 0 | 0 of 5 | 33.1 |
 
 | Problem | Bug | plain tests | reference only | convergence only | full suite |
 |---|---|---|---|---|---|
@@ -41,8 +41,8 @@
 | heat1d | source_time_shift | **missed** | **missed** | **missed** | caught |
 | sod | gamma_wrong | caught | caught | **missed** | caught |
 | sod | nonconservative_momentum | **missed** | **missed** | **missed** | caught |
-| sod | wave_speed_without_sound | **missed** | **missed** | **missed** | **missed** |
+| sod | wave_speed_without_sound | **missed** | caught | **missed** | caught |
 | sod | last_step_not_clipped | **missed** | **missed** | **missed** | caught |
-| sod | reflective_boundary | **missed** | **missed** | **missed** | **missed** |
+| sod | reflective_boundary | **missed** | caught | **missed** | caught |
 
 Runtimes depend on the machine; the other columns do not (the checks are deterministic).

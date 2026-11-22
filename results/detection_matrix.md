@@ -39,12 +39,12 @@
 | sod | (none) | n/a | ok | ok | n/a | n/a | baseline (all should pass) |
 | sod | gamma_wrong | n/a | FLAGGED | FLAGGED | n/a | n/a | reference |
 | sod | nonconservative_momentum | n/a | no | FLAGGED | n/a | n/a | invariant |
-| sod | wave_speed_without_sound | n/a | no | no | n/a | n/a | none (blind spot) |
+| sod | wave_speed_without_sound | n/a | FLAGGED | no | n/a | n/a | reference |
 | sod | last_step_not_clipped | n/a | no | FLAGGED | n/a | n/a | invariant |
-| sod | reflective_boundary | n/a | no | no | n/a | n/a | none (blind spot) |
+| sod | reflective_boundary | n/a | FLAGGED | no | n/a | n/a | reference |
 
-Bugs seeded: 37. Flagged by at least one check: 35. Missed by all: 2 (sod/wave_speed_without_sound, sod/reflective_boundary).
-Of the 35 flagged: 35 by at least one FAIL, 0 only by INCONCLUSIVE or ERROR.
+Bugs seeded: 37. Flagged by at least one check: 37. Missed by all: 0.
+Of the 37 flagged: 37 by at least one FAIL, 0 only by INCONCLUSIVE or ERROR.
 Bug-free baselines with a false alarm: 0 of 5.
-Bugs flagged per family: mms 27, reference 26, invariant 22, limit 14, patch 27.
-Bugs flagged by that family alone: mms 0, reference 0, invariant 2, limit 2, patch 3.
+Bugs flagged per family: mms 27, reference 28, invariant 22, limit 14, patch 27.
+Bugs flagged by that family alone: mms 0, reference 2, invariant 2, limit 2, patch 3.

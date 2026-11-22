@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- **Benchmark: the two seeded-bug misses are closed.** The Sod solver gains two checks from linear acoustics: an acoustic wave in a fluid at rest (catches Rusanov dissipation without the sound speed, which makes the scheme unstable there) and an acoustic pulse leaving through an open end (catches a reflecting boundary). The full suite now flags 37 of 37 seeded bugs; these two checks were written after the misses were known, which the docs say.
+
 ## 0.9.1 (2026-11-21)
 
 Fixes for checks that could report success when they should not, found by an outside review of 0.9.0. Each case below gave PASS or EXACT in 0.9.0 and now fails with a message that says why.

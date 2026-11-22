@@ -134,7 +134,7 @@ These show that the defects were real; they are not a bug rate for physics code.
 
 ## How well it works
 
-- **Seeded bugs:** of 37 bugs added one at a time to five small solvers, the checks flagged 35 (plain "compare with one answer" tests: 27), with no false alarms. The same person wrote the bugs and the checks, so this shows the tool works as designed, not how it does on other code. `python scripts/reproduce_all.py` regenerates the tables.
+- **Seeded bugs:** of 37 bugs added one at a time to five small solvers, the checks flagged all 37 (two of them only after checks were added for those two; plain "compare with one answer" tests: 27), with no false alarms. The same person wrote the bugs and the checks, so this shows the tool works as designed, not how it does on other code. `python scripts/reproduce_all.py` regenerates the tables.
 - **AI review claims on 100 repositories (2026-11):** five AI reviewers reviewed 100 public physics repositories. On the 50 that earlier testing had found clean, 119 review claims were each checked by a run: 40 changed a result, 51 were real but minor, 10 were wrong and 18 could not be settled. Counts hold for this sample only; the labels come from two automated checkers following written rules ([preprint, doi:10.5281/zenodo.24224433](https://doi.org/10.5281/zenodo.24224433)).
 - **Earlier testing of public repositories (October 2026):** of the first 74 defects reported to authors, 14 were found by a physverify check as such, 11 by running the code at all, and the rest by each repository's test script or by reading ([ledger](https://github.com/rcgiri-physics/physverify/blob/main/results/corpus/LEDGER.md), [results](https://rcgiri-physics.github.io/physverify/results/)).
 

@@ -4,7 +4,7 @@
 
 To test physverify itself, 37 bugs were added one at a time to five small solvers (projectile, double pendulum, planet orbit, heat equation, shock tube):
 
-- **35 of 37** bugs were caught; plain "compare with one answer" tests caught 27.
+- **37 of 37** bugs were caught (two of them only after checks were added for those two); plain "compare with one answer" tests caught 27.
 - **No false alarms** on the bug-free versions.
 - For the Monte Carlo checks, all 21 seeded bugs were caught, with no false alarms.
 
