@@ -40,6 +40,7 @@ class Result:
 class OrderResult(Result):
     expected: float = float("nan")
     fitted: float = float("nan")
+    fitted_se: float = float("nan")  # standard error of the fitted order; nan with fewer than three fit points
     hs: tuple = ()
     errors: tuple = ()
     acceptance: str = ""  # the rule a PASS had to meet, in words (reported in the JSON output)

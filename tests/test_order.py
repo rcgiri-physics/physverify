@@ -115,3 +115,32 @@ def test_gci_flags_change_that_does_not_shrink():
         assert g["not_converging"]
         assert math.isnan(g["order"]) and math.isnan(g["gci_fine"])
     assert not gci(1.01, 1.04, 1.16, 2.0)["not_converging"]
+
+
+# issue #8: a PASS should say when it rests on little data
+
+
+def test_pass_from_two_step_sizes_says_so():
+    r = check_order([0.1, 0.05], [1e-2, 2.5e-3], expected=2)
+    assert r.status == PASS and "two step sizes" in r.message and math.isnan(r.fitted_se)
+
+
+def test_repeated_step_sizes_are_not_counted_as_evidence():
+    r = check_order([0.1, 0.1, 0.05, 0.05], [1e-2, 1e-2, 2.5e-3, 2.5e-3], expected=2)
+    assert r.status == PASS and "only 2 distinct step sizes" in r.message
+
+
+def test_wide_standard_error_is_reported():
+    errs = [h**2 * f for h, f in zip(HS, [1.0, 2.2, 0.6, 1.5])]
+    r = check_order(HS, errs, expected=2)
+    assert r.status == PASS and r.fitted_se > 0.3 and "standard error" in r.message
+
+
+def test_clean_pass_gives_small_standard_error_and_no_warning():
+    r = check_order(HS, [3.0 * h**4 for h in HS], expected=4)
+    assert r.status == PASS and r.fitted_se < 1e-10 and r.message == "observed order 4.00 (expected 4)"
+
+
+def test_exact_warns_about_self_made_references():
+    r = check_order(HS, [0.0] * 4, expected=2)
+    assert r.status == EXACT and "computed by the code under test" in r.message
