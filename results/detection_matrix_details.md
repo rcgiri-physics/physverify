@@ -1,15 +1,15 @@
 ### projectile / (baseline)
 - mms [vacuum/rk4] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- reference [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable
+- reference [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)
 - mms [vacuum/rk4 (whole trajectory)] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- invariant [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable
+- invariant [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)
 - patch [vacuum/rk4] EXACT: reproduced to round-off (largest error 1.4e-14), as designed
 - mms [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - reference [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - invariant [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - patch [vacuum/euler] EXACT: reproduced to round-off (largest error 5.7e-14), as designed
 - mms [linear/rk4] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- reference [linear/rk4] PASS: observed order 4.00 (expected 4)
+- reference [linear/rk4] PASS: observed order 4.00 (expected 4); with two step sizes the line passes through both points, so nothing checks that the error follows a power law: add a third resolution
 - mms [linear/rk4 (whole trajectory)] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
 - patch [linear/rk4] EXACT: reproduced to round-off (largest error 1.4e-14), as designed
 - mms [linear/euler] PASS: observed order 1.00 (expected 1)
@@ -52,9 +52,9 @@
 
 ### projectile / linear_drag_missing_mass
 - mms [vacuum/rk4] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- reference [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable
+- reference [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)
 - mms [vacuum/rk4 (whole trajectory)] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- invariant [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable
+- invariant [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)
 - patch [vacuum/rk4] EXACT: reproduced to round-off (largest error 1.4e-14), as designed
 - mms [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - reference [vacuum/euler] PASS: observed order 1.00 (expected 1)
@@ -78,16 +78,16 @@
 
 ### projectile / quad_drag_factor_half
 - mms [vacuum/rk4] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- reference [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable
+- reference [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)
 - mms [vacuum/rk4 (whole trajectory)] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- invariant [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable
+- invariant [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)
 - patch [vacuum/rk4] EXACT: reproduced to round-off (largest error 1.4e-14), as designed
 - mms [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - reference [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - invariant [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - patch [vacuum/euler] EXACT: reproduced to round-off (largest error 5.7e-14), as designed
 - mms [linear/rk4] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- reference [linear/rk4] PASS: observed order 4.00 (expected 4)
+- reference [linear/rk4] PASS: observed order 4.00 (expected 4); with two step sizes the line passes through both points, so nothing checks that the error follows a power law: add a third resolution
 - mms [linear/rk4 (whole trajectory)] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
 - patch [linear/rk4] EXACT: reproduced to round-off (largest error 1.4e-14), as designed
 - mms [linear/euler] PASS: observed order 1.00 (expected 1)
@@ -104,16 +104,16 @@
 
 ### projectile / quad_drag_speed_from_vx
 - mms [vacuum/rk4] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- reference [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable
+- reference [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)
 - mms [vacuum/rk4 (whole trajectory)] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- invariant [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable
+- invariant [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)
 - patch [vacuum/rk4] EXACT: reproduced to round-off (largest error 1.4e-14), as designed
 - mms [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - reference [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - invariant [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - patch [vacuum/euler] EXACT: reproduced to round-off (largest error 5.7e-14), as designed
 - mms [linear/rk4] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- reference [linear/rk4] PASS: observed order 4.00 (expected 4)
+- reference [linear/rk4] PASS: observed order 4.00 (expected 4); with two step sizes the line passes through both points, so nothing checks that the error follows a power law: add a third resolution
 - mms [linear/rk4 (whole trajectory)] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
 - patch [linear/rk4] EXACT: reproduced to round-off (largest error 1.4e-14), as designed
 - mms [linear/euler] PASS: observed order 1.00 (expected 1)
@@ -130,16 +130,16 @@
 
 ### projectile / quad_drag_abs_vx
 - mms [vacuum/rk4] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- reference [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable
+- reference [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)
 - mms [vacuum/rk4 (whole trajectory)] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- invariant [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable
+- invariant [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)
 - patch [vacuum/rk4] EXACT: reproduced to round-off (largest error 1.4e-14), as designed
 - mms [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - reference [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - invariant [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - patch [vacuum/euler] EXACT: reproduced to round-off (largest error 5.7e-14), as designed
 - mms [linear/rk4] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- reference [linear/rk4] PASS: observed order 4.00 (expected 4)
+- reference [linear/rk4] PASS: observed order 4.00 (expected 4); with two step sizes the line passes through both points, so nothing checks that the error follows a power law: add a third resolution
 - mms [linear/rk4 (whole trajectory)] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
 - patch [linear/rk4] EXACT: reproduced to round-off (largest error 1.4e-14), as designed
 - mms [linear/euler] PASS: observed order 1.00 (expected 1)
@@ -156,16 +156,16 @@
 
 ### projectile / landing_no_interp
 - mms [vacuum/rk4] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- reference [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable
+- reference [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)
 - mms [vacuum/rk4 (whole trajectory)] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- invariant [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable
+- invariant [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)
 - patch [vacuum/rk4] EXACT: reproduced to round-off (largest error 1.4e-14), as designed
 - mms [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - reference [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - invariant [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - patch [vacuum/euler] EXACT: reproduced to round-off (largest error 5.7e-14), as designed
 - mms [linear/rk4] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- reference [linear/rk4] PASS: observed order 4.00 (expected 4)
+- reference [linear/rk4] PASS: observed order 4.00 (expected 4); with two step sizes the line passes through both points, so nothing checks that the error follows a power law: add a third resolution
 - mms [linear/rk4 (whole trajectory)] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
 - patch [linear/rk4] EXACT: reproduced to round-off (largest error 1.4e-14), as designed
 - mms [linear/euler] PASS: observed order 1.00 (expected 1)
@@ -182,16 +182,16 @@
 
 ### projectile / angle_not_converted
 - mms [vacuum/rk4] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- reference [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable
+- reference [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)
 - mms [vacuum/rk4 (whole trajectory)] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- invariant [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable
+- invariant [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)
 - patch [vacuum/rk4] EXACT: reproduced to round-off (largest error 1.4e-14), as designed
 - mms [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - reference [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - invariant [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - patch [vacuum/euler] EXACT: reproduced to round-off (largest error 5.7e-14), as designed
 - mms [linear/rk4] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- reference [linear/rk4] PASS: observed order 4.00 (expected 4)
+- reference [linear/rk4] PASS: observed order 4.00 (expected 4); with two step sizes the line passes through both points, so nothing checks that the error follows a power law: add a third resolution
 - mms [linear/rk4 (whole trajectory)] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
 - patch [linear/rk4] EXACT: reproduced to round-off (largest error 1.4e-14), as designed
 - mms [linear/euler] PASS: observed order 1.00 (expected 1)
@@ -208,16 +208,16 @@
 
 ### projectile / euler_extra_step
 - mms [vacuum/rk4] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- reference [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable
+- reference [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)
 - mms [vacuum/rk4 (whole trajectory)] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- invariant [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable
+- invariant [vacuum/rk4] EXACT: error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)
 - patch [vacuum/rk4] EXACT: reproduced to round-off (largest error 1.4e-14), as designed
 - mms [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - reference [vacuum/euler] PASS: observed order 1.00 (expected 1)
 - invariant [vacuum/euler] PASS: observed order 1.01 (expected 1)
 - patch [vacuum/euler] FAIL: expected an exact solution to round-off, but the error reaches 0.075 and shrinks at about order 1.00
 - mms [linear/rk4] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
-- reference [linear/rk4] PASS: observed order 4.00 (expected 4)
+- reference [linear/rk4] PASS: observed order 4.00 (expected 4); with two step sizes the line passes through both points, so nothing checks that the error follows a power law: add a third resolution
 - mms [linear/rk4 (whole trajectory)] PASS: observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off
 - patch [linear/rk4] EXACT: reproduced to round-off (largest error 1.4e-14), as designed
 - mms [linear/euler] PASS: observed order 1.00 (expected 1)
