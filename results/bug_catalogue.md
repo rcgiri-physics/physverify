@@ -331,9 +331,9 @@ Predictions and symptoms were written from reasoning before the checks were run.
 - Expected symptom: wrong wave speeds and plateaus in Sod's problem; the smooth wave has uniform pressure, so it may not see it
 - Predicted to be flagged by: reference
 - Flagged by: invariant, reference
-- Outcome of its 3 checks: 2 FAIL, 1 PASS
+- Outcome of its 5 checks: 4 FAIL, 1 PASS
 - Where it is switched on:
-    - [benchmark/pvbench/problems/sod.py:172](https://github.com/rcgiri-physics/physverify/blob/main/benchmark/pvbench/problems/sod.py#L172): `gamma_flux = 5.0 / 3.0 if "gamma_wrong" in bugs else GAMMA`
+    - [benchmark/pvbench/problems/sod.py:189](https://github.com/rcgiri-physics/physverify/blob/main/benchmark/pvbench/problems/sod.py#L189): `gamma_flux = 5.0 / 3.0 if "gamma_wrong" in bugs else GAMMA`
 
 ## sod / nonconservative_momentum
 
@@ -341,19 +341,19 @@ Predictions and symptoms were written from reasoning before the checks were run.
 - Expected symptom: momentum not conserved. Predicted before running: the Sod reference check too, through a wrong shock speed. Observed: its order falls from 0.63 to 0.43, still inside the wide band a discontinuous solution needs, so only the conservation check flags it
 - Predicted to be flagged by: invariant
 - Flagged by: invariant
-- Outcome of its 3 checks: 1 FAIL, 2 PASS
+- Outcome of its 5 checks: 1 FAIL, 4 PASS
 - Where it is switched on:
-    - [benchmark/pvbench/problems/sod.py:200](https://github.com/rcgiri-physics/physverify/blob/main/benchmark/pvbench/problems/sod.py#L200): `if "nonconservative_momentum" in bugs:`
+    - [benchmark/pvbench/problems/sod.py:217](https://github.com/rcgiri-physics/physverify/blob/main/benchmark/pvbench/problems/sod.py#L217): `if "nonconservative_momentum" in bugs:`
 
 ## sod / wave_speed_without_sound
 
 - Change: the Rusanov dissipation uses |u| instead of |u| + c
-- Expected symptom: predicted before running: oscillations at the discontinuities, flagged by the Sod reference check. Observed: the scheme stayed stable and was slightly more accurate (less dissipation), and it is still in conservation form, so no check flags it. A blind spot: the bug is a stability risk, not a wrong answer on this problem
-- Predicted to be flagged by: nothing (blind spot)
-- Flagged by: nothing
-- Outcome of its 3 checks: 1 EXACT, 2 PASS
+- Expected symptom: predicted before running: oscillations at the discontinuities, flagged by the Sod reference check. Observed: on Sod's problem the scheme stayed stable and was slightly more accurate (less dissipation). An acoustic wave in a fluid at rest (u = 0) exposes it: the dissipation vanishes, the scheme becomes central differences with forward Euler, which is unstable, and the error grows
+- Predicted to be flagged by: reference
+- Flagged by: reference
+- Outcome of its 5 checks: 1 EXACT, 2 FAIL, 2 PASS
 - Where it is switched on:
-    - [benchmark/pvbench/problems/sod.py:196](https://github.com/rcgiri-physics/physverify/blob/main/benchmark/pvbench/problems/sod.py#L196): `wave = np.abs(u) if "wave_speed_without_sound" in bugs else np.abs(u) + c`
+    - [benchmark/pvbench/problems/sod.py:213](https://github.com/rcgiri-physics/physverify/blob/main/benchmark/pvbench/problems/sod.py#L213): `wave = np.abs(u) if "wave_speed_without_sound" in bugs else np.abs(u) + c`
 
 ## sod / last_step_not_clipped
 
@@ -361,14 +361,14 @@ Predictions and symptoms were written from reasoning before the checks were run.
 - Expected symptom: an O(dt) time error, the same order as the scheme's own, so the order studies pass; the conservation check uses the intended time and sees the extra momentum
 - Predicted to be flagged by: invariant
 - Flagged by: invariant
-- Outcome of its 3 checks: 1 FAIL, 2 PASS
+- Outcome of its 5 checks: 1 FAIL, 4 PASS
 
 ## sod / reflective_boundary
 
 - Change: the boundary cells reflect (velocity negated) instead of letting waves out
-- Expected symptom: nothing until a wave reaches a boundary, which does not happen before t_end: a documented blind spot of every check here
-- Predicted to be flagged by: nothing (blind spot)
-- Flagged by: nothing
-- Outcome of its 3 checks: 1 EXACT, 2 PASS
+- Expected symptom: nothing in Sod's problem, where no wave reaches a boundary before t_end. An acoustic pulse sent out through the open end exposes it: the reflected pulse stays in the domain
+- Predicted to be flagged by: reference
+- Flagged by: reference
+- Outcome of its 5 checks: 1 EXACT, 1 FAIL, 3 PASS
 - Where it is switched on:
-    - [benchmark/pvbench/problems/sod.py:183](https://github.com/rcgiri-physics/physverify/blob/main/benchmark/pvbench/problems/sod.py#L183): `if "reflective_boundary" in bugs:`
+    - [benchmark/pvbench/problems/sod.py:200](https://github.com/rcgiri-physics/physverify/blob/main/benchmark/pvbench/problems/sod.py#L200): `if "reflective_boundary" in bugs:`

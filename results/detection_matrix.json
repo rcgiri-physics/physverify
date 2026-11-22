@@ -1,11 +1,11 @@
 {
  "provenance": {
-  "physverify": "0.4.1",
-  "git_commit": "8c9dcf4f98635053864b53a1b5ea7b8c260fd86d",
+  "physverify": "0.9.1",
+  "git_commit": "ba9dedc59c7451421d4706e1d774ef3acee2bd91",
   "python": "3.14.5",
   "numpy": "2.5.2",
   "platform": "Windows-10-10.0.19045-SP0",
-  "date": "2026-10-22T02:06:00+00:00"
+  "date": "2026-11-22T02:48:07+00:00"
  },
  "records": [
   {
@@ -14,9 +14,9 @@
    "family": "mms",
    "check": "vacuum/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0448
+   "seconds": 0.1334
   },
   {
    "problem": "projectile",
@@ -24,9 +24,9 @@
    "family": "reference",
    "check": "vacuum/rk4",
    "status": "EXACT",
-   "message": "error below 1e-12 at every resolution; order not measurable",
+   "message": "error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)",
    "predicted_to_flag": false,
-   "seconds": 0.0573
+   "seconds": 0.0737
   },
   {
    "problem": "projectile",
@@ -34,9 +34,9 @@
    "family": "mms",
    "check": "vacuum/rk4 (whole trajectory)",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0261
+   "seconds": 0.1644
   },
   {
    "problem": "projectile",
@@ -44,9 +44,9 @@
    "family": "invariant",
    "check": "vacuum/rk4",
    "status": "EXACT",
-   "message": "error below 1e-12 at every resolution; order not measurable",
+   "message": "error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)",
    "predicted_to_flag": false,
-   "seconds": 0.0067
+   "seconds": 0.0256
   },
   {
    "problem": "projectile",
@@ -56,7 +56,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.4e-14), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0137
+   "seconds": 0.0391
   },
   {
    "problem": "projectile",
@@ -66,7 +66,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.0212
+   "seconds": 0.3323
   },
   {
    "problem": "projectile",
@@ -76,7 +76,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.1948
+   "seconds": 0.2299
   },
   {
    "problem": "projectile",
@@ -86,7 +86,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.0089
+   "seconds": 0.0059
   },
   {
    "problem": "projectile",
@@ -96,7 +96,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 5.7e-14), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0131
+   "seconds": 0.0125
   },
   {
    "problem": "projectile",
@@ -104,9 +104,9 @@
    "family": "mms",
    "check": "linear/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0242
+   "seconds": 0.0892
   },
   {
    "problem": "projectile",
@@ -114,9 +114,9 @@
    "family": "reference",
    "check": "linear/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); with two step sizes the line passes through both points, so nothing checks that the error follows a power law: add a third resolution",
    "predicted_to_flag": false,
-   "seconds": 0.0641
+   "seconds": 0.0599
   },
   {
    "problem": "projectile",
@@ -124,9 +124,9 @@
    "family": "mms",
    "check": "linear/rk4 (whole trajectory)",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0315
+   "seconds": 0.1003
   },
   {
    "problem": "projectile",
@@ -136,7 +136,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.4e-14), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0158
+   "seconds": 0.0162
   },
   {
    "problem": "projectile",
@@ -146,7 +146,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.0276
+   "seconds": 0.0867
   },
   {
    "problem": "projectile",
@@ -156,7 +156,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.2785
+   "seconds": 0.2125
   },
   {
    "problem": "projectile",
@@ -166,7 +166,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 5.7e-14), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0185
+   "seconds": 0.0139
   },
   {
    "problem": "projectile",
@@ -174,9 +174,9 @@
    "family": "mms",
    "check": "quadratic/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.01 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0242
+   "seconds": 0.0933
   },
   {
    "problem": "projectile",
@@ -184,9 +184,9 @@
    "family": "reference",
    "check": "quadratic/rk4",
    "status": "PASS",
-   "message": "observed order 4.01 (expected 4)",
+   "message": "observed order 4.03 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0635
+   "seconds": 0.0649
   },
   {
    "problem": "projectile",
@@ -194,9 +194,9 @@
    "family": "mms",
    "check": "quadratic/rk4 (whole trajectory)",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.01 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0294
+   "seconds": 0.1008
   },
   {
    "problem": "projectile",
@@ -206,7 +206,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.4e-14), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0164
+   "seconds": 0.0183
   },
   {
    "problem": "projectile",
@@ -216,7 +216,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.0229
+   "seconds": 0.1079
   },
   {
    "problem": "projectile",
@@ -226,7 +226,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.2403
+   "seconds": 0.3882
   },
   {
    "problem": "projectile",
@@ -236,7 +236,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 5.7e-14), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0151
+   "seconds": 0.0154
   },
   {
    "problem": "projectile",
@@ -246,7 +246,7 @@
    "status": "PASS",
    "message": "observed order 2.00 (expected 2)",
    "predicted_to_flag": false,
-   "seconds": 0.0067
+   "seconds": 0.0062
   },
   {
    "problem": "projectile",
@@ -256,7 +256,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 19.6 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0236
+   "seconds": 0.0879
   },
   {
    "problem": "projectile",
@@ -266,7 +266,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 19.6 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0743
+   "seconds": 0.0558
   },
   {
    "problem": "projectile",
@@ -276,7 +276,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 19.6 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0274
+   "seconds": 0.0934
   },
   {
    "problem": "projectile",
@@ -286,7 +286,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 2.72 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.008
+   "seconds": 0.0063
   },
   {
    "problem": "projectile",
@@ -296,7 +296,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 19.6 and shrinks at about order -0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0127
+   "seconds": 0.0139
   },
   {
    "problem": "projectile",
@@ -306,7 +306,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 19.6 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0221
+   "seconds": 0.0846
   },
   {
    "problem": "projectile",
@@ -316,7 +316,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 19.6 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.1828
+   "seconds": 0.1803
   },
   {
    "problem": "projectile",
@@ -326,7 +326,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 2.72 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0055
+   "seconds": 0.0056
   },
   {
    "problem": "projectile",
@@ -336,7 +336,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 19.6 and shrinks at about order -0.00",
    "predicted_to_flag": true,
-   "seconds": 0.018
+   "seconds": 0.0118
   },
   {
    "problem": "projectile",
@@ -346,7 +346,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 19.4 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.033
+   "seconds": 0.0943
   },
   {
    "problem": "projectile",
@@ -356,7 +356,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 19.4 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0564
+   "seconds": 0.054
   },
   {
    "problem": "projectile",
@@ -366,7 +366,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 19.4 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0285
+   "seconds": 0.0928
   },
   {
    "problem": "projectile",
@@ -376,7 +376,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 19.4 and shrinks at about order -0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0152
+   "seconds": 0.0159
   },
   {
    "problem": "projectile",
@@ -386,7 +386,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 19.4 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0221
+   "seconds": 0.1005
   },
   {
    "problem": "projectile",
@@ -396,7 +396,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 19.4 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.2597
+   "seconds": 0.1956
   },
   {
    "problem": "projectile",
@@ -406,7 +406,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 19.4 and shrinks at about order 0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0175
+   "seconds": 0.0132
   },
   {
    "problem": "projectile",
@@ -416,7 +416,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 16.5 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0254
+   "seconds": 0.0948
   },
   {
    "problem": "projectile",
@@ -426,7 +426,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 15.6 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.074
+   "seconds": 0.0667
   },
   {
    "problem": "projectile",
@@ -436,7 +436,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 16.5 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0321
+   "seconds": 0.0945
   },
   {
    "problem": "projectile",
@@ -446,7 +446,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 16.5 and shrinks at about order -0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0171
+   "seconds": 0.0151
   },
   {
    "problem": "projectile",
@@ -456,7 +456,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 16.5 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.027
+   "seconds": 0.09
   },
   {
    "problem": "projectile",
@@ -466,7 +466,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 15.6 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.2596
+   "seconds": 0.2274
   },
   {
    "problem": "projectile",
@@ -476,7 +476,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 16.6 and shrinks at about order 0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0163
+   "seconds": 0.0146
   },
   {
    "problem": "projectile",
@@ -486,7 +486,7 @@
    "status": "ERROR",
    "message": "RuntimeError: projectile never landed within 100 s",
    "predicted_to_flag": true,
-   "seconds": 0.0043
+   "seconds": 0.0041
   },
   {
    "problem": "projectile",
@@ -494,9 +494,9 @@
    "family": "mms",
    "check": "vacuum/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": true,
-   "seconds": 0.0262
+   "seconds": 0.0885
   },
   {
    "problem": "projectile",
@@ -504,9 +504,9 @@
    "family": "reference",
    "check": "vacuum/rk4",
    "status": "EXACT",
-   "message": "error below 1e-12 at every resolution; order not measurable",
+   "message": "error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)",
    "predicted_to_flag": true,
-   "seconds": 0.057
+   "seconds": 0.0518
   },
   {
    "problem": "projectile",
@@ -514,9 +514,9 @@
    "family": "mms",
    "check": "vacuum/rk4 (whole trajectory)",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": true,
-   "seconds": 0.0252
+   "seconds": 0.0866
   },
   {
    "problem": "projectile",
@@ -524,9 +524,9 @@
    "family": "invariant",
    "check": "vacuum/rk4",
    "status": "EXACT",
-   "message": "error below 1e-12 at every resolution; order not measurable",
+   "message": "error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)",
    "predicted_to_flag": false,
-   "seconds": 0.0116
+   "seconds": 0.0064
   },
   {
    "problem": "projectile",
@@ -536,7 +536,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.4e-14), as designed",
    "predicted_to_flag": true,
-   "seconds": 0.0152
+   "seconds": 0.0132
   },
   {
    "problem": "projectile",
@@ -546,7 +546,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": true,
-   "seconds": 0.0262
+   "seconds": 0.0897
   },
   {
    "problem": "projectile",
@@ -556,7 +556,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": true,
-   "seconds": 0.21
+   "seconds": 0.1849
   },
   {
    "problem": "projectile",
@@ -566,7 +566,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.0079
+   "seconds": 0.0056
   },
   {
    "problem": "projectile",
@@ -576,7 +576,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 5.7e-14), as designed",
    "predicted_to_flag": true,
-   "seconds": 0.0121
+   "seconds": 0.0129
   },
   {
    "problem": "projectile",
@@ -586,7 +586,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.0389 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0226
+   "seconds": 0.0871
   },
   {
    "problem": "projectile",
@@ -596,7 +596,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.12 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0557
+   "seconds": 0.0619
   },
   {
    "problem": "projectile",
@@ -606,7 +606,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.0404 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0245
+   "seconds": 0.0983
   },
   {
    "problem": "projectile",
@@ -616,7 +616,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.0182 and shrinks at about order -0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0153
+   "seconds": 0.0131
   },
   {
    "problem": "projectile",
@@ -626,7 +626,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.0412 at the finest level)",
    "predicted_to_flag": true,
-   "seconds": 0.0237
+   "seconds": 0.0863
   },
   {
    "problem": "projectile",
@@ -636,7 +636,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.12 at the finest level)",
    "predicted_to_flag": true,
-   "seconds": 0.2252
+   "seconds": 0.2149
   },
   {
    "problem": "projectile",
@@ -646,7 +646,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.0184 and shrinks at about order 0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0203
+   "seconds": 0.0139
   },
   {
    "problem": "projectile",
@@ -654,9 +654,9 @@
    "family": "mms",
    "check": "quadratic/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.01 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": true,
-   "seconds": 0.0347
+   "seconds": 0.1002
   },
   {
    "problem": "projectile",
@@ -664,9 +664,9 @@
    "family": "reference",
    "check": "quadratic/rk4",
    "status": "PASS",
-   "message": "observed order 4.01 (expected 4)",
+   "message": "observed order 4.03 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": true,
-   "seconds": 0.0811
+   "seconds": 0.0633
   },
   {
    "problem": "projectile",
@@ -674,9 +674,9 @@
    "family": "mms",
    "check": "quadratic/rk4 (whole trajectory)",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.01 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": true,
-   "seconds": 0.0262
+   "seconds": 0.099
   },
   {
    "problem": "projectile",
@@ -686,7 +686,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.4e-14), as designed",
    "predicted_to_flag": true,
-   "seconds": 0.0172
+   "seconds": 0.0166
   },
   {
    "problem": "projectile",
@@ -696,7 +696,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": true,
-   "seconds": 0.0239
+   "seconds": 0.0919
   },
   {
    "problem": "projectile",
@@ -706,7 +706,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": true,
-   "seconds": 0.2553
+   "seconds": 0.2233
   },
   {
    "problem": "projectile",
@@ -716,7 +716,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 5.7e-14), as designed",
    "predicted_to_flag": true,
-   "seconds": 0.0163
+   "seconds": 0.0143
   },
   {
    "problem": "projectile",
@@ -726,7 +726,7 @@
    "status": "PASS",
    "message": "observed order 2.00 (expected 2)",
    "predicted_to_flag": false,
-   "seconds": 0.0053
+   "seconds": 0.0051
   },
   {
    "problem": "projectile",
@@ -734,9 +734,9 @@
    "family": "mms",
    "check": "vacuum/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": true,
-   "seconds": 0.0295
+   "seconds": 0.0915
   },
   {
    "problem": "projectile",
@@ -744,9 +744,9 @@
    "family": "reference",
    "check": "vacuum/rk4",
    "status": "EXACT",
-   "message": "error below 1e-12 at every resolution; order not measurable",
+   "message": "error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)",
    "predicted_to_flag": true,
-   "seconds": 0.069
+   "seconds": 0.0524
   },
   {
    "problem": "projectile",
@@ -754,9 +754,9 @@
    "family": "mms",
    "check": "vacuum/rk4 (whole trajectory)",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": true,
-   "seconds": 0.0287
+   "seconds": 0.0858
   },
   {
    "problem": "projectile",
@@ -764,9 +764,9 @@
    "family": "invariant",
    "check": "vacuum/rk4",
    "status": "EXACT",
-   "message": "error below 1e-12 at every resolution; order not measurable",
+   "message": "error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)",
    "predicted_to_flag": false,
-   "seconds": 0.0064
+   "seconds": 0.0061
   },
   {
    "problem": "projectile",
@@ -776,7 +776,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.4e-14), as designed",
    "predicted_to_flag": true,
-   "seconds": 0.0198
+   "seconds": 0.0145
   },
   {
    "problem": "projectile",
@@ -786,7 +786,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": true,
-   "seconds": 0.023
+   "seconds": 0.0884
   },
   {
    "problem": "projectile",
@@ -796,7 +796,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": true,
-   "seconds": 0.2191
+   "seconds": 0.373
   },
   {
    "problem": "projectile",
@@ -806,7 +806,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.0057
+   "seconds": 0.0351
   },
   {
    "problem": "projectile",
@@ -816,7 +816,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 5.7e-14), as designed",
    "predicted_to_flag": true,
-   "seconds": 0.0144
+   "seconds": 0.0535
   },
   {
    "problem": "projectile",
@@ -824,9 +824,9 @@
    "family": "mms",
    "check": "linear/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": true,
-   "seconds": 0.0225
+   "seconds": 0.2611
   },
   {
    "problem": "projectile",
@@ -834,9 +834,9 @@
    "family": "reference",
    "check": "linear/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); with two step sizes the line passes through both points, so nothing checks that the error follows a power law: add a third resolution",
    "predicted_to_flag": true,
-   "seconds": 0.0625
+   "seconds": 0.1367
   },
   {
    "problem": "projectile",
@@ -844,9 +844,9 @@
    "family": "mms",
    "check": "linear/rk4 (whole trajectory)",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": true,
-   "seconds": 0.0279
+   "seconds": 0.0978
   },
   {
    "problem": "projectile",
@@ -856,7 +856,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.4e-14), as designed",
    "predicted_to_flag": true,
-   "seconds": 0.0189
+   "seconds": 0.0144
   },
   {
    "problem": "projectile",
@@ -866,7 +866,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": true,
-   "seconds": 0.0249
+   "seconds": 0.0888
   },
   {
    "problem": "projectile",
@@ -876,7 +876,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": true,
-   "seconds": 0.2211
+   "seconds": 0.2131
   },
   {
    "problem": "projectile",
@@ -886,7 +886,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 5.7e-14), as designed",
    "predicted_to_flag": true,
-   "seconds": 0.0142
+   "seconds": 0.013
   },
   {
    "problem": "projectile",
@@ -896,7 +896,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.339 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0337
+   "seconds": 0.1059
   },
   {
    "problem": "projectile",
@@ -906,7 +906,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 1.41 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0737
+   "seconds": 0.0729
   },
   {
    "problem": "projectile",
@@ -916,7 +916,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.347 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0276
+   "seconds": 0.1136
   },
   {
    "problem": "projectile",
@@ -926,7 +926,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.0581 and shrinks at about order -0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0156
+   "seconds": 0.0165
   },
   {
    "problem": "projectile",
@@ -936,7 +936,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.338 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.026
+   "seconds": 0.1051
   },
   {
    "problem": "projectile",
@@ -946,7 +946,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 1.41 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.2375
+   "seconds": 0.2279
   },
   {
    "problem": "projectile",
@@ -956,7 +956,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.0591 and shrinks at about order 0.01",
    "predicted_to_flag": true,
-   "seconds": 0.0155
+   "seconds": 0.0191
   },
   {
    "problem": "projectile",
@@ -966,7 +966,7 @@
    "status": "PASS",
    "message": "observed order 2.00 (expected 2)",
    "predicted_to_flag": false,
-   "seconds": 0.0072
+   "seconds": 0.0074
   },
   {
    "problem": "projectile",
@@ -974,9 +974,9 @@
    "family": "mms",
    "check": "vacuum/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": true,
-   "seconds": 0.0209
+   "seconds": 0.1313
   },
   {
    "problem": "projectile",
@@ -984,9 +984,9 @@
    "family": "reference",
    "check": "vacuum/rk4",
    "status": "EXACT",
-   "message": "error below 1e-12 at every resolution; order not measurable",
+   "message": "error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)",
    "predicted_to_flag": true,
-   "seconds": 0.0511
+   "seconds": 0.0658
   },
   {
    "problem": "projectile",
@@ -994,9 +994,9 @@
    "family": "mms",
    "check": "vacuum/rk4 (whole trajectory)",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": true,
-   "seconds": 0.0291
+   "seconds": 0.0969
   },
   {
    "problem": "projectile",
@@ -1004,9 +1004,9 @@
    "family": "invariant",
    "check": "vacuum/rk4",
    "status": "EXACT",
-   "message": "error below 1e-12 at every resolution; order not measurable",
+   "message": "error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)",
    "predicted_to_flag": false,
-   "seconds": 0.0068
+   "seconds": 0.0084
   },
   {
    "problem": "projectile",
@@ -1016,7 +1016,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.4e-14), as designed",
    "predicted_to_flag": true,
-   "seconds": 0.0176
+   "seconds": 0.0135
   },
   {
    "problem": "projectile",
@@ -1026,7 +1026,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": true,
-   "seconds": 0.0204
+   "seconds": 0.091
   },
   {
    "problem": "projectile",
@@ -1036,7 +1036,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": true,
-   "seconds": 0.2296
+   "seconds": 0.18
   },
   {
    "problem": "projectile",
@@ -1046,7 +1046,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.0103
+   "seconds": 0.0056
   },
   {
    "problem": "projectile",
@@ -1056,7 +1056,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 5.7e-14), as designed",
    "predicted_to_flag": true,
-   "seconds": 0.0153
+   "seconds": 0.0115
   },
   {
    "problem": "projectile",
@@ -1064,9 +1064,9 @@
    "family": "mms",
    "check": "linear/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": true,
-   "seconds": 0.0241
+   "seconds": 0.0879
   },
   {
    "problem": "projectile",
@@ -1074,9 +1074,9 @@
    "family": "reference",
    "check": "linear/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); with two step sizes the line passes through both points, so nothing checks that the error follows a power law: add a third resolution",
    "predicted_to_flag": true,
-   "seconds": 0.0632
+   "seconds": 0.0599
   },
   {
    "problem": "projectile",
@@ -1084,9 +1084,9 @@
    "family": "mms",
    "check": "linear/rk4 (whole trajectory)",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": true,
-   "seconds": 0.0238
+   "seconds": 0.1117
   },
   {
    "problem": "projectile",
@@ -1096,7 +1096,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.4e-14), as designed",
    "predicted_to_flag": true,
-   "seconds": 0.0156
+   "seconds": 0.0232
   },
   {
    "problem": "projectile",
@@ -1106,7 +1106,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": true,
-   "seconds": 0.0309
+   "seconds": 0.0887
   },
   {
    "problem": "projectile",
@@ -1116,7 +1116,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": true,
-   "seconds": 0.2531
+   "seconds": 0.2218
   },
   {
    "problem": "projectile",
@@ -1126,7 +1126,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 5.7e-14), as designed",
    "predicted_to_flag": true,
-   "seconds": 0.0145
+   "seconds": 0.0129
   },
   {
    "problem": "projectile",
@@ -1136,7 +1136,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.354 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0252
+   "seconds": 0.1002
   },
   {
    "problem": "projectile",
@@ -1146,7 +1146,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.343 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0751
+   "seconds": 0.0694
   },
   {
    "problem": "projectile",
@@ -1156,7 +1156,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.357 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0267
+   "seconds": 0.0935
   },
   {
    "problem": "projectile",
@@ -1166,7 +1166,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.0344 and shrinks at about order -0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0161
+   "seconds": 0.0156
   },
   {
    "problem": "projectile",
@@ -1176,7 +1176,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.357 at the finest level)",
    "predicted_to_flag": true,
-   "seconds": 0.023
+   "seconds": 0.0894
   },
   {
    "problem": "projectile",
@@ -1186,7 +1186,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.343 at the finest level)",
    "predicted_to_flag": true,
-   "seconds": 0.5155
+   "seconds": 0.2369
   },
   {
    "problem": "projectile",
@@ -1196,7 +1196,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.0349 and shrinks at about order 0.01",
    "predicted_to_flag": true,
-   "seconds": 0.0161
+   "seconds": 0.0158
   },
   {
    "problem": "projectile",
@@ -1206,7 +1206,7 @@
    "status": "PASS",
    "message": "observed order 2.00 (expected 2)",
    "predicted_to_flag": false,
-   "seconds": 0.0057
+   "seconds": 0.0055
   },
   {
    "problem": "projectile",
@@ -1214,9 +1214,9 @@
    "family": "mms",
    "check": "vacuum/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": true,
-   "seconds": 0.0212
+   "seconds": 0.0965
   },
   {
    "problem": "projectile",
@@ -1224,9 +1224,9 @@
    "family": "reference",
    "check": "vacuum/rk4",
    "status": "EXACT",
-   "message": "error below 1e-12 at every resolution; order not measurable",
+   "message": "error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)",
    "predicted_to_flag": false,
-   "seconds": 0.0741
+   "seconds": 0.0572
   },
   {
    "problem": "projectile",
@@ -1234,9 +1234,9 @@
    "family": "mms",
    "check": "vacuum/rk4 (whole trajectory)",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": true,
-   "seconds": 0.0315
+   "seconds": 0.0865
   },
   {
    "problem": "projectile",
@@ -1244,15 +1244,95 @@
    "family": "invariant",
    "check": "vacuum/rk4",
    "status": "EXACT",
-   "message": "error below 1e-12 at every resolution; order not measurable",
+   "message": "error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)",
    "predicted_to_flag": false,
-   "seconds": 0.0068
+   "seconds": 0.008
   },
   {
    "problem": "projectile",
    "bug": "quad_drag_abs_vx",
    "family": "patch",
    "check": "vacuum/rk4",
+   "status": "EXACT",
+   "message": "reproduced to round-off (largest error 1.4e-14), as designed",
+   "predicted_to_flag": true,
+   "seconds": 0.0141
+  },
+  {
+   "problem": "projectile",
+   "bug": "quad_drag_abs_vx",
+   "family": "mms",
+   "check": "vacuum/euler",
+   "status": "PASS",
+   "message": "observed order 1.00 (expected 1)",
+   "predicted_to_flag": true,
+   "seconds": 0.0858
+  },
+  {
+   "problem": "projectile",
+   "bug": "quad_drag_abs_vx",
+   "family": "reference",
+   "check": "vacuum/euler",
+   "status": "PASS",
+   "message": "observed order 1.00 (expected 1)",
+   "predicted_to_flag": false,
+   "seconds": 0.2055
+  },
+  {
+   "problem": "projectile",
+   "bug": "quad_drag_abs_vx",
+   "family": "invariant",
+   "check": "vacuum/euler",
+   "status": "PASS",
+   "message": "observed order 1.00 (expected 1)",
+   "predicted_to_flag": false,
+   "seconds": 0.016
+  },
+  {
+   "problem": "projectile",
+   "bug": "quad_drag_abs_vx",
+   "family": "patch",
+   "check": "vacuum/euler",
+   "status": "EXACT",
+   "message": "reproduced to round-off (largest error 5.7e-14), as designed",
+   "predicted_to_flag": true,
+   "seconds": 0.0167
+  },
+  {
+   "problem": "projectile",
+   "bug": "quad_drag_abs_vx",
+   "family": "mms",
+   "check": "linear/rk4",
+   "status": "PASS",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
+   "predicted_to_flag": true,
+   "seconds": 0.1025
+  },
+  {
+   "problem": "projectile",
+   "bug": "quad_drag_abs_vx",
+   "family": "reference",
+   "check": "linear/rk4",
+   "status": "PASS",
+   "message": "observed order 4.00 (expected 4); with two step sizes the line passes through both points, so nothing checks that the error follows a power law: add a third resolution",
+   "predicted_to_flag": false,
+   "seconds": 0.0627
+  },
+  {
+   "problem": "projectile",
+   "bug": "quad_drag_abs_vx",
+   "family": "mms",
+   "check": "linear/rk4 (whole trajectory)",
+   "status": "PASS",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
+   "predicted_to_flag": true,
+   "seconds": 0.1024
+  },
+  {
+   "problem": "projectile",
+   "bug": "quad_drag_abs_vx",
+   "family": "patch",
+   "check": "linear/rk4",
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.4e-14), as designed",
    "predicted_to_flag": true,
@@ -1262,91 +1342,11 @@
    "problem": "projectile",
    "bug": "quad_drag_abs_vx",
    "family": "mms",
-   "check": "vacuum/euler",
-   "status": "PASS",
-   "message": "observed order 1.00 (expected 1)",
-   "predicted_to_flag": true,
-   "seconds": 0.024
-  },
-  {
-   "problem": "projectile",
-   "bug": "quad_drag_abs_vx",
-   "family": "reference",
-   "check": "vacuum/euler",
-   "status": "PASS",
-   "message": "observed order 1.00 (expected 1)",
-   "predicted_to_flag": false,
-   "seconds": 0.1981
-  },
-  {
-   "problem": "projectile",
-   "bug": "quad_drag_abs_vx",
-   "family": "invariant",
-   "check": "vacuum/euler",
-   "status": "PASS",
-   "message": "observed order 1.00 (expected 1)",
-   "predicted_to_flag": false,
-   "seconds": 0.0079
-  },
-  {
-   "problem": "projectile",
-   "bug": "quad_drag_abs_vx",
-   "family": "patch",
-   "check": "vacuum/euler",
-   "status": "EXACT",
-   "message": "reproduced to round-off (largest error 5.7e-14), as designed",
-   "predicted_to_flag": true,
-   "seconds": 0.0112
-  },
-  {
-   "problem": "projectile",
-   "bug": "quad_drag_abs_vx",
-   "family": "mms",
-   "check": "linear/rk4",
-   "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
-   "predicted_to_flag": true,
-   "seconds": 0.0327
-  },
-  {
-   "problem": "projectile",
-   "bug": "quad_drag_abs_vx",
-   "family": "reference",
-   "check": "linear/rk4",
-   "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
-   "predicted_to_flag": false,
-   "seconds": 0.0613
-  },
-  {
-   "problem": "projectile",
-   "bug": "quad_drag_abs_vx",
-   "family": "mms",
-   "check": "linear/rk4 (whole trajectory)",
-   "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
-   "predicted_to_flag": true,
-   "seconds": 0.0302
-  },
-  {
-   "problem": "projectile",
-   "bug": "quad_drag_abs_vx",
-   "family": "patch",
-   "check": "linear/rk4",
-   "status": "EXACT",
-   "message": "reproduced to round-off (largest error 1.4e-14), as designed",
-   "predicted_to_flag": true,
-   "seconds": 0.0184
-  },
-  {
-   "problem": "projectile",
-   "bug": "quad_drag_abs_vx",
-   "family": "mms",
    "check": "linear/euler",
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": true,
-   "seconds": 0.0289
+   "seconds": 0.0974
   },
   {
    "problem": "projectile",
@@ -1356,7 +1356,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.2301
+   "seconds": 0.2211
   },
   {
    "problem": "projectile",
@@ -1366,7 +1366,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 5.7e-14), as designed",
    "predicted_to_flag": true,
-   "seconds": 0.0154
+   "seconds": 0.0138
   },
   {
    "problem": "projectile",
@@ -1376,7 +1376,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.000503 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0344
+   "seconds": 0.1046
   },
   {
    "problem": "projectile",
@@ -1384,9 +1384,9 @@
    "family": "reference",
    "check": "quadratic/rk4",
    "status": "PASS",
-   "message": "observed order 4.01 (expected 4)",
+   "message": "observed order 4.03 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0651
+   "seconds": 0.0631
   },
   {
    "problem": "projectile",
@@ -1396,7 +1396,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.000503 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.027
+   "seconds": 0.0952
   },
   {
    "problem": "projectile",
@@ -1406,7 +1406,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.0652 and shrinks at about order 0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0209
+   "seconds": 0.016
   },
   {
    "problem": "projectile",
@@ -1416,7 +1416,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": true,
-   "seconds": 0.0311
+   "seconds": 0.1105
   },
   {
    "problem": "projectile",
@@ -1426,7 +1426,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.2542
+   "seconds": 0.2461
   },
   {
    "problem": "projectile",
@@ -1436,7 +1436,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.0662 and shrinks at about order 0.01",
    "predicted_to_flag": true,
-   "seconds": 0.0166
+   "seconds": 0.0163
   },
   {
    "problem": "projectile",
@@ -1446,7 +1446,7 @@
    "status": "PASS",
    "message": "observed order 2.00 (expected 2)",
    "predicted_to_flag": false,
-   "seconds": 0.0072
+   "seconds": 0.0052
   },
   {
    "problem": "projectile",
@@ -1454,9 +1454,9 @@
    "family": "mms",
    "check": "vacuum/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0218
+   "seconds": 0.0894
   },
   {
    "problem": "projectile",
@@ -1464,9 +1464,9 @@
    "family": "reference",
    "check": "vacuum/rk4",
    "status": "EXACT",
-   "message": "error below 1e-12 at every resolution; order not measurable",
+   "message": "error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)",
    "predicted_to_flag": false,
-   "seconds": 0.0505
+   "seconds": 0.0521
   },
   {
    "problem": "projectile",
@@ -1474,9 +1474,9 @@
    "family": "mms",
    "check": "vacuum/rk4 (whole trajectory)",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0282
+   "seconds": 0.0984
   },
   {
    "problem": "projectile",
@@ -1484,9 +1484,9 @@
    "family": "invariant",
    "check": "vacuum/rk4",
    "status": "EXACT",
-   "message": "error below 1e-12 at every resolution; order not measurable",
+   "message": "error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)",
    "predicted_to_flag": false,
-   "seconds": 0.0067
+   "seconds": 0.007
   },
   {
    "problem": "projectile",
@@ -1496,7 +1496,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.4e-14), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0135
+   "seconds": 0.0143
   },
   {
    "problem": "projectile",
@@ -1506,7 +1506,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.0205
+   "seconds": 0.098
   },
   {
    "problem": "projectile",
@@ -1516,7 +1516,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.2329
+   "seconds": 0.1799
   },
   {
    "problem": "projectile",
@@ -1526,7 +1526,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.0064
+   "seconds": 0.0056
   },
   {
    "problem": "projectile",
@@ -1536,7 +1536,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 5.7e-14), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0135
+   "seconds": 0.0144
   },
   {
    "problem": "projectile",
@@ -1544,9 +1544,9 @@
    "family": "mms",
    "check": "linear/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0351
+   "seconds": 0.0894
   },
   {
    "problem": "projectile",
@@ -1554,9 +1554,9 @@
    "family": "reference",
    "check": "linear/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); with two step sizes the line passes through both points, so nothing checks that the error follows a power law: add a third resolution",
    "predicted_to_flag": false,
-   "seconds": 0.0736
+   "seconds": 0.0618
   },
   {
    "problem": "projectile",
@@ -1564,9 +1564,9 @@
    "family": "mms",
    "check": "linear/rk4 (whole trajectory)",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0234
+   "seconds": 0.0891
   },
   {
    "problem": "projectile",
@@ -1576,7 +1576,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.4e-14), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0151
+   "seconds": 0.0137
   },
   {
    "problem": "projectile",
@@ -1586,7 +1586,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.0341
+   "seconds": 0.0874
   },
   {
    "problem": "projectile",
@@ -1596,7 +1596,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.2357
+   "seconds": 0.2105
   },
   {
    "problem": "projectile",
@@ -1606,7 +1606,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 5.7e-14), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0224
+   "seconds": 0.0155
   },
   {
    "problem": "projectile",
@@ -1614,9 +1614,9 @@
    "family": "mms",
    "check": "quadratic/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.01 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0382
+   "seconds": 0.0978
   },
   {
    "problem": "projectile",
@@ -1624,9 +1624,9 @@
    "family": "reference",
    "check": "quadratic/rk4",
    "status": "PASS",
-   "message": "observed order 4.01 (expected 4)",
+   "message": "observed order 4.03 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0994
+   "seconds": 0.0615
   },
   {
    "problem": "projectile",
@@ -1634,9 +1634,9 @@
    "family": "mms",
    "check": "quadratic/rk4 (whole trajectory)",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.01 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0271
+   "seconds": 0.0953
   },
   {
    "problem": "projectile",
@@ -1646,7 +1646,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.4e-14), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0181
+   "seconds": 0.0161
   },
   {
    "problem": "projectile",
@@ -1656,7 +1656,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.0323
+   "seconds": 0.0958
   },
   {
    "problem": "projectile",
@@ -1666,251 +1666,11 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.2673
+   "seconds": 0.235
   },
   {
    "problem": "projectile",
    "bug": "landing_no_interp",
-   "family": "patch",
-   "check": "quadratic/euler",
-   "status": "EXACT",
-   "message": "reproduced to round-off (largest error 5.7e-14), as designed",
-   "predicted_to_flag": false,
-   "seconds": 0.0174
-  },
-  {
-   "problem": "projectile",
-   "bug": "landing_no_interp",
-   "family": "limit",
-   "check": "vacuum/rk4 range",
-   "status": "FAIL",
-   "message": "observed order 1.00 is below the expected 2",
-   "predicted_to_flag": true,
-   "seconds": 0.0065
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "mms",
-   "check": "vacuum/rk4",
-   "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
-   "predicted_to_flag": false,
-   "seconds": 0.021
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "reference",
-   "check": "vacuum/rk4",
-   "status": "EXACT",
-   "message": "error below 1e-12 at every resolution; order not measurable",
-   "predicted_to_flag": false,
-   "seconds": 0.0569
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "mms",
-   "check": "vacuum/rk4 (whole trajectory)",
-   "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
-   "predicted_to_flag": false,
-   "seconds": 0.0293
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "invariant",
-   "check": "vacuum/rk4",
-   "status": "EXACT",
-   "message": "error below 1e-12 at every resolution; order not measurable",
-   "predicted_to_flag": false,
-   "seconds": 0.0079
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "patch",
-   "check": "vacuum/rk4",
-   "status": "EXACT",
-   "message": "reproduced to round-off (largest error 1.4e-14), as designed",
-   "predicted_to_flag": false,
-   "seconds": 0.0118
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "mms",
-   "check": "vacuum/euler",
-   "status": "PASS",
-   "message": "observed order 1.00 (expected 1)",
-   "predicted_to_flag": false,
-   "seconds": 0.0258
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "reference",
-   "check": "vacuum/euler",
-   "status": "PASS",
-   "message": "observed order 1.00 (expected 1)",
-   "predicted_to_flag": false,
-   "seconds": 0.234
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "invariant",
-   "check": "vacuum/euler",
-   "status": "PASS",
-   "message": "observed order 1.00 (expected 1)",
-   "predicted_to_flag": false,
-   "seconds": 0.0057
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "patch",
-   "check": "vacuum/euler",
-   "status": "EXACT",
-   "message": "reproduced to round-off (largest error 5.7e-14), as designed",
-   "predicted_to_flag": false,
-   "seconds": 0.0128
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "mms",
-   "check": "linear/rk4",
-   "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
-   "predicted_to_flag": false,
-   "seconds": 0.0241
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "reference",
-   "check": "linear/rk4",
-   "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
-   "predicted_to_flag": false,
-   "seconds": 0.0606
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "mms",
-   "check": "linear/rk4 (whole trajectory)",
-   "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
-   "predicted_to_flag": false,
-   "seconds": 0.0301
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "patch",
-   "check": "linear/rk4",
-   "status": "EXACT",
-   "message": "reproduced to round-off (largest error 1.4e-14), as designed",
-   "predicted_to_flag": false,
-   "seconds": 0.0158
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "mms",
-   "check": "linear/euler",
-   "status": "PASS",
-   "message": "observed order 1.00 (expected 1)",
-   "predicted_to_flag": false,
-   "seconds": 0.0313
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "reference",
-   "check": "linear/euler",
-   "status": "PASS",
-   "message": "observed order 1.00 (expected 1)",
-   "predicted_to_flag": false,
-   "seconds": 0.2343
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "patch",
-   "check": "linear/euler",
-   "status": "EXACT",
-   "message": "reproduced to round-off (largest error 5.7e-14), as designed",
-   "predicted_to_flag": false,
-   "seconds": 0.0121
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "mms",
-   "check": "quadratic/rk4",
-   "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
-   "predicted_to_flag": false,
-   "seconds": 0.026
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "reference",
-   "check": "quadratic/rk4",
-   "status": "PASS",
-   "message": "observed order 4.01 (expected 4)",
-   "predicted_to_flag": false,
-   "seconds": 0.0722
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "mms",
-   "check": "quadratic/rk4 (whole trajectory)",
-   "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
-   "predicted_to_flag": false,
-   "seconds": 0.0266
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "patch",
-   "check": "quadratic/rk4",
-   "status": "EXACT",
-   "message": "reproduced to round-off (largest error 1.4e-14), as designed",
-   "predicted_to_flag": false,
-   "seconds": 0.0157
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "mms",
-   "check": "quadratic/euler",
-   "status": "PASS",
-   "message": "observed order 1.00 (expected 1)",
-   "predicted_to_flag": false,
-   "seconds": 0.0241
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
-   "family": "reference",
-   "check": "quadratic/euler",
-   "status": "PASS",
-   "message": "observed order 1.00 (expected 1)",
-   "predicted_to_flag": false,
-   "seconds": 0.3702
-  },
-  {
-   "problem": "projectile",
-   "bug": "angle_not_converted",
    "family": "patch",
    "check": "quadratic/euler",
    "status": "EXACT",
@@ -1920,13 +1680,253 @@
   },
   {
    "problem": "projectile",
+   "bug": "landing_no_interp",
+   "family": "limit",
+   "check": "vacuum/rk4 range",
+   "status": "FAIL",
+   "message": "observed order 1.00 is below the expected 2",
+   "predicted_to_flag": true,
+   "seconds": 0.005
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "mms",
+   "check": "vacuum/rk4",
+   "status": "PASS",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
+   "predicted_to_flag": false,
+   "seconds": 0.086
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "reference",
+   "check": "vacuum/rk4",
+   "status": "EXACT",
+   "message": "error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)",
+   "predicted_to_flag": false,
+   "seconds": 0.049
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "mms",
+   "check": "vacuum/rk4 (whole trajectory)",
+   "status": "PASS",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
+   "predicted_to_flag": false,
+   "seconds": 0.0875
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "invariant",
+   "check": "vacuum/rk4",
+   "status": "EXACT",
+   "message": "error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)",
+   "predicted_to_flag": false,
+   "seconds": 0.0064
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "patch",
+   "check": "vacuum/rk4",
+   "status": "EXACT",
+   "message": "reproduced to round-off (largest error 1.4e-14), as designed",
+   "predicted_to_flag": false,
+   "seconds": 0.0134
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "mms",
+   "check": "vacuum/euler",
+   "status": "PASS",
+   "message": "observed order 1.00 (expected 1)",
+   "predicted_to_flag": false,
+   "seconds": 0.0852
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "reference",
+   "check": "vacuum/euler",
+   "status": "PASS",
+   "message": "observed order 1.00 (expected 1)",
+   "predicted_to_flag": false,
+   "seconds": 0.1734
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "invariant",
+   "check": "vacuum/euler",
+   "status": "PASS",
+   "message": "observed order 1.00 (expected 1)",
+   "predicted_to_flag": false,
+   "seconds": 0.0075
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "patch",
+   "check": "vacuum/euler",
+   "status": "EXACT",
+   "message": "reproduced to round-off (largest error 5.7e-14), as designed",
+   "predicted_to_flag": false,
+   "seconds": 0.0104
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "mms",
+   "check": "linear/rk4",
+   "status": "PASS",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
+   "predicted_to_flag": false,
+   "seconds": 0.0919
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "reference",
+   "check": "linear/rk4",
+   "status": "PASS",
+   "message": "observed order 4.00 (expected 4); with two step sizes the line passes through both points, so nothing checks that the error follows a power law: add a third resolution",
+   "predicted_to_flag": false,
+   "seconds": 0.0609
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "mms",
+   "check": "linear/rk4 (whole trajectory)",
+   "status": "PASS",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
+   "predicted_to_flag": false,
+   "seconds": 0.0877
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "patch",
+   "check": "linear/rk4",
+   "status": "EXACT",
+   "message": "reproduced to round-off (largest error 1.4e-14), as designed",
+   "predicted_to_flag": false,
+   "seconds": 0.0143
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "mms",
+   "check": "linear/euler",
+   "status": "PASS",
+   "message": "observed order 1.00 (expected 1)",
+   "predicted_to_flag": false,
+   "seconds": 0.0883
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "reference",
+   "check": "linear/euler",
+   "status": "PASS",
+   "message": "observed order 1.00 (expected 1)",
+   "predicted_to_flag": false,
+   "seconds": 0.1966
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "patch",
+   "check": "linear/euler",
+   "status": "EXACT",
+   "message": "reproduced to round-off (largest error 5.7e-14), as designed",
+   "predicted_to_flag": false,
+   "seconds": 0.0147
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "mms",
+   "check": "quadratic/rk4",
+   "status": "PASS",
+   "message": "observed order 4.01 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
+   "predicted_to_flag": false,
+   "seconds": 0.0927
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "reference",
+   "check": "quadratic/rk4",
+   "status": "PASS",
+   "message": "observed order 4.03 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
+   "predicted_to_flag": false,
+   "seconds": 0.0612
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "mms",
+   "check": "quadratic/rk4 (whole trajectory)",
+   "status": "PASS",
+   "message": "observed order 4.01 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
+   "predicted_to_flag": false,
+   "seconds": 0.0951
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "patch",
+   "check": "quadratic/rk4",
+   "status": "EXACT",
+   "message": "reproduced to round-off (largest error 1.4e-14), as designed",
+   "predicted_to_flag": false,
+   "seconds": 0.0159
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "mms",
+   "check": "quadratic/euler",
+   "status": "PASS",
+   "message": "observed order 1.00 (expected 1)",
+   "predicted_to_flag": false,
+   "seconds": 0.0885
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "reference",
+   "check": "quadratic/euler",
+   "status": "PASS",
+   "message": "observed order 1.00 (expected 1)",
+   "predicted_to_flag": false,
+   "seconds": 0.2311
+  },
+  {
+   "problem": "projectile",
+   "bug": "angle_not_converted",
+   "family": "patch",
+   "check": "quadratic/euler",
+   "status": "EXACT",
+   "message": "reproduced to round-off (largest error 5.7e-14), as designed",
+   "predicted_to_flag": false,
+   "seconds": 0.0161
+  },
+  {
+   "problem": "projectile",
    "bug": "angle_not_converted",
    "family": "limit",
    "check": "vacuum/rk4 range",
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 182 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0072
+   "seconds": 0.0059
   },
   {
    "problem": "projectile",
@@ -1934,9 +1934,9 @@
    "family": "mms",
    "check": "vacuum/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0216
+   "seconds": 0.0928
   },
   {
    "problem": "projectile",
@@ -1944,9 +1944,9 @@
    "family": "reference",
    "check": "vacuum/rk4",
    "status": "EXACT",
-   "message": "error below 1e-12 at every resolution; order not measurable",
+   "message": "error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)",
    "predicted_to_flag": false,
-   "seconds": 0.0715
+   "seconds": 0.0511
   },
   {
    "problem": "projectile",
@@ -1954,9 +1954,9 @@
    "family": "mms",
    "check": "vacuum/rk4 (whole trajectory)",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0277
+   "seconds": 0.0902
   },
   {
    "problem": "projectile",
@@ -1964,9 +1964,9 @@
    "family": "invariant",
    "check": "vacuum/rk4",
    "status": "EXACT",
-   "message": "error below 1e-12 at every resolution; order not measurable",
+   "message": "error below 1e-12 at every resolution; order not measurable (if the reference values were computed by the code under test, this shows nothing)",
    "predicted_to_flag": false,
-   "seconds": 0.0067
+   "seconds": 0.0097
   },
   {
    "problem": "projectile",
@@ -1976,7 +1976,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.4e-14), as designed",
    "predicted_to_flag": true,
-   "seconds": 0.0133
+   "seconds": 0.015
   },
   {
    "problem": "projectile",
@@ -1986,7 +1986,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.0207
+   "seconds": 0.1002
   },
   {
    "problem": "projectile",
@@ -1996,7 +1996,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.1961
+   "seconds": 0.2007
   },
   {
    "problem": "projectile",
@@ -2006,7 +2006,7 @@
    "status": "PASS",
    "message": "observed order 1.01 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.0057
+   "seconds": 0.0064
   },
   {
    "problem": "projectile",
@@ -2016,7 +2016,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.075 and shrinks at about order 1.00",
    "predicted_to_flag": true,
-   "seconds": 0.0158
+   "seconds": 0.0137
   },
   {
    "problem": "projectile",
@@ -2024,9 +2024,9 @@
    "family": "mms",
    "check": "linear/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0244
+   "seconds": 0.1095
   },
   {
    "problem": "projectile",
@@ -2034,9 +2034,9 @@
    "family": "reference",
    "check": "linear/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); with two step sizes the line passes through both points, so nothing checks that the error follows a power law: add a third resolution",
    "predicted_to_flag": false,
-   "seconds": 0.0562
+   "seconds": 0.0588
   },
   {
    "problem": "projectile",
@@ -2044,9 +2044,9 @@
    "family": "mms",
    "check": "linear/rk4 (whole trajectory)",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0311
+   "seconds": 0.0881
   },
   {
    "problem": "projectile",
@@ -2056,7 +2056,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.4e-14), as designed",
    "predicted_to_flag": true,
-   "seconds": 0.0147
+   "seconds": 0.0141
   },
   {
    "problem": "projectile",
@@ -2066,7 +2066,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.0218
+   "seconds": 0.0918
   },
   {
    "problem": "projectile",
@@ -2076,7 +2076,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.2192
+   "seconds": 0.2767
   },
   {
    "problem": "projectile",
@@ -2086,7 +2086,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.075 and shrinks at about order 1.00",
    "predicted_to_flag": true,
-   "seconds": 0.0138
+   "seconds": 0.0186
   },
   {
    "problem": "projectile",
@@ -2094,9 +2094,9 @@
    "family": "mms",
    "check": "quadratic/rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.01 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0368
+   "seconds": 0.1083
   },
   {
    "problem": "projectile",
@@ -2104,9 +2104,9 @@
    "family": "reference",
    "check": "quadratic/rk4",
    "status": "PASS",
-   "message": "observed order 4.01 (expected 4)",
+   "message": "observed order 4.03 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0812
+   "seconds": 0.0686
   },
   {
    "problem": "projectile",
@@ -2114,9 +2114,9 @@
    "family": "mms",
    "check": "quadratic/rk4 (whole trajectory)",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.01 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0322
+   "seconds": 0.0997
   },
   {
    "problem": "projectile",
@@ -2126,7 +2126,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.4e-14), as designed",
    "predicted_to_flag": true,
-   "seconds": 0.0219
+   "seconds": 0.016
   },
   {
    "problem": "projectile",
@@ -2136,7 +2136,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.0277
+   "seconds": 0.1033
   },
   {
    "problem": "projectile",
@@ -2146,7 +2146,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.2697
+   "seconds": 0.5183
   },
   {
    "problem": "projectile",
@@ -2156,7 +2156,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.075 and shrinks at about order 1.00",
    "predicted_to_flag": true,
-   "seconds": 0.0163
+   "seconds": 0.0828
   },
   {
    "problem": "projectile",
@@ -2166,7 +2166,7 @@
    "status": "PASS",
    "message": "observed order 2.00 (expected 2)",
    "predicted_to_flag": false,
-   "seconds": 0.0065
+   "seconds": 0.0141
   },
   {
    "problem": "projectile",
@@ -2176,7 +2176,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0114
+   "seconds": 0.0724
   },
   {
    "problem": "projectile",
@@ -2186,7 +2186,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0517
+   "seconds": 0.1485
   },
   {
    "problem": "projectile",
@@ -2196,7 +2196,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0082
+   "seconds": 0.0332
   },
   {
    "problem": "projectile",
@@ -2216,7 +2216,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.4e-14), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0028
+   "seconds": 0.0044
   },
   {
    "problem": "projectile",
@@ -2226,7 +2226,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0059
+   "seconds": 0.0255
   },
   {
    "problem": "projectile",
@@ -2236,7 +2236,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0638
+   "seconds": 0.0763
   },
   {
    "problem": "projectile",
@@ -2246,7 +2246,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0083
+   "seconds": 0.0436
   },
   {
    "problem": "projectile",
@@ -2256,7 +2256,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.4e-14), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0031
+   "seconds": 0.0071
   },
   {
    "problem": "projectile",
@@ -2266,7 +2266,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0056
+   "seconds": 0.0305
   },
   {
    "problem": "projectile",
@@ -2276,7 +2276,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0804
+   "seconds": 0.0982
   },
   {
    "problem": "projectile",
@@ -2286,7 +2286,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0084
+   "seconds": 0.0264
   },
   {
    "problem": "projectile",
@@ -2296,7 +2296,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.4e-14), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0037
+   "seconds": 0.0035
   },
   {
    "problem": "projectile",
@@ -2316,7 +2316,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 3.03 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0297
+   "seconds": 0.1082
   },
   {
    "problem": "projectile",
@@ -2326,7 +2326,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 3.33 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0623
+   "seconds": 0.0576
   },
   {
    "problem": "projectile",
@@ -2336,7 +2336,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 3.03 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0294
+   "seconds": 0.1119
   },
   {
    "problem": "projectile",
@@ -2346,7 +2346,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0073
+   "seconds": 0.0072
   },
   {
    "problem": "projectile",
@@ -2356,7 +2356,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.9 and shrinks at about order 0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0114
+   "seconds": 0.0122
   },
   {
    "problem": "projectile",
@@ -2366,7 +2366,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 3.01 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0244
+   "seconds": 0.1418
   },
   {
    "problem": "projectile",
@@ -2376,7 +2376,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 3.3 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0663
+   "seconds": 0.1074
   },
   {
    "problem": "projectile",
@@ -2386,7 +2386,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 3.01 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0227
+   "seconds": 0.3836
   },
   {
    "problem": "projectile",
@@ -2396,7 +2396,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.901 and shrinks at about order 0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0156
+   "seconds": 0.0455
   },
   {
    "problem": "projectile",
@@ -2406,7 +2406,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 2.91 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0237
+   "seconds": 0.1829
   },
   {
    "problem": "projectile",
@@ -2416,7 +2416,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 3.42 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0677
+   "seconds": 0.0805
   },
   {
    "problem": "projectile",
@@ -2426,7 +2426,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 2.91 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0272
+   "seconds": 0.1102
   },
   {
    "problem": "projectile",
@@ -2436,7 +2436,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.902 and shrinks at about order 0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0155
+   "seconds": 0.0158
   },
   {
    "problem": "projectile",
@@ -2446,7 +2446,7 @@
    "status": "FAIL",
    "message": "observed order 1.01 is below the expected 2",
    "predicted_to_flag": false,
-   "seconds": 0.0068
+   "seconds": 0.0079
   },
   {
    "problem": "projectile",
@@ -2456,7 +2456,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0234
+   "seconds": 0.1046
   },
   {
    "problem": "projectile",
@@ -2466,7 +2466,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0539
+   "seconds": 0.0493
   },
   {
    "problem": "projectile",
@@ -2476,7 +2476,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0236
+   "seconds": 0.088
   },
   {
    "problem": "projectile",
@@ -2486,7 +2486,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": false,
-   "seconds": 0.0088
+   "seconds": 0.0089
   },
   {
    "problem": "projectile",
@@ -2496,7 +2496,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.0167 and shrinks at about order 1.00",
    "predicted_to_flag": true,
-   "seconds": 0.0134
+   "seconds": 0.0428
   },
   {
    "problem": "projectile",
@@ -2506,7 +2506,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0261
+   "seconds": 0.3217
   },
   {
    "problem": "projectile",
@@ -2516,7 +2516,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0728
+   "seconds": 0.0729
   },
   {
    "problem": "projectile",
@@ -2526,7 +2526,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0237
+   "seconds": 0.1171
   },
   {
    "problem": "projectile",
@@ -2536,7 +2536,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.0165 and shrinks at about order 1.00",
    "predicted_to_flag": true,
-   "seconds": 0.0148
+   "seconds": 0.0275
   },
   {
    "problem": "projectile",
@@ -2546,7 +2546,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0243
+   "seconds": 0.2344
   },
   {
    "problem": "projectile",
@@ -2556,7 +2556,7 @@
    "status": "FAIL",
    "message": "observed order 1.01 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0921
+   "seconds": 0.1375
   },
   {
    "problem": "projectile",
@@ -2566,7 +2566,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0383
+   "seconds": 0.2195
   },
   {
    "problem": "projectile",
@@ -2576,7 +2576,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.0159 and shrinks at about order 1.00",
    "predicted_to_flag": true,
-   "seconds": 0.0162
+   "seconds": 0.1824
   },
   {
    "problem": "projectile",
@@ -2586,7 +2586,7 @@
    "status": "FAIL",
    "message": "observed order 1.01 is below the expected 2",
    "predicted_to_flag": false,
-   "seconds": 0.0069
+   "seconds": 0.0163
   },
   {
    "problem": "pendulum",
@@ -2596,7 +2596,7 @@
    "status": "PASS",
    "message": "observed order 3.98 (expected 4)",
    "predicted_to_flag": false,
-   "seconds": 0.0703
+   "seconds": 0.5518
   },
   {
    "problem": "pendulum",
@@ -2606,7 +2606,7 @@
    "status": "PASS",
    "message": "observed order 3.95 (expected 4)",
    "predicted_to_flag": false,
-   "seconds": 0.1539
+   "seconds": 0.4992
   },
   {
    "problem": "pendulum",
@@ -2616,7 +2616,7 @@
    "status": "PASS",
    "message": "observed order 4.05 (expected 4)",
    "predicted_to_flag": false,
-   "seconds": 0.0692
+   "seconds": 0.4164
   },
   {
    "problem": "pendulum",
@@ -2624,9 +2624,9 @@
    "family": "invariant",
    "check": "rk4",
    "status": "PASS",
-   "message": "observed order 5.30 (expected 4)",
+   "message": "observed order 5.10 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0333
+   "seconds": 0.0797
   },
   {
    "problem": "pendulum",
@@ -2636,7 +2636,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 8.1e-15), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0596
+   "seconds": 0.0926
   },
   {
    "problem": "pendulum",
@@ -2646,7 +2646,7 @@
    "status": "PASS",
    "message": "frequencies match the closed form (relative error 5.8e-13)",
    "predicted_to_flag": false,
-   "seconds": 0.0004
+   "seconds": 0.0006
   },
   {
    "problem": "pendulum",
@@ -2656,7 +2656,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.02 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0606
+   "seconds": 0.568
   },
   {
    "problem": "pendulum",
@@ -2666,7 +2666,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.247 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.1632
+   "seconds": 0.5409
   },
   {
    "problem": "pendulum",
@@ -2676,7 +2676,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.02 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0645
+   "seconds": 0.5124
   },
   {
    "problem": "pendulum",
@@ -2686,7 +2686,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.00248 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0338
+   "seconds": 0.0853
   },
   {
    "problem": "pendulum",
@@ -2696,7 +2696,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.0273 and shrinks at about order -0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0568
+   "seconds": 0.154
   },
   {
    "problem": "pendulum",
@@ -2706,7 +2706,7 @@
    "status": "PASS",
    "message": "frequencies match the closed form (relative error 5.8e-13)",
    "predicted_to_flag": false,
-   "seconds": 0.0003
+   "seconds": 0.0007
   },
   {
    "problem": "pendulum",
@@ -2716,7 +2716,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.46 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0732
+   "seconds": 0.4224
   },
   {
    "problem": "pendulum",
@@ -2726,7 +2726,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.0603 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.1437
+   "seconds": 0.3091
   },
   {
    "problem": "pendulum",
@@ -2736,7 +2736,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.46 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0796
+   "seconds": 0.4296
   },
   {
    "problem": "pendulum",
@@ -2746,7 +2746,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.00065 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0481
+   "seconds": 0.1033
   },
   {
    "problem": "pendulum",
@@ -2756,7 +2756,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.883 and shrinks at about order 0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0608
+   "seconds": 0.1582
   },
   {
    "problem": "pendulum",
@@ -2766,7 +2766,7 @@
    "status": "PASS",
    "message": "frequencies match the closed form (relative error 3.3e-13)",
    "predicted_to_flag": false,
-   "seconds": 0.0003
+   "seconds": 0.0007
   },
   {
    "problem": "pendulum",
@@ -2776,7 +2776,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 1.73 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0721
+   "seconds": 0.3334
   },
   {
    "problem": "pendulum",
@@ -2786,7 +2786,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.422 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.1615
+   "seconds": 0.2934
   },
   {
    "problem": "pendulum",
@@ -2796,7 +2796,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 1.73 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0738
+   "seconds": 0.3622
   },
   {
    "problem": "pendulum",
@@ -2806,7 +2806,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.0203 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0452
+   "seconds": 0.0839
   },
   {
    "problem": "pendulum",
@@ -2816,7 +2816,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 3.34 and shrinks at about order -0.00",
    "predicted_to_flag": true,
-   "seconds": 0.053
+   "seconds": 0.1228
   },
   {
    "problem": "pendulum",
@@ -2826,7 +2826,7 @@
    "status": "FAIL",
    "message": "frequencies [np.float64(2.1219488542025706), np.float64(5.525671664678316)] differ from [2.621396023017722, 6.0009996814048545] (relative error 0.19)",
    "predicted_to_flag": true,
-   "seconds": 0.0003
+   "seconds": 0.0007
   },
   {
    "problem": "pendulum",
@@ -2836,7 +2836,7 @@
    "status": "FAIL",
    "message": "observed order 0.98 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0662
+   "seconds": 0.2285
   },
   {
    "problem": "pendulum",
@@ -2846,7 +2846,7 @@
    "status": "PASS",
    "message": "observed order 3.95 (expected 4)",
    "predicted_to_flag": false,
-   "seconds": 0.1518
+   "seconds": 0.2219
   },
   {
    "problem": "pendulum",
@@ -2856,7 +2856,7 @@
    "status": "FAIL",
    "message": "observed order 0.97 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0719
+   "seconds": 0.3556
   },
   {
    "problem": "pendulum",
@@ -2864,9 +2864,9 @@
    "family": "invariant",
    "check": "rk4",
    "status": "PASS",
-   "message": "observed order 5.30 (expected 4)",
+   "message": "observed order 5.10 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0449
+   "seconds": 0.0713
   },
   {
    "problem": "pendulum",
@@ -2876,7 +2876,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.0147 and shrinks at about order 1.00",
    "predicted_to_flag": true,
-   "seconds": 0.0531
+   "seconds": 0.1078
   },
   {
    "problem": "pendulum",
@@ -2886,7 +2886,7 @@
    "status": "PASS",
    "message": "frequencies match the closed form (relative error 5.8e-13)",
    "predicted_to_flag": false,
-   "seconds": 0.0003
+   "seconds": 0.0006
   },
   {
    "problem": "pendulum",
@@ -2896,7 +2896,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.0884 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0682
+   "seconds": 0.2529
   },
   {
    "problem": "pendulum",
@@ -2906,7 +2906,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.0381 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.1405
+   "seconds": 0.1995
   },
   {
    "problem": "pendulum",
@@ -2916,7 +2916,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.0884 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0703
+   "seconds": 0.2437
   },
   {
    "problem": "pendulum",
@@ -2926,7 +2926,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.000296 at the finest level)",
    "predicted_to_flag": true,
-   "seconds": 0.0379
+   "seconds": 0.0509
   },
   {
    "problem": "pendulum",
@@ -2936,7 +2936,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.165 and shrinks at about order -0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0503
+   "seconds": 0.0702
   },
   {
    "problem": "pendulum",
@@ -2946,7 +2946,7 @@
    "status": "PASS",
    "message": "frequencies match the closed form (relative error 5.8e-13)",
    "predicted_to_flag": false,
-   "seconds": 0.0004
+   "seconds": 0.0003
   },
   {
    "problem": "pendulum",
@@ -2956,7 +2956,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.0129 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0681
+   "seconds": 0.2163
   },
   {
    "problem": "pendulum",
@@ -2966,7 +2966,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.074 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.1494
+   "seconds": 0.3091
   },
   {
    "problem": "pendulum",
@@ -2976,7 +2976,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.0129 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0768
+   "seconds": 0.1589
   },
   {
    "problem": "pendulum",
@@ -2986,7 +2986,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.000762 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0363
+   "seconds": 0.0589
   },
   {
    "problem": "pendulum",
@@ -2996,7 +2996,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.165 and shrinks at about order -0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0615
+   "seconds": 0.0796
   },
   {
    "problem": "pendulum",
@@ -3006,7 +3006,7 @@
    "status": "PASS",
    "message": "frequencies match the closed form (relative error 5.3e-13)",
    "predicted_to_flag": false,
-   "seconds": 0.0003
+   "seconds": 0.0004
   },
   {
    "problem": "pendulum",
@@ -3016,7 +3016,7 @@
    "status": "FAIL",
    "message": "observed order 1.01 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0155
+   "seconds": 0.0435
   },
   {
    "problem": "pendulum",
@@ -3026,7 +3026,7 @@
    "status": "FAIL",
    "message": "observed order 1.39 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.1198
+   "seconds": 0.1303
   },
   {
    "problem": "pendulum",
@@ -3036,7 +3036,7 @@
    "status": "FAIL",
    "message": "observed order 1.01 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0171
+   "seconds": 0.0406
   },
   {
    "problem": "pendulum",
@@ -3046,7 +3046,7 @@
    "status": "FAIL",
    "message": "observed order 1.17 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0079
+   "seconds": 0.0103
   },
   {
    "problem": "pendulum",
@@ -3056,7 +3056,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 7.4e-15), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0132
+   "seconds": 0.0122
   },
   {
    "problem": "pendulum",
@@ -3076,7 +3076,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.49 at the finest level)",
    "predicted_to_flag": true,
-   "seconds": 0.0648
+   "seconds": 0.1446
   },
   {
    "problem": "pendulum",
@@ -3086,7 +3086,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 1.1 at the finest level)",
    "predicted_to_flag": true,
-   "seconds": 0.1522
+   "seconds": 0.1333
   },
   {
    "problem": "pendulum",
@@ -3096,7 +3096,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.49 at the finest level)",
    "predicted_to_flag": true,
-   "seconds": 0.0783
+   "seconds": 0.142
   },
   {
    "problem": "pendulum",
@@ -3106,7 +3106,7 @@
    "status": "FAIL",
    "message": "observed order 0.97 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0329
+   "seconds": 0.0334
   },
   {
    "problem": "pendulum",
@@ -3116,7 +3116,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.154 and shrinks at about order 0.01",
    "predicted_to_flag": true,
-   "seconds": 0.0638
+   "seconds": 0.0564
   },
   {
    "problem": "pendulum",
@@ -3136,7 +3136,7 @@
    "status": "FAIL",
    "message": "observed order 0.93 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0644
+   "seconds": 0.1863
   },
   {
    "problem": "pendulum",
@@ -3146,7 +3146,7 @@
    "status": "FAIL",
    "message": "observed order 1.06 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.1429
+   "seconds": 0.1658
   },
   {
    "problem": "pendulum",
@@ -3156,7 +3156,7 @@
    "status": "FAIL",
    "message": "observed order 0.96 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.084
+   "seconds": 0.2056
   },
   {
    "problem": "pendulum",
@@ -3166,7 +3166,7 @@
    "status": "FAIL",
    "message": "observed order 0.95 is below the expected 4",
    "predicted_to_flag": false,
-   "seconds": 0.0568
+   "seconds": 0.0482
   },
   {
    "problem": "pendulum",
@@ -3176,7 +3176,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.0258 and shrinks at about order 0.96",
    "predicted_to_flag": true,
-   "seconds": 0.0699
+   "seconds": 0.0511
   },
   {
    "problem": "pendulum",
@@ -3186,7 +3186,7 @@
    "status": "PASS",
    "message": "frequencies match the closed form (relative error 5.8e-13)",
    "predicted_to_flag": false,
-   "seconds": 0.0018
+   "seconds": 0.0007
   },
   {
    "problem": "kepler",
@@ -3194,9 +3194,9 @@
    "family": "mms",
    "check": "rk4",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 2 finest resolution(s) within a factor 100 of the noise floor (8.2e-13) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0746
+   "seconds": 0.226
   },
   {
    "problem": "kepler",
@@ -3206,7 +3206,7 @@
    "status": "PASS",
    "message": "observed order 4.04 (expected 4)",
    "predicted_to_flag": false,
-   "seconds": 0.1767
+   "seconds": 0.1514
   },
   {
    "problem": "kepler",
@@ -3214,9 +3214,9 @@
    "family": "mms",
    "check": "rk4 (whole trajectory)",
    "status": "PASS",
-   "message": "observed order 4.00 (expected 4)",
+   "message": "observed order 4.00 (expected 4); 2 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0766
+   "seconds": 0.2178
   },
   {
    "problem": "kepler",
@@ -3226,7 +3226,7 @@
    "status": "PASS",
    "message": "observed order 4.12 (expected 4)",
    "predicted_to_flag": false,
-   "seconds": 0.0323
+   "seconds": 0.0191
   },
   {
    "problem": "kepler",
@@ -3236,7 +3236,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.1e-14), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0449
+   "seconds": 0.0398
   },
   {
    "problem": "kepler",
@@ -3244,9 +3244,9 @@
    "family": "invariant",
    "check": "rk4 angular momentum",
    "status": "PASS",
-   "message": "observed order 5.03 (expected 4)",
+   "message": "observed order 5.03 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
-   "seconds": 0.0203
+   "seconds": 0.0224
   },
   {
    "problem": "kepler",
@@ -3256,7 +3256,7 @@
    "status": "PASS",
    "message": "observed order 4.14 (expected 4)",
    "predicted_to_flag": false,
-   "seconds": 0.1206
+   "seconds": 0.1135
   },
   {
    "problem": "kepler",
@@ -3266,7 +3266,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.073 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0993
+   "seconds": 0.246
   },
   {
    "problem": "kepler",
@@ -3276,7 +3276,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.735 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.1686
+   "seconds": 0.1511
   },
   {
    "problem": "kepler",
@@ -3286,7 +3286,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.073 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0772
+   "seconds": 0.2174
   },
   {
    "problem": "kepler",
@@ -3294,9 +3294,9 @@
    "family": "invariant",
    "check": "rk4",
    "status": "FAIL",
-   "message": "error does not decrease with resolution (about 0.279 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
+   "message": "error does not decrease with resolution (about 0.557 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0242
+   "seconds": 0.0205
   },
   {
    "problem": "kepler",
@@ -3306,7 +3306,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.165 and shrinks at about order -0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0479
+   "seconds": 0.0414
   },
   {
    "problem": "kepler",
@@ -3314,9 +3314,9 @@
    "family": "invariant",
    "check": "rk4 angular momentum",
    "status": "PASS",
-   "message": "observed order 5.01 (expected 4)",
+   "message": "observed order 5.01 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": true,
-   "seconds": 0.0198
+   "seconds": 0.0207
   },
   {
    "problem": "kepler",
@@ -3326,7 +3326,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 1.78 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.1381
+   "seconds": 0.1033
   },
   {
    "problem": "kepler",
@@ -3336,7 +3336,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.612 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0858
+   "seconds": 0.2172
   },
   {
    "problem": "kepler",
@@ -3346,7 +3346,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 2.6 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.1624
+   "seconds": 0.1534
   },
   {
    "problem": "kepler",
@@ -3356,7 +3356,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.612 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0737
+   "seconds": 0.2491
   },
   {
    "problem": "kepler",
@@ -3364,9 +3364,9 @@
    "family": "invariant",
    "check": "rk4",
    "status": "FAIL",
-   "message": "error does not decrease with resolution (about 4.09 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
+   "message": "error does not decrease with resolution (about 8.19 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0211
+   "seconds": 0.0244
   },
   {
    "problem": "kepler",
@@ -3376,7 +3376,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.577 and shrinks at about order 0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0479
+   "seconds": 0.063
   },
   {
    "problem": "kepler",
@@ -3384,9 +3384,9 @@
    "family": "invariant",
    "check": "rk4 angular momentum",
    "status": "FAIL",
-   "message": "error does not decrease with resolution (about 0.524 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
+   "message": "error does not decrease with resolution (about 0.605 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0208
+   "seconds": 0.0288
   },
   {
    "problem": "kepler",
@@ -3396,7 +3396,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 16.9 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.1144
+   "seconds": 0.1322
   },
   {
    "problem": "kepler",
@@ -3406,7 +3406,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.00909 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0779
+   "seconds": 0.2558
   },
   {
    "problem": "kepler",
@@ -3416,7 +3416,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.0322 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.1786
+   "seconds": 0.1558
   },
   {
    "problem": "kepler",
@@ -3426,7 +3426,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.00909 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0839
+   "seconds": 0.2876
   },
   {
    "problem": "kepler",
@@ -3434,9 +3434,9 @@
    "family": "invariant",
    "check": "rk4",
    "status": "FAIL",
-   "message": "error does not decrease with resolution (about 0.00952 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
+   "message": "error does not decrease with resolution (about 0.019 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0254
+   "seconds": 0.0193
   },
   {
    "problem": "kepler",
@@ -3446,7 +3446,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.00552 and shrinks at about order 0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0549
+   "seconds": 0.0402
   },
   {
    "problem": "kepler",
@@ -3454,9 +3454,9 @@
    "family": "invariant",
    "check": "rk4 angular momentum",
    "status": "PASS",
-   "message": "observed order 5.03 (expected 4)",
+   "message": "observed order 5.03 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": true,
-   "seconds": 0.0248
+   "seconds": 0.0196
   },
   {
    "problem": "kepler",
@@ -3466,7 +3466,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.942 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.1256
+   "seconds": 0.1184
   },
   {
    "problem": "kepler",
@@ -3476,7 +3476,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 1.16e-06 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0682
+   "seconds": 0.2008
   },
   {
    "problem": "kepler",
@@ -3486,7 +3486,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 1.37e-05 at the finest level)",
    "predicted_to_flag": true,
-   "seconds": 0.197
+   "seconds": 0.1543
   },
   {
    "problem": "kepler",
@@ -3496,7 +3496,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 1.16e-06 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0766
+   "seconds": 0.2144
   },
   {
    "problem": "kepler",
@@ -3504,9 +3504,9 @@
    "family": "invariant",
    "check": "rk4",
    "status": "FAIL",
-   "message": "error does not decrease with resolution (about 3.44e-06 at the finest level)",
+   "message": "error does not decrease with resolution (about 6.88e-06 at the finest level)",
    "predicted_to_flag": false,
-   "seconds": 0.0208
+   "seconds": 0.0202
   },
   {
    "problem": "kepler",
@@ -3516,7 +3516,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 4.99e-07 and shrinks at about order 0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0395
+   "seconds": 0.0389
   },
   {
    "problem": "kepler",
@@ -3524,7 +3524,7 @@
    "family": "invariant",
    "check": "rk4 angular momentum",
    "status": "PASS",
-   "message": "observed order 5.03 (expected 4)",
+   "message": "observed order 5.03 (expected 4); 1 finest resolution(s) within a factor 100 of the noise floor (1e-12) were left out of the fit as round-off",
    "predicted_to_flag": false,
    "seconds": 0.0209
   },
@@ -3536,7 +3536,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.000331 at the finest level)",
    "predicted_to_flag": false,
-   "seconds": 0.1049
+   "seconds": 0.1058
   },
   {
    "problem": "kepler",
@@ -3546,7 +3546,7 @@
    "status": "FAIL",
    "message": "observed order 0.99 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.016
+   "seconds": 0.0501
   },
   {
    "problem": "kepler",
@@ -3556,7 +3556,7 @@
    "status": "FAIL",
    "message": "observed order 0.95 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.1516
+   "seconds": 0.1485
   },
   {
    "problem": "kepler",
@@ -3566,7 +3566,7 @@
    "status": "FAIL",
    "message": "observed order 0.99 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.02
+   "seconds": 0.0561
   },
   {
    "problem": "kepler",
@@ -3576,7 +3576,7 @@
    "status": "FAIL",
    "message": "observed order 0.97 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0045
+   "seconds": 0.0051
   },
   {
    "problem": "kepler",
@@ -3586,7 +3586,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 1.1e-14), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0172
+   "seconds": 0.0084
   },
   {
    "problem": "kepler",
@@ -3596,7 +3596,7 @@
    "status": "FAIL",
    "message": "observed order 0.99 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0108
+   "seconds": 0.0058
   },
   {
    "problem": "kepler",
@@ -3606,7 +3606,7 @@
    "status": "FAIL",
    "message": "observed order 0.49 is below the expected 4",
    "predicted_to_flag": false,
-   "seconds": 0.0306
+   "seconds": 0.0236
   },
   {
    "problem": "kepler",
@@ -3616,7 +3616,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.326 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0716
+   "seconds": 0.2031
   },
   {
    "problem": "kepler",
@@ -3626,7 +3626,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.418 at the finest level)",
    "predicted_to_flag": true,
-   "seconds": 0.1533
+   "seconds": 0.1544
   },
   {
    "problem": "kepler",
@@ -3636,7 +3636,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.326 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0707
+   "seconds": 0.2167
   },
   {
    "problem": "kepler",
@@ -3646,7 +3646,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0269
+   "seconds": 0.0384
   },
   {
    "problem": "kepler",
@@ -3656,7 +3656,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.147 and shrinks at about order -0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0404
+   "seconds": 0.0846
   },
   {
    "problem": "kepler",
@@ -3666,7 +3666,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0209
+   "seconds": 0.0229
   },
   {
    "problem": "kepler",
@@ -3676,7 +3676,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 2.19 at the finest level)",
    "predicted_to_flag": false,
-   "seconds": 0.105
+   "seconds": 0.1235
   },
   {
    "problem": "kepler",
@@ -3686,7 +3686,7 @@
    "status": "FAIL",
    "message": "observed order 0.99 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0749
+   "seconds": 0.2483
   },
   {
    "problem": "kepler",
@@ -3696,7 +3696,7 @@
    "status": "FAIL",
    "message": "observed order 0.99 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.1784
+   "seconds": 0.1693
   },
   {
    "problem": "kepler",
@@ -3706,7 +3706,7 @@
    "status": "FAIL",
    "message": "observed order 0.99 is below the expected 4",
    "predicted_to_flag": true,
-   "seconds": 0.0772
+   "seconds": 0.2514
   },
   {
    "problem": "kepler",
@@ -3716,7 +3716,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": false,
-   "seconds": 0.0287
+   "seconds": 0.0225
   },
   {
    "problem": "kepler",
@@ -3726,7 +3726,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.00337 and shrinks at about order 1.00",
    "predicted_to_flag": true,
-   "seconds": 0.0469
+   "seconds": 0.0472
   },
   {
    "problem": "kepler",
@@ -3736,7 +3736,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 4",
    "predicted_to_flag": false,
-   "seconds": 0.0298
+   "seconds": 0.0268
   },
   {
    "problem": "kepler",
@@ -3746,7 +3746,7 @@
    "status": "FAIL",
    "message": "observed order 0.62 is below the expected 4",
    "predicted_to_flag": false,
-   "seconds": 0.106
+   "seconds": 0.1129
   },
   {
    "problem": "heat1d",
@@ -3756,7 +3756,7 @@
    "status": "PASS",
    "message": "observed order 2.00 (expected 2)",
    "predicted_to_flag": false,
-   "seconds": 0.233
+   "seconds": 0.2156
   },
   {
    "problem": "heat1d",
@@ -3766,7 +3766,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.1029
+   "seconds": 0.0946
   },
   {
    "problem": "heat1d",
@@ -3776,7 +3776,7 @@
    "status": "PASS",
    "message": "observed order 2.00 (expected 2)",
    "predicted_to_flag": false,
-   "seconds": 0.1978
+   "seconds": 0.1723
   },
   {
    "problem": "heat1d",
@@ -3786,7 +3786,7 @@
    "status": "PASS",
    "message": "observed order 1.99 (expected 2)",
    "predicted_to_flag": false,
-   "seconds": 0.0473
+   "seconds": 0.0452
   },
   {
    "problem": "heat1d",
@@ -3796,7 +3796,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 2.8e-16), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0167
+   "seconds": 0.0152
   },
   {
    "problem": "heat1d",
@@ -3806,7 +3806,7 @@
    "status": "FAIL",
    "message": "observed order 0.91 is below the expected 2",
    "predicted_to_flag": true,
-   "seconds": 0.2425
+   "seconds": 0.2048
   },
   {
    "problem": "heat1d",
@@ -3816,7 +3816,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.0117 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0923
+   "seconds": 0.0925
   },
   {
    "problem": "heat1d",
@@ -3826,7 +3826,7 @@
    "status": "FAIL",
    "message": "observed order 0.91 is below the expected 2",
    "predicted_to_flag": true,
-   "seconds": 0.2103
+   "seconds": 0.1765
   },
   {
    "problem": "heat1d",
@@ -3836,7 +3836,7 @@
    "status": "FAIL",
    "message": "observed order 1.00 is below the expected 2",
    "predicted_to_flag": true,
-   "seconds": 0.042
+   "seconds": 0.0422
   },
   {
    "problem": "heat1d",
@@ -3846,7 +3846,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.0515 and shrinks at about order 0.34",
    "predicted_to_flag": true,
-   "seconds": 0.014
+   "seconds": 0.013
   },
   {
    "problem": "heat1d",
@@ -3856,7 +3856,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.235 at the finest level)",
    "predicted_to_flag": true,
-   "seconds": 0.2374
+   "seconds": 0.1921
   },
   {
    "problem": "heat1d",
@@ -3866,7 +3866,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.0698 at the finest level)",
    "predicted_to_flag": true,
-   "seconds": 0.1503
+   "seconds": 0.0871
   },
   {
    "problem": "heat1d",
@@ -3876,7 +3876,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.272 at the finest level)",
    "predicted_to_flag": true,
-   "seconds": 0.2043
+   "seconds": 0.1679
   },
   {
    "problem": "heat1d",
@@ -3886,7 +3886,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.128 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.0555
+   "seconds": 0.0401
   },
   {
    "problem": "heat1d",
@@ -3896,7 +3896,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.0789 and shrinks at about order 0.00",
    "predicted_to_flag": true,
-   "seconds": 0.0143
+   "seconds": 0.0131
   },
   {
    "problem": "heat1d",
@@ -3906,7 +3906,7 @@
    "status": "PASS",
    "message": "observed order 2.00 (expected 2)",
    "predicted_to_flag": false,
-   "seconds": 0.2256
+   "seconds": 0.1919
   },
   {
    "problem": "heat1d",
@@ -3916,7 +3916,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.0953
+   "seconds": 0.0834
   },
   {
    "problem": "heat1d",
@@ -3926,7 +3926,7 @@
    "status": "PASS",
    "message": "observed order 2.00 (expected 2)",
    "predicted_to_flag": false,
-   "seconds": 0.2186
+   "seconds": 0.1792
   },
   {
    "problem": "heat1d",
@@ -3936,7 +3936,7 @@
    "status": "PASS",
    "message": "observed order 2.00 (expected 2)",
    "predicted_to_flag": false,
-   "seconds": 0.0448
+   "seconds": 0.0445
   },
   {
    "problem": "heat1d",
@@ -3946,7 +3946,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.00212 and shrinks at about order 1.00",
    "predicted_to_flag": true,
-   "seconds": 0.013
+   "seconds": 0.0156
   },
   {
    "problem": "heat1d",
@@ -3956,7 +3956,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 4.31e+261 at the finest level)",
    "predicted_to_flag": true,
-   "seconds": 0.093
+   "seconds": 0.0912
   },
   {
    "problem": "heat1d",
@@ -3966,7 +3966,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": true,
-   "seconds": 0.1036
+   "seconds": 0.0962
   },
   {
    "problem": "heat1d",
@@ -3976,7 +3976,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 3.09e+261 at the finest level)",
    "predicted_to_flag": true,
-   "seconds": 0.1099
+   "seconds": 0.0778
   },
   {
    "problem": "heat1d",
@@ -3986,7 +3986,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 2.16e+261 at the finest level)",
    "predicted_to_flag": true,
-   "seconds": 0.0191
+   "seconds": 0.0187
   },
   {
    "problem": "heat1d",
@@ -3996,7 +3996,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.349",
    "predicted_to_flag": true,
-   "seconds": 0.0094
+   "seconds": 0.0113
   },
   {
    "problem": "heat1d",
@@ -4006,7 +4006,7 @@
    "status": "PASS",
    "message": "observed order 2.00 (expected 2)",
    "predicted_to_flag": false,
-   "seconds": 0.2209
+   "seconds": 0.2077
   },
   {
    "problem": "heat1d",
@@ -4016,7 +4016,7 @@
    "status": "PASS",
    "message": "observed order 1.00 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.1077
+   "seconds": 0.0926
   },
   {
    "problem": "heat1d",
@@ -4026,7 +4026,7 @@
    "status": "PASS",
    "message": "observed order 2.00 (expected 2)",
    "predicted_to_flag": false,
-   "seconds": 0.2279
+   "seconds": 0.1764
   },
   {
    "problem": "heat1d",
@@ -4036,7 +4036,7 @@
    "status": "PASS",
    "message": "observed order 1.99 (expected 2)",
    "predicted_to_flag": false,
-   "seconds": 0.0419
+   "seconds": 0.0431
   },
   {
    "problem": "heat1d",
@@ -4046,7 +4046,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.00111 and shrinks at about order 1.00",
    "predicted_to_flag": true,
-   "seconds": 0.019
+   "seconds": 0.0126
   },
   {
    "problem": "sod",
@@ -4056,7 +4056,7 @@
    "status": "PASS",
    "message": "observed order 0.63 (expected 0.5)",
    "predicted_to_flag": false,
-   "seconds": 0.3054
+   "seconds": 0.26
   },
   {
    "problem": "sod",
@@ -4066,7 +4066,27 @@
    "status": "PASS",
    "message": "observed order 0.98 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.1594
+   "seconds": 0.1465
+  },
+  {
+   "problem": "sod",
+   "bug": null,
+   "family": "reference",
+   "check": "acoustic wave about rest, periodic",
+   "status": "PASS",
+   "message": "observed order 0.99 (expected 1)",
+   "predicted_to_flag": false,
+   "seconds": 0.0677
+  },
+  {
+   "problem": "sod",
+   "bug": null,
+   "family": "reference",
+   "check": "acoustic pulse leaving through an open end",
+   "status": "PASS",
+   "message": "after the pulse left through the open end, at most 0.00018 of it remained (limit 0.01) on 50 to 200 cells",
+   "predicted_to_flag": false,
+   "seconds": 0.0274
   },
   {
    "problem": "sod",
@@ -4076,7 +4096,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 4.4e-16), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0042
+   "seconds": 0.0077
   },
   {
    "problem": "sod",
@@ -4086,7 +4106,7 @@
    "status": "FAIL",
    "message": "error does not decrease with resolution (about 0.0605 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
    "predicted_to_flag": true,
-   "seconds": 0.426
+   "seconds": 0.4206
   },
   {
    "problem": "sod",
@@ -4096,7 +4116,27 @@
    "status": "PASS",
    "message": "observed order 0.98 (expected 1)",
    "predicted_to_flag": true,
-   "seconds": 0.2178
+   "seconds": 0.1728
+  },
+  {
+   "problem": "sod",
+   "bug": "gamma_wrong",
+   "family": "reference",
+   "check": "acoustic wave about rest, periodic",
+   "status": "FAIL",
+   "message": "error does not decrease with resolution (about 0.425 at the finest level); the error is the same at every resolution, which points to something independent of the step (a jump in the model such as a potential cutoff crossing, a wrong constant, or a reference for a different problem) rather than to the integrator",
+   "predicted_to_flag": true,
+   "seconds": 0.0922
+  },
+  {
+   "problem": "sod",
+   "bug": "gamma_wrong",
+   "family": "reference",
+   "check": "acoustic pulse leaving through an open end",
+   "status": "FAIL",
+   "message": "0.165 of an outgoing acoustic pulse is still in the domain after it should have left through the open end (limit 0.01): the boundary reflects or the solution is unstable",
+   "predicted_to_flag": true,
+   "seconds": 0.0368
   },
   {
    "problem": "sod",
@@ -4106,7 +4146,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.03 and shrinks at about order -0.00",
    "predicted_to_flag": false,
-   "seconds": 0.0053
+   "seconds": 0.0072
   },
   {
    "problem": "sod",
@@ -4116,7 +4156,7 @@
    "status": "PASS",
    "message": "observed order 0.43 (expected 0.5)",
    "predicted_to_flag": false,
-   "seconds": 0.4273
+   "seconds": 0.3531
   },
   {
    "problem": "sod",
@@ -4126,7 +4166,27 @@
    "status": "PASS",
    "message": "observed order 0.98 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.2251
+   "seconds": 0.1784
+  },
+  {
+   "problem": "sod",
+   "bug": "nonconservative_momentum",
+   "family": "reference",
+   "check": "acoustic wave about rest, periodic",
+   "status": "PASS",
+   "message": "observed order 0.99 (expected 1)",
+   "predicted_to_flag": false,
+   "seconds": 0.0917
+  },
+  {
+   "problem": "sod",
+   "bug": "nonconservative_momentum",
+   "family": "reference",
+   "check": "acoustic pulse leaving through an open end",
+   "status": "PASS",
+   "message": "after the pulse left through the open end, at most 0.00018 of it remained (limit 0.01) on 50 to 200 cells",
+   "predicted_to_flag": false,
+   "seconds": 0.0317
   },
   {
    "problem": "sod",
@@ -4136,7 +4196,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.0113 and shrinks at about order 0.80",
    "predicted_to_flag": true,
-   "seconds": 0.0057
+   "seconds": 0.0055
   },
   {
    "problem": "sod",
@@ -4145,8 +4205,8 @@
    "check": "Sod shock tube, density L1",
    "status": "PASS",
    "message": "observed order 0.59 (expected 0.5)",
-   "predicted_to_flag": false,
-   "seconds": 0.3328
+   "predicted_to_flag": true,
+   "seconds": 0.2705
   },
   {
    "problem": "sod",
@@ -4155,8 +4215,28 @@
    "check": "smooth density wave, periodic",
    "status": "PASS",
    "message": "observed order 0.99 (expected 1)",
-   "predicted_to_flag": false,
-   "seconds": 0.1667
+   "predicted_to_flag": true,
+   "seconds": 0.1267
+  },
+  {
+   "problem": "sod",
+   "bug": "wave_speed_without_sound",
+   "family": "reference",
+   "check": "acoustic wave about rest, periodic",
+   "status": "FAIL",
+   "message": "error does not decrease with resolution (about 1.4e+05 at the finest level)",
+   "predicted_to_flag": true,
+   "seconds": 0.0678
+  },
+  {
+   "problem": "sod",
+   "bug": "wave_speed_without_sound",
+   "family": "reference",
+   "check": "acoustic pulse leaving through an open end",
+   "status": "FAIL",
+   "message": "58.5 of an outgoing acoustic pulse is still in the domain after it should have left through the open end (limit 0.01): the boundary reflects or the solution is unstable",
+   "predicted_to_flag": true,
+   "seconds": 0.0214
   },
   {
    "problem": "sod",
@@ -4166,7 +4246,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 4.4e-16), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0057
+   "seconds": 0.004
   },
   {
    "problem": "sod",
@@ -4176,7 +4256,7 @@
    "status": "PASS",
    "message": "observed order 0.63 (expected 0.5)",
    "predicted_to_flag": false,
-   "seconds": 0.3288
+   "seconds": 0.3052
   },
   {
    "problem": "sod",
@@ -4186,7 +4266,27 @@
    "status": "PASS",
    "message": "observed order 0.98 (expected 1)",
    "predicted_to_flag": false,
-   "seconds": 0.1612
+   "seconds": 0.1439
+  },
+  {
+   "problem": "sod",
+   "bug": "last_step_not_clipped",
+   "family": "reference",
+   "check": "acoustic wave about rest, periodic",
+   "status": "PASS",
+   "message": "observed order 1.05 (expected 1)",
+   "predicted_to_flag": false,
+   "seconds": 0.0689
+  },
+  {
+   "problem": "sod",
+   "bug": "last_step_not_clipped",
+   "family": "reference",
+   "check": "acoustic pulse leaving through an open end",
+   "status": "PASS",
+   "message": "after the pulse left through the open end, at most 0.00013 of it remained (limit 0.01) on 50 to 200 cells",
+   "predicted_to_flag": false,
+   "seconds": 0.0217
   },
   {
    "problem": "sod",
@@ -4196,7 +4296,7 @@
    "status": "FAIL",
    "message": "expected an exact solution to round-off, but the error reaches 0.00208 and shrinks at about order 1.33",
    "predicted_to_flag": true,
-   "seconds": 0.0042
+   "seconds": 0.0037
   },
   {
    "problem": "sod",
@@ -4205,8 +4305,8 @@
    "check": "Sod shock tube, density L1",
    "status": "PASS",
    "message": "observed order 0.63 (expected 0.5)",
-   "predicted_to_flag": false,
-   "seconds": 0.2981
+   "predicted_to_flag": true,
+   "seconds": 0.2733
   },
   {
    "problem": "sod",
@@ -4215,8 +4315,28 @@
    "check": "smooth density wave, periodic",
    "status": "PASS",
    "message": "observed order 0.98 (expected 1)",
-   "predicted_to_flag": false,
-   "seconds": 0.1404
+   "predicted_to_flag": true,
+   "seconds": 0.1289
+  },
+  {
+   "problem": "sod",
+   "bug": "reflective_boundary",
+   "family": "reference",
+   "check": "acoustic wave about rest, periodic",
+   "status": "PASS",
+   "message": "observed order 0.99 (expected 1)",
+   "predicted_to_flag": true,
+   "seconds": 0.0695
+  },
+  {
+   "problem": "sod",
+   "bug": "reflective_boundary",
+   "family": "reference",
+   "check": "acoustic pulse leaving through an open end",
+   "status": "FAIL",
+   "message": "1 of an outgoing acoustic pulse is still in the domain after it should have left through the open end (limit 0.01): the boundary reflects or the solution is unstable",
+   "predicted_to_flag": true,
+   "seconds": 0.0224
   },
   {
    "problem": "sod",
@@ -4226,7 +4346,7 @@
    "status": "EXACT",
    "message": "reproduced to round-off (largest error 4.4e-16), as designed",
    "predicted_to_flag": false,
-   "seconds": 0.0056
+   "seconds": 0.0039
   }
  ]
 }

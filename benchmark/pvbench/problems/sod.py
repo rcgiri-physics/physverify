@@ -12,6 +12,10 @@ reference  Sod's problem against the exact Riemann solution (Toro, ch. 4). With
            band ([0.3, 1.0]).
 reference  a density wave carried at constant velocity and pressure, which is an
            exact smooth solution: order 1 on a periodic domain.
+reference  a small-amplitude acoustic wave about rest (linear acoustics): order 1, periodic.
+           With u = 0 only the sound speed gives the scheme its dissipation.
+reference  a small acoustic pulse sent out through the right end: afterwards the exact
+           solution is the uniform rest state, so at most 1% of the pulse may remain.
 invariant  discrete conservation, at t = 0.05. Before any wave reaches the ends the fluxes
            through the ends are known exactly (only the pressure term, p_L - p_R,
            moves momentum), so the totals of mass, momentum and energy must match
@@ -43,6 +47,19 @@ CONSERVATION_CELLS = (50, 100, 200)
 # by t = 0.2 at CFL 0.5, so numerical diffusion would reach the ends. By t = 0.05 it has
 # moved about 0.21 from the diaphragm, and the end cells are still exactly the initial states.
 CONSERVATION_T_END = 0.05
+# Small-amplitude acoustics about rest (rho0 = p0 = 1, c0 = sqrt(gamma)). The linearized Euler equations give
+# right-going simple waves rho' = eps f(x - c0 t), u' = c0 rho', p' = c0^2 rho' (Toro, sect. 2.3 / LeVeque,
+# Finite Volume Methods, ch. 14); the nonlinear correction is O(eps^2), far below the scheme's error here.
+ACOUSTIC_EPS = 1e-6
+ACOUSTIC_C0 = math.sqrt(GAMMA)
+ACOUSTIC_CELLS = (50, 100, 200, 400, 800)
+ACOUSTIC_T_END = 0.25
+PULSE_CELLS = (50, 100, 200)
+PULSE_X0, PULSE_WIDTH = 0.7, 0.05
+PULSE_T_END = 0.6 / ACOUSTIC_C0  # the pulse centre is then 0.3 past the right end, every part of it outside
+# A copied (transmissive) end lets a smooth outgoing pulse leave almost entirely: about 2e-4 of it is left on
+# 50 cells and less on finer grids. A reflecting end keeps all of it, so 1% separates the two with a wide margin.
+PULSE_LEFT_TOL = 0.01
 
 BUGS = {
     "gamma_wrong": BugInfo(
@@ -59,11 +76,11 @@ BUGS = {
     ),
     "wave_speed_without_sound": BugInfo(
         "the Rusanov dissipation uses |u| instead of |u| + c",
-        families(),
+        families("reference"),
         "predicted before running: oscillations at the discontinuities, flagged by the Sod reference "
-        "check. Observed: the scheme stayed stable and was slightly more accurate (less dissipation), "
-        "and it is still in conservation form, so no check flags it. A blind spot: the bug is a "
-        "stability risk, not a wrong answer on this problem",
+        "check. Observed: on Sod's problem the scheme stayed stable and was slightly more accurate (less "
+        "dissipation). An acoustic wave in a fluid at rest (u = 0) exposes it: the dissipation vanishes, "
+        "the scheme becomes central differences with forward Euler, which is unstable, and the error grows",
     ),
     "last_step_not_clipped": BugInfo(
         "the last time step is not shortened to end exactly at t_end",
@@ -73,9 +90,9 @@ BUGS = {
     ),
     "reflective_boundary": BugInfo(
         "the boundary cells reflect (velocity negated) instead of letting waves out",
-        families(),
-        "nothing until a wave reaches a boundary, which does not happen before t_end: a documented "
-        "blind spot of every check here",
+        families("reference"),
+        "nothing in Sod's problem, where no wave reaches a boundary before t_end. An acoustic pulse sent "
+        "out through the open end exposes it: the reflected pulse stays in the domain",
     ),
 }
 
@@ -227,6 +244,20 @@ def wave_init(x, t=0.0):
     return 1.0 + 0.2 * np.sin(2.0 * math.pi * (x - t)), np.ones_like(x), np.ones_like(x)
 
 
+def _acoustic(f):
+    """Right-going linear acoustic wave with density perturbation f (an array), about rest."""
+    rho = ACOUSTIC_EPS * f
+    return 1.0 + rho, ACOUSTIC_C0 * rho, 1.0 + ACOUSTIC_C0 ** 2 * rho
+
+
+def acoustic_wave_init(x, t=0.0):
+    return _acoustic(np.sin(2.0 * math.pi * (x - ACOUSTIC_C0 * t)))
+
+
+def acoustic_pulse_init(x):
+    return _acoustic(np.exp(-((x - PULSE_X0) / PULSE_WIDTH) ** 2))
+
+
 def _l1(a, b):
     with np.errstate(all="ignore"):
         return float(np.mean(np.abs(a - b)))
@@ -262,9 +293,34 @@ def checks(bugs=frozenset()) -> list[Check]:
             hs.append(1.0 / n)
         return check_exact(hs, errs, floor=1e-11)
 
+    def run_acoustic_wave():
+        # the fluid is at rest, so all dissipation must come from the sound speed
+        hs, errs = [], []
+        for n in ACOUSTIC_CELLS:
+            x, U, _ = solve(n, bugs, acoustic_wave_init, ACOUSTIC_T_END, periodic=True)
+            hs.append(1.0 / n)
+            errs.append(_l1(U[0], acoustic_wave_init(x, ACOUSTIC_T_END)[0]) / ACOUSTIC_EPS)
+        return check_order(hs, errs, 1.0)
+
+    def run_pulse_exit():
+        worst = 0.0
+        for n in PULSE_CELLS:
+            x, U, _ = solve(n, bugs, acoustic_pulse_init, PULSE_T_END)
+            initial = _l1(acoustic_pulse_init(x)[0], 1.0)
+            left = _l1(U[0], 1.0) / initial
+            worst = max(worst, left) if np.isfinite(left) else float("inf")
+        if worst <= PULSE_LEFT_TOL:
+            return Result(PASS, f"after the pulse left through the open end, at most {worst:.2g} of it remained"
+                                f" (limit {PULSE_LEFT_TOL:g}) on {PULSE_CELLS[0]} to {PULSE_CELLS[-1]} cells")
+        return Result(FAIL, f"{worst:.3g} of an outgoing acoustic pulse is still in the domain after it should have"
+                            f" left through the open end (limit {PULSE_LEFT_TOL:g}): the boundary reflects or the"
+                            " solution is unstable")
+
     return [
         Check("reference", "Sod shock tube, density L1", run_sod),
         Check("reference", "smooth density wave, periodic", run_wave),
+        Check("reference", "acoustic wave about rest, periodic", run_acoustic_wave),
+        Check("reference", "acoustic pulse leaving through an open end", run_pulse_exit),
         Check("invariant", "discrete conservation of mass, momentum, energy", run_conservation),
     ]
 

@@ -60,11 +60,11 @@ python -m pytest -q                             # about 2 minutes
 | | Count |
 |---|---|
 | Bugs seeded | 37 |
-| Flagged by at least one check | 35 |
-| Missed by every check | 2, both in the Sod solver (see below) |
+| Flagged by at least one check | 37 |
+| Missed by every check | 0 (the last two, in the Sod solver, were closed by checks added for them; see below) |
 | False alarms on the 5 bug-free baselines | 0 |
-| Flagged by `mms` / `reference` / `invariant` / `limit` / `patch` | 27 / 26 / 22 / 14 / 27 |
-| Flagged by one family alone | `invariant` 2, `limit` 2, `patch` 3, all others 0 |
+| Flagged by `mms` / `reference` / `invariant` / `limit` / `patch` | 27 / 28 / 22 / 14 / 27 |
+| Flagged by one family alone | `reference` 2, `invariant` 2, `limit` 2, `patch` 3, all others 0 |
 
 **Reproducing it.** The checks are deterministic. `tests/test_seeded_bugs.py` reruns every check and requires that `detection_matrix.md` and `bug_catalogue.md` match the committed files exactly. Two commands regenerate the tables:
 
@@ -78,9 +78,9 @@ PYTHONPATH=src:benchmark python -m pvbench.compare results/comparison.md
 | Strategy | Bugs caught | False alarms | Runtime on the author's laptop |
 |---|---|---|---|
 | plain tests | 27 of 37 | 0 of 5 | 26 s |
-| `reference` only | 26 of 37 | 0 of 5 | 42 s |
+| `reference` only | 28 of 37 | 0 of 5 | 42 s |
 | `mms` only | 27 of 37 | 0 of 5 | 23 s |
-| all five families | 35 of 37 | 0 of 5 | 76 s |
+| all five families | 37 of 37 | 0 of 5 | 76 s |
 
 The plain tests missed ten bugs. Most only show on forced or backward-moving runs, are small (a 0.1% range error, gravitational softening), or keep the scheme's order. A tighter tolerance would catch more of them. The difficulty is choosing it: the order studies need no tolerance on the error itself, only on the order.
 
@@ -96,10 +96,11 @@ How to read this:
   - `heat1d/source_time_shift`
   - `projectile/euler_extra_step`
 - **Not independent evidence.** The heat patch test was added after `extra_time_step` was the one miss in the first version of the table. The ODE patch test and the other two order-preserving bugs were added together, after the heat result. So these three detections are not independent evidence. They show that the mechanism works as designed. [docs/patch.md](patch.md) states exactly what the patch check assumes and proves.
-- **Sod: two predictions were wrong, and two bugs are missed.** The predictions and symptoms were written before the checks were run, and the catalogue records where they turned out wrong:
+- **Sod: two predictions were wrong, and two bugs were missed until checks were added for them.** The predictions and symptoms were written before the checks were run, and the catalogue records where they turned out wrong:
   - `nonconservative_momentum` was predicted to fail the Sod reference check. Its observed order fell from 0.63 to 0.43, still inside the wide band a discontinuous solution needs, so only the conservation check flags it.
-  - `wave_speed_without_sound` (Rusanov dissipation without the sound speed) was predicted to oscillate. It stayed stable and was slightly more accurate, so nothing flags it.
-  - `reflective_boundary` cannot show before a wave reaches a boundary, and none does by the measurement time. It is listed as a blind spot on purpose.
+  - `wave_speed_without_sound` (Rusanov dissipation without the sound speed) was predicted to oscillate. On Sod's problem it stayed stable and was slightly more accurate, so the first checks missed it. An acoustic wave in a fluid at rest now exposes it: with u = 0 the dissipation vanishes and the scheme is unstable.
+  - `reflective_boundary` cannot show before a wave reaches a boundary, and none does in Sod's problem by the measurement time. An acoustic pulse sent out through the open end now exposes it.
+  - These two checks were written after the two bugs were known to be missed, so like the patch tests above they are not independent evidence; they show that a problem chosen for the mechanism finds it.
 - **Order studies on discontinuous solutions are weak.** Sod's L1 order is only known to lie between about 0.5 and 1. That band is too wide to catch a change from 0.63 to 0.43. The exact conservation check is the stronger test there.
 - **A built-in blind spot, shown on purpose.** A manufactured solution built from the code's own right-hand side hides a wrong right-hand side. `tests/test_mms.py` demonstrates this.
 
