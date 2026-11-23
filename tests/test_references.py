@@ -37,7 +37,8 @@ def test_heisenberg_chain_bond_energy_by_quadrature():
     b = 1.7
     z = np.linspace(-1, 1, 200001)
     w = np.exp(b * z)
-    mean = np.trapezoid(z * w, z) / np.trapezoid(w, z)
+    trapezoid = getattr(np, "trapezoid", None) or np.trapz  # np.trapezoid is NumPy 2.0+
+    mean = trapezoid(z * w, z) / trapezoid(w, z)
     r = R.heisenberg_open_chain(5, 1.7, 1.0)
     assert abs(r["e"] - (-(4 / 5) * 1.7 * mean)) < 1e-9  # -(N-1)/N J <cos>
     assert abs(float(R.langevin(1e-5)) - 1e-5 / 3) < 1e-15
