@@ -17,6 +17,17 @@ jobs:
       - run: python -m pip install ruff
       - run: ruff check .
 
+  types:
+    # mypy on the public API; the files are listed in pyproject.toml
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e . mypy
+      - run: mypy
+
   test:
     runs-on: ${{ matrix.os }}
     strategy:

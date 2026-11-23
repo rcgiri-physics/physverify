@@ -241,7 +241,7 @@ def a_stability_margin(A, b) -> float:
     scale = max(1.0, float(np.max(np.abs(E.coef))))
     pts = [0.0, 1.0, -1.0]
     if E.degree() >= 2:
-        pts += [float(r.real) for r in E.deriv().roots() if abs(r.imag) < 1e-7 * max(1.0, abs(r))]
+        pts += [float(r.real) for r in E.deriv().roots() if abs(r.imag) < 1e-7 * max(1.0, float(abs(r)))]
     lead = E.coef[-1] if E.degree() >= 1 else 0.0
     if E.degree() >= 1 and lead < -1e-12 * scale:
         return float("-inf")

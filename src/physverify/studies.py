@@ -383,11 +383,11 @@ def decay_rate(t, y, *, t_skip: float | None = None, windows: int = 8, steady_to
     ly = np.log(y)
     if t_skip is None:
         edges = np.linspace(t[0], t[-1], windows + 1)
-        rates = []
+        window_rates = []
         for a, b in zip(edges[:-1], edges[1:]):
             m = (t >= a) & (t <= b)
-            rates.append(-np.polyfit(t[m], ly[m], 1)[0] if m.sum() >= 2 else np.nan)
-        rates = np.array(rates)
+            window_rates.append(-np.polyfit(t[m], ly[m], 1)[0] if m.sum() >= 2 else np.nan)
+        rates = np.array(window_rates)
         last = rates[-1]
         steady = np.abs(rates - last) <= steady_tol * abs(last)
         start = None
