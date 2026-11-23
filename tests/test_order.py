@@ -1,10 +1,19 @@
+import importlib.util
 import math
+from pathlib import Path
 
 import numpy as np
 import pytest
 
 from physverify.checks import EXACT, FAIL, INCONCLUSIVE, PASS
-from physverify.order import check_exact, check_order, fit_order, gci, pairwise_orders
+from physverify.order import (
+    check_exact,
+    check_order,
+    fit_order,
+    fit_order_error,
+    gci,
+    pairwise_orders,
+)
 
 HS = [0.1, 0.05, 0.025, 0.0125]
 
@@ -144,3 +153,87 @@ def test_clean_pass_gives_small_standard_error_and_no_warning():
 def test_exact_warns_about_self_made_references():
     r = check_order(HS, [0.0] * 4, expected=2)
     assert r.status == EXACT and "computed by the code under test" in r.message
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def _runner():
+    spec = importlib.util.spec_from_file_location("pv_runner_b8", ROOT / "sandbox" / "runner.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _pixel_to_sky(p, n, crpix):
+    return (p + 1 - crpix) * 2.0  # 0-based pixel to arcsec, FITS reference pixel crpix at 0 arcsec
+
+
+def _sabine(S, V, a, m, c=343.0):
+    return 24 * math.log(10) / c * V / (a * S + 4 * m * V)
+
+
+def _eyring_bug(S, V, a, m, c=343.0):
+    return -(24 * math.log(10) / c) * V / (S * math.log(1 - a) + 4 * m * V)
+
+
+def _eyring(S, V, a, m, c=343.0):
+    return -(24 * math.log(10) / c) * V / (S * math.log(1 - a) - 4 * m * V)
+
+
+SOURCE = '''
+from __future__ import annotations
+import numpy as np
+import package_that_is_not_installed
+from .sibling import helper
+
+SCALE = 2.0
+
+def centered_diff(x):
+    return np.gradient(x)
+
+def curvature(p: Spec) -> float:
+    return SCALE * centered_diff(p)
+
+def unrelated():
+    raise RuntimeError("must not be needed")
+
+run_the_whole_simulation_at_import()
+'''
+
+
+def test_check_order_tol_alias_and_round_off_hints():
+    hs = [0.1, 0.05, 0.025, 0.0125]
+    errs = [h**2 for h in hs]
+    assert check_order(hs, errs, 2.6, tol=0.7).status == PASS
+    assert check_order(hs, errs, 2.6, tol=0.1).status == FAIL
+    r = check_order([0.1, 0.05, 0.025], [3e-12, 5e-13, 4e-13], 4)
+    assert r.status == INCONCLUSIVE and "coarser" in r.message
+    r = check_order([0.1, 0.05, 0.025], [2e-11, 2.1e-11, 2.05e-11], 4)
+    assert r.status == FAIL and "round-off" in r.message
+
+
+def test_check_order_reports_an_accuracy_only_failure():
+    hs = np.array([0.1, 0.05, 0.025, 0.0125])
+    errs = 3.0 * hs**2
+    assert check_order(hs, errs, 2).status == PASS
+    r = check_order(hs, errs, 2, atol=1e-4)
+    assert r.status == FAIL and "only the accuracy requirement fails" in r.message
+    assert "2.2 times smaller steps" in r.message  # finest error 4.69e-4, order 2: sqrt(4.69)
+    assert check_order(hs, errs, 2, atol=1e-3).status == PASS
+    bad = check_order(hs, 3.0 * hs, 2, atol=1e-4)
+    assert bad.status == FAIL and "below the expected" in bad.message and "also above" in bad.message
+
+
+def test_order_with_standard_error_and_gci():
+    hs = np.array([0.1, 0.05, 0.025, 0.0125])
+    p, se = fit_order_error(hs, 3.0 * hs ** 2)
+    assert abs(p - 2) < 1e-12 and se < 1e-10
+    noisy = 3.0 * hs ** 2 * np.array([1.0, 1.3, 0.8, 1.2])
+    p, se = fit_order_error(hs, noisy)
+    assert se > 0.05
+    # f(h) = 1 + h^2 on h = 0.1, 0.2, 0.4: p = 2, extrapolate 1
+    g = gci(1.01, 1.04, 1.16, 2.0)
+    assert abs(g["order"] - 2) < 1e-12 and abs(g["extrapolated"] - 1.0) < 1e-12
+    assert abs(g["gci_fine"] - 1.25 * 0.03 / 1.01 / 3) < 1e-12
+    assert gci(1.0, 1.1, 1.05, 2.0)["oscillatory"]

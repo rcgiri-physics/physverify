@@ -1,6 +1,4 @@
-"""Roadmap items done for 0.7.0: real tableaux, symplecticity, order uncertainty, independent references."""
-
-import textwrap
+"""Butcher tables: published tables, embedded orders, rounded coefficients, symplecticity."""
 
 import numpy as np
 import pytest
@@ -12,8 +10,14 @@ from physverify.butcher import (
     square_tableau,
     symplectic_residual,
 )
-from physverify.order import fit_order_error, gci
-from physverify.specscan import reference_notes
+from physverify.checks import FAIL
+
+
+def test_check_tableau_points_at_rounded_coefficients():
+    A = [[0, 0, 0, 0], [0.5, 0, 0, 0], [0, 0.5, 0, 0], [0, 0, 1, 0]]
+    b = [0.166667, 0.333333, 0.333333, 0.166667]  # classical RK4 typed with 6 digits
+    r = check_tableau(A, b, claimed=4)
+    assert r.status == FAIL and "too few digits" in r.message
 
 
 def test_published_tables_and_their_embedded_orders():
@@ -53,37 +57,3 @@ def test_symplectic_gauss_but_not_rk4():
     assert check_tableau(g["A"], g["b"], claimed=4, symplectic=True).ok
     r = check_tableau(rk4["A"], rk4["b"], claimed=4, symplectic=True)
     assert not r.ok and "symplectic" in r.message
-
-
-def test_order_with_standard_error_and_gci():
-    hs = np.array([0.1, 0.05, 0.025, 0.0125])
-    p, se = fit_order_error(hs, 3.0 * hs ** 2)
-    assert abs(p - 2) < 1e-12 and se < 1e-10
-    noisy = 3.0 * hs ** 2 * np.array([1.0, 1.3, 0.8, 1.2])
-    p, se = fit_order_error(hs, noisy)
-    assert se > 0.05
-    # f(h) = 1 + h^2 on h = 0.1, 0.2, 0.4: p = 2, extrapolate 1
-    g = gci(1.01, 1.04, 1.16, 2.0)
-    assert abs(g["order"] - 2) < 1e-12 and abs(g["extrapolated"] - 1.0) < 1e-12
-    assert abs(g["gci_fine"] - 1.25 * 0.03 / 1.01 / 3) < 1e-12
-    assert gci(1.0, 1.1, 1.05, 2.0)["oscillatory"]
-
-
-def test_reference_that_uses_the_solver_is_noted(tmp_path):
-    spec = tmp_path / "verify_x.py"
-    spec.write_text(textwrap.dedent('''
-        import numpy as np
-        import mysolver
-        from physverify import Check
-
-        def exact(t):
-            return mysolver.run(t, dt=1e-6)
-
-        def analytic(t):
-            return np.exp(-t)
-
-        def checks():
-            return []
-    '''), encoding="utf-8")
-    notes = reference_notes(spec)
-    assert len(notes) == 1 and "exact()" in notes[0] and "mysolver" in notes[0]
