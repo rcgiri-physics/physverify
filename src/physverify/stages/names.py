@@ -106,7 +106,7 @@ def scan_names(path: Path, tree, rel: str, source: str = "") -> list[Finding]:
                         f"{len(unknown)} names are used but never defined or imported ({shown}); so many usually means they"
                         " are provided at run time by a host program or a library, so they are not reported one by one", rule="PV402")]
     for name, lines in sorted(unknown.items(), key=lambda kv: kv[1][0]):
-        close = [k for k in known if k != name and len(k) > 2 and _one_edit(name, k)]
+        close = [k for k in sorted(known) if k != name and len(k) > 2 and _one_edit(name, k)]
         hint = f" (did you mean {close[0]}?)" if close else ""
         more = f", also lines {', '.join(map(str, lines[1:6]))}" if len(lines) > 1 else ""
         out.append(Finding("names", WARN, rel, lines[0],
