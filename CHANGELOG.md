@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Stable rule IDs for `scan`.** Every finding names its rule (`PV101` to `PV910`, in `physverify.rules`), shown as `[PV401]` in the text output and as `rule` in the JSON. `docs/scan-rules.md` lists what each rule looks for and what the 2026-10 corpus rescan measured for its stage.
 - **Type information ships with the package (`py.typed`).** The public API (`physverify`, `physverify.butcher`) passes mypy, which now runs in CI; the other modules are added as they are cleaned up.
 - **Test files are named by what they test.** The tests in `test_batch7_lessons`, `test_batch8_lessons`, `test_helpers_2026_10`, `test_new_checks_2026_11`, `test_roadmap_0_7` and `test_v040_helpers` moved to files named after the module they check (`test_identities.py`, `test_butcher.py`, `test_checks.py` and others). Older entries below still give the old file names.
 - **Benchmark: the two seeded-bug misses are closed.** The Sod solver gains two checks from linear acoustics: an acoustic wave in a fluid at rest (catches Rusanov dissipation without the sound speed, which makes the scheme unstable there) and an acoustic pulse leaving through an open end (catches a reflecting boundary). The full suite now flags 37 of 37 seeded bugs; these two checks were written after the misses were known, which the docs say.

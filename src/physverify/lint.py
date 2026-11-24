@@ -167,18 +167,18 @@ def scan_names(path: Path, tree, rel: str, source: str = "") -> list[Finding]:
         shown = ", ".join(sorted(unknown)[:8]) + (", ..." if len(unknown) > 8 else "")
         return [Finding("names", NOTE, rel, first,
                         f"{len(unknown)} names are used but never defined or imported ({shown}); so many usually means they"
-                        " are provided at run time by a host program or a library, so they are not reported one by one")]
+                        " are provided at run time by a host program or a library, so they are not reported one by one", rule="PV402")]
     for name, lines in sorted(unknown.items(), key=lambda kv: kv[1][0]):
         close = [k for k in known if k != name and len(k) > 2 and _one_edit(name, k)]
         hint = f" (did you mean {close[0]}?)" if close else ""
         more = f", also lines {', '.join(map(str, lines[1:6]))}" if len(lines) > 1 else ""
         out.append(Finding("names", WARN, rel, lines[0],
-                           f"{name} is used but never defined or imported in this file{hint}{more}; it raises NameError when reached"))
+                           f"{name} is used but never defined or imported in this file{hint}{more}; it raises NameError when reached", rule="PV401"))
     for name, lines in sorted(in_annotation.items(), key=lambda kv: kv[1][0]):
         if name not in unknown:
             out.append(Finding("names", NOTE, rel, lines[0],
                                f"{name} is used only in type annotations and never defined or imported; Python 3.13 and"
-                               " older evaluate annotations at definition time, so this raises NameError there"))
+                               " older evaluate annotations at definition time, so this raises NameError there", rule="PV403"))
     return out
 
 
@@ -197,12 +197,12 @@ def parse_finding(rel: str, exc: Exception, source: str = "") -> Finding:
     msg = getattr(exc, "msg", str(exc))
     line = getattr(exc, "lineno", 0) or 0
     if re.search(r"\{\{.*\}\}|\{%.*%\}", source):
-        return Finding("names", NOTE, rel, line, f"the file does not parse, but looks like a template ({{{{ }}}} or {{% %}}): {msg}")
+        return Finding("names", NOTE, rel, line, f"the file does not parse, but looks like a template ({{{{ }}}} or {{% %}}): {msg}", rule="PV405")
     why = " (Python 2 code)" if "print" in msg and "parenthes" in msg else ""
     # a loose script in misc/, scripts/ or examples/ is not part of the package (corpus repo L164): one look, not a defect
     loose = bool(set(Path(rel).parts[:-1]) & _LOOSE_DIRS)
     return Finding("names", NOTE if loose else WARN, rel, line,
-                   f"the file does not parse{why}: {msg}" + ("; it is outside the package, in a folder of loose scripts" if loose else ""))
+                   f"the file does not parse{why}: {msg}" + ("; it is outside the package, in a folder of loose scripts" if loose else ""), rule="PV404")
 
 
 _LOOSE_DIRS = {"misc", "scripts", "script", "examples", "example", "old", "legacy", "attic", "archive", "sandbox"}
@@ -298,7 +298,7 @@ def _import_time_downloads(tree, rel) -> list[Finding]:
                 via_requests = fn == "get" and isinstance(n.func, ast.Attribute) and getattr(n.func.value, "id", "") == "requests"
                 if fn in _DOWNLOADS or via_requests:
                     out.append(Finding("api", NOTE, rel, n.lineno, f"{ast.unparse(n.func)}(...) runs when the module is"
-                                                                   " imported, so importing it needs a network connection"))
+                                                                   " imported, so importing it needs a network connection", rule="PV501"))
     return out
 
 
@@ -313,19 +313,19 @@ def scan_api(path: Path, tree, rel: str) -> list[Finding]:
         if isinstance(n, ast.Attribute) and isinstance(n.value, ast.Name) and n.value.id in np_names:
             if n.attr in _NUMPY:
                 new, when = _NUMPY[n.attr]
-                out.append(Finding("api", WARN, rel, n.lineno, f"{n.value.id}.{n.attr} was {when}; use {new}"))
+                out.append(Finding("api", WARN, rel, n.lineno, f"{n.value.id}.{n.attr} was {when}; use {new}", rule="PV502"))
             elif n.attr in _NUMPY_READDED:
                 out.append(Finding("api", NOTE, rel, n.lineno, f"{n.value.id}.{n.attr} raises AttributeError on NumPy 1.24"
-                                                                 f" to 1.26; for those versions use {_NUMPY_READDED[n.attr]}"))
+                                                                 f" to 1.26; for those versions use {_NUMPY_READDED[n.attr]}", rule="PV503"))
             elif n.attr in _NUMPY_DEPRECATED:
                 out.append(Finding("api", NOTE, rel, n.lineno, f"{n.value.id}.{n.attr} is deprecated in NumPy 2;"
-                                                                 f" use {_NUMPY_DEPRECATED[n.attr]}"))
+                                                                 f" use {_NUMPY_DEPRECATED[n.attr]}", rule="PV504"))
         # from numpy import NaN
         if isinstance(n, ast.ImportFrom) and n.module == "numpy":
             for a in n.names:
                 if a.name in _NUMPY:
                     new, when = _NUMPY[a.name]
-                    out.append(Finding("api", WARN, rel, n.lineno, f"numpy.{a.name} was {when}; use {new}"))
+                    out.append(Finding("api", WARN, rel, n.lineno, f"numpy.{a.name} was {when}; use {new}", rule="PV502"))
         # np.array(x, copy=False)
         if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and n.func.attr == "array" \
                 and isinstance(n.func.value, ast.Name) and n.func.value.id in np_names:
@@ -335,15 +335,15 @@ def scan_api(path: Path, tree, rel: str) -> list[Finding]:
             for k in n.keywords:
                 if k.arg == "copy" and isinstance(k.value, ast.Constant) and k.value.value is False and not buffer:
                     out.append(Finding("api", WARN, rel, n.lineno, "np.array(..., copy=False) raises ValueError in NumPy 2"
-                                                                   " whenever a copy is needed (a list, a number); use np.asarray"))
+                                                                   " whenever a copy is needed (a list, a number); use np.asarray", rule="PV505"))
         # np.vstack(x for x in ...): stacking functions need a sequence; a generator raises TypeError since NumPy 1.24
         if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and n.func.attr in _STACKERS                 and isinstance(n.func.value, ast.Name) and n.func.value.id in np_names                 and n.args and isinstance(n.args[0], ast.GeneratorExp):
             out.append(Finding("api", WARN, rel, n.lineno, f"{n.func.value.id}.{n.func.attr} is given a generator, which"
-                                                           " raises TypeError since NumPy 1.24; pass a list ([... for ...])"))
+                                                           " raises TypeError since NumPy 1.24; pass a list ([... for ...])", rule="PV506"))
         # jnp.clip(x, a_min=, a_max=): current JAX rejects these keywords (corpus repo L329 could not run on it)
         if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and n.func.attr == "clip"                 and _src_text(n.func.value) in ("jnp", "jax.numpy")                 and any(k.arg in ("a_min", "a_max") for k in n.keywords):
             out.append(Finding("api", WARN, rel, n.lineno, f"{_src_text(n.func)}(..., a_min=, a_max=): current JAX raises"
-                                                           " TypeError for these keywords; use min= and max=, or pass them by position"))
+                                                           " TypeError for these keywords; use min= and max=, or pass them by position", rule="PV507"))
         # scipy and Python modules that were removed
         if isinstance(n, ast.ImportFrom) and n.module:
             for mod, names in _SCIPY.items():
@@ -352,22 +352,22 @@ def scan_api(path: Path, tree, rel: str) -> list[Finding]:
                         new = names.get(a.name, names.get("*", False))
                         if new is not False:
                             out.append(Finding("api", WARN, rel, n.lineno, f"{n.module}.{a.name} has been removed from SciPy"
-                                                                           + (f"; use {new}" if new else "")))
+                                                                           + (f"; use {new}" if new else ""), rule="PV508"))
             if n.module.split(".")[0] in _PY_REMOVED:
                 top = n.module.split(".")[0]
-                out.append(Finding("api", NOTE if top in _SHIMMED else WARN, rel, n.lineno, f"{n.module}: use {_PY_REMOVED[top]}"))
+                out.append(Finding("api", NOTE if top in _SHIMMED else WARN, rel, n.lineno, f"{n.module}: use {_PY_REMOVED[top]}", rule="PV509"))
         if isinstance(n, ast.Import):
             for a in n.names:
                 top = a.name.split(".")[0]
                 if top in _PY_REMOVED:
                     out.append(Finding("api", NOTE if top in _SHIMMED else WARN, rel, n.lineno,
-                                       f"import {a.name}: use {_PY_REMOVED[top]}"))
+                                       f"import {a.name}: use {_PY_REMOVED[top]}", rule="PV509"))
                 if a.name == "scipy.misc":
-                    out.append(Finding("api", WARN, rel, n.lineno, "scipy.misc has been removed from SciPy"))
+                    out.append(Finding("api", WARN, rel, n.lineno, "scipy.misc has been removed from SciPy", rule="PV508"))
         if isinstance(n, ast.Attribute) and n.attr in _SCIPY["scipy.integrate"] and isinstance(n.value, ast.Attribute) \
                 and n.value.attr == "integrate":
             out.append(Finding("api", WARN, rel, n.lineno, f"scipy.integrate.{n.attr} has been removed from SciPy;"
-                                                           f" use {_SCIPY['scipy.integrate'][n.attr]}"))
+                                                           f" use {_SCIPY['scipy.integrate'][n.attr]}", rule="PV508"))
     return out
 
 
@@ -395,12 +395,12 @@ def scan_literals(path: Path, tree, rel: str, source: str) -> list[Finding]:
                 a, b = n.left.value, n.right.value
                 value = a - b if isinstance(n.op, ast.Sub) else a + b
                 out.append(Finding("literals", WARN, rel, n.lineno,
-                                   f"{text.strip()} is {value:g}; if {meant} was meant, the operator is inside the number"))
+                                   f"{text.strip()} is {value:g}; if {meant} was meant, the operator is inside the number", rule="PV601"))
         if isinstance(n, ast.BinOp) and isinstance(n.op, ast.BitXor) and isinstance(n.right, ast.Constant) \
                 and n.right.value in (2, 3) and not isinstance(n.left, ast.Constant):
             text = ast.get_source_segment(source, n) or ""
             out.append(Finding("literals", WARN, rel, n.lineno,
-                               f"{text.strip()}: ^ is exclusive or in Python, not a power (use **)"))
+                               f"{text.strip()}: ^ is exclusive or in Python, not a power (use **)", rule="PV602"))
         # A literal list, tuple, number or string indexed with a tuple, or called, raises TypeError when the line
         # runs; it is nearly always a lost comma or a lost name (corpus repo L313: `[c[0][...], [0][0,0,:,:]]`).
         # CPython warns about the same cases at compile time, but only when the file is compiled, and the warning
@@ -412,13 +412,13 @@ def scan_literals(path: Path, tree, rel: str, source: str) -> list[Finding]:
             text = ast.get_source_segment(source, n) or ""
             out.append(Finding("literals", WARN, rel, n.lineno,
                                f"{text.strip()[:60]}: indexing a literal {type(n.value).__name__.lower()} with a tuple or"
-                               " string raises TypeError; a comma or a name is probably missing"))
+                               " string raises TypeError; a comma or a name is probably missing", rule="PV603"))
         if isinstance(n, ast.Call) and isinstance(n.func, literal) \
                 and not (isinstance(n.func, ast.Constant) and n.func.value is None):
             text = ast.get_source_segment(source, n) or ""
             out.append(Finding("literals", WARN, rel, n.lineno,
                                f"{text.strip()[:60]}: a literal is called, which raises TypeError;"
-                               " a comma is probably missing between two items"))
+                               " a comma is probably missing between two items", rule="PV604"))
         if isinstance(n, ast.Compare):
             for op, right in zip(n.ops, n.comparators):
                 for side in (n.left, right):
@@ -426,7 +426,7 @@ def scan_literals(path: Path, tree, rel: str, source: str) -> list[Finding]:
                             and side.attr in ("nan", "NaN", "NAN") and getattr(side.value, "id", None) in np_names:
                         out.append(Finding("literals", WARN, rel, n.lineno,
                                            f"comparison with {side.value.id}.{side.attr} is {'never' if isinstance(op, ast.Eq) else 'always'}"
-                                           " true (NaN equals nothing); use np.isnan"))
+                                           " true (NaN equals nothing); use np.isnan", rule="PV605"))
     return out
 
 
@@ -517,5 +517,5 @@ def scan_units(path: Path, tree, rel: str) -> list[Finding]:
             q = _QDIM.get(t.lower())
             if q is not None and q != d:
                 out.append(Finding("units", WARN, rel, n.lineno,
-                                   f"{ast.unparse(n.elts[0])} has dimension {_show(d)}, but \"{t}\" has {_show(q)}"))
+                                   f"{ast.unparse(n.elts[0])} has dimension {_show(d)}, but \"{t}\" has {_show(q)}", rule="PV701"))
     return out

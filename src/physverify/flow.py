@@ -132,7 +132,7 @@ def _unbound(fn, rel) -> list[Finding]:
                         reported.add(n.id)
                         out.append(Finding("flow", NOTE, rel, n.lineno,
                                            f"'{n.id}' is assigned only inside the if at line {stmt.lineno}, so"
-                                           f" {fn.name}() raises UnboundLocalError when that branch is not taken"))
+                                           f" {fn.name}() raises UnboundLocalError when that branch is not taken", rule="PV801"))
                 # a later statement that binds the name on every path ends the risk
                 if not isinstance(fn.body[k], (ast.If, ast.For, ast.While, ast.Try, ast.With)):
                     maybe -= _stored(own[k])
@@ -182,7 +182,7 @@ def _alias(fn, rel) -> list[Finding]:
                 out.append(Finding("flow", NOTE, rel, line,
                                    f"'{a} = {b}' makes {a} the same array as {b}; {a} is changed in place at line"
                                    f" {mutated_at} and {b} is read at line {m.lineno}, so {b} has changed too."
-                                   f" If a copy was meant, write {a} = {b}.copy()"))
+                                   f" If a copy was meant, write {a} = {b}.copy()", rule="PV802"))
                 break
     return out
 
@@ -207,7 +207,7 @@ def _spacing(fn, rel) -> list[Finding]:
                 out.append(Finding("flow", WARN, rel, n.lineno,
                                    f"west/south coefficient '{n.targets[0].id}' uses only east/north spacings"
                                    f" ({', '.join(east)}) although west spacings exist in {fn.name}(); the two"
-                                   " agree only on a uniform grid"))
+                                   " agree only on a uniform grid", rule="PV803"))
     return out
 
 
@@ -237,7 +237,7 @@ def _numba(fn, rel, scipy_names) -> list[Finding]:
                 return [Finding("flow", WARN, rel, eager.lineno,
                                 f"{fn.name}() is compiled at import by an eager numba signature but calls"
                                 f" {ast.unparse(n.func)}, which numba cannot type; since numba 0.59 this raises"
-                                " TypingError at import (there is no object-mode fallback)")]
+                                " TypingError at import (there is no object-mode fallback)", rule="PV804")]
     return []
 
 
@@ -261,12 +261,12 @@ def scan_flow(path: Path, tree, rel: str) -> list[Finding]:
                 out.append(Finding("flow", NOTE, rel, n.lineno,
                                    f"factorial2({ast.unparse(a)}) is factorial2(-1) when the index is 0; current SciPy"
                                    " returns 0 there (it was 1), so a normalisation divides by zero. Use"
-                                   " exact=True, or define (-1)!! = 1"))
+                                   " exact=True, or define (-1)!! = 1", rule="PV805"))
         if isinstance(n, ast.Call) and getattr(n.func, "id", "") == "int" and len(n.args) == 1:
             a = n.args[0]
             if isinstance(a, ast.BinOp) and isinstance(a.op, ast.Div) and _T_END.match(_last(a.left)) \
                     and re.fullmatch(r"d_?t|delta_?t|h|step", _last(a.right), re.I):
                 out.append(Finding("flow", NOTE, rel, n.lineno,
                                    f"int({ast.unparse(a)}) truncates (int(1.0 / 0.1) == 9), so the run can stop one"
-                                   " step before the end time; use round(), or check the final time"))
+                                   " step before the end time; use round(), or check the final time", rule="PV806"))
     return out
