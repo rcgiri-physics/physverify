@@ -168,6 +168,21 @@ def _cmd_scan(args) -> int:
     if probes:
         print("physverify: --run calls the code; use it only on code you trust or inside the sandbox", file=sys.stderr)
         findings += probe(args.path, probes=probes, timeout=args.timeout)
+    from .suppress import apply_baseline, apply_ignores, write_baseline
+
+    findings, hidden = apply_ignores(findings, args.path)
+    if args.write_baseline:
+        n = write_baseline(findings, args.path, args.write_baseline)
+        print(f"physverify: wrote {n} findings to the baseline {args.write_baseline}; later scans with"
+              f" --baseline {args.write_baseline} report only new ones", file=sys.stderr)
+        return 0
+    known = 0
+    if args.baseline:
+        try:
+            findings, known = apply_baseline(findings, args.path, args.baseline)
+        except (OSError, ValueError, KeyError) as exc:
+            print(f"physverify: cannot read the baseline {args.baseline}: {exc}", file=sys.stderr)
+            return 2
     if args.json:
         text = json.dumps({**to_dict(findings, unparsed), "files_scanned": count}, indent=1)
         if args.json == "-":
@@ -187,8 +202,10 @@ def _cmd_scan(args) -> int:
         if not count:
             print(f"physverify: no Python files found in {args.path}; nothing was scanned")
             return 0
+        left_out = "".join([f", {hidden} hidden by # pv: ignore" if hidden else "",
+                            f", {known} in the baseline not shown" if args.baseline else ""])
         print(f"{count} files scanned: {warn} warnings, {len(findings) - warn - skip} notes{ran}, {broken} files not parsed"
-              f" ({how}; a clean scan means only that these patterns were not found)")
+              f"{left_out} ({how}; a clean scan means only that these patterns were not found)")
     return 1 if any(f.level == WARN for f in findings) else 0
 
 
@@ -299,6 +316,8 @@ def build_parser() -> argparse.ArgumentParser:
                     help="also run the probes smoke and branches, which CALL the code (trusted code or the sandbox only); "
                          "the experimental probes edges,deadargs,roundtrip,siblings,known,monotone with --only")
     sc.add_argument("--timeout", type=float, default=60.0, help="with --run: seconds per script or file of functions (default 60)")
+    sc.add_argument("--baseline", metavar="FILE", help="leave out the findings listed in FILE (see --write-baseline); report only new ones")
+    sc.add_argument("--write-baseline", metavar="FILE", help="write the current findings to FILE as a baseline and exit 0")
     sc.set_defaults(func=_cmd_scan)
 
     cf = sub.add_parser("confirm", help="judge one suspected defect against a reference from the physics and record the verdict"

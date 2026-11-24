@@ -71,6 +71,15 @@ From Python, `physverify.scan.extract_tables(path)` returns every table the scan
 
 Each finding names a stable rule ID such as `[PV401]`, listed with what it looks for in [Scan rules](../scan-rules.md).
 
+To hide one finding, put `# pv: ignore[PV401]` on its line (several IDs separated by commas; `# pv: ignore` alone hides every rule on the line). To adopt `scan` in an existing project, record what it finds today and report only new findings from then on:
+
+```bash
+physverify scan src --write-baseline scan-baseline.json   # once; commit the file
+physverify scan src --baseline scan-baseline.json         # in CI: exit 1 only for new warnings
+```
+
+A baseline entry matches a finding by file, rule and the text of its line, so it still matches after lines above it move. Each entry matches one finding: a second copy of a known pattern is reported.
+
 Exit code 1 if there is any WARN, 0 otherwise, 2 for a bad path or stage name. Files that do not parse are listed, not skipped silently. A clean scan means only that these patterns were not found. Stages are read only for explicit methods on one state variable: implicit methods and systems split into parts (`x` and `v` advanced side by side) are skipped, and no check of the physics is made.
 
 ### `physverify scan --run`: probes that call the code
