@@ -10,7 +10,7 @@ had order 6.
 from __future__ import annotations
 
 from fractions import Fraction
-from math import factorial
+from math import factorial, isfinite
 
 import numpy as np
 
@@ -54,6 +54,9 @@ def check_stencil(offsets, weights, deriv: int, *, claimed: int | None = None, d
     exactly. FAIL for a lower moment that is not zero, a scale other than 1 (a missing factor such as 1/2),
     or an order below `claimed`.
     """
+    # integers and Fractions are always finite, and may be too large for a float
+    if not all(_exact(x) or isfinite(float(x)) for values in ((divisor,), offsets, weights) for x in values):
+        return Result(FAIL, "the stencil offsets, weights and divisor must be finite")
     if _exact(divisor) and all(map(_exact, weights)):
         w = [Fraction(x, divisor) for x in weights]
     else:

@@ -2,7 +2,15 @@
 
 import numpy as np
 
+from physverify.checks import FAIL
 from physverify.stochastic.ito import check_ito_integrals
+
+
+def test_ito_integrals_reject_nonfinite_samples():
+    w = np.zeros((16, 1))
+    i2 = np.full((16, 1, 1), np.nan)
+    result = check_ito_integrals(lambda p: (w, i2, None))
+    assert result.status == FAIL and "non-finite I2" in result.message
 
 
 def _aoup_msd(dt, with_dt=True, T=2.0, n=4000, seed=1):

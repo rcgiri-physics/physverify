@@ -856,7 +856,10 @@ def _drop_fsal(A, b, tol: float = 1e-14):
 def compare_tableau(A, b, name: str, *, tol: float = 1e-10) -> Result:
     """A code's copy of a published table (one of `TABLES`) has the published coefficients."""
     ref = TABLES[name]
-    A1, b1 = _drop_fsal(*square_tableau(A, b)[:2])
+    A1, b1, _ = square_tableau(A, b)
+    if not (np.all(np.isfinite(A1)) and np.all(np.isfinite(b1))):
+        return Result(FAIL, f"{name}: the candidate table contains non-finite coefficients")
+    A1, b1 = _drop_fsal(A1, b1)
     A2, b2 = _drop_fsal(*square_tableau(ref["A"], ref["b"])[:2])
     if A1.shape != A2.shape:
         return Result(FAIL, f"{name}: {A1.shape[0]} stages, the published table has {A2.shape[0]}")
