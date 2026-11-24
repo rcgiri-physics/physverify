@@ -11,7 +11,9 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 EXAMPLES = ROOT / "docs" / "examples"
 # 1e-13 and below, and exact zeros, differ between platforms (1.1e-16 on one, 0.0e+00 on another)
-ROUNDOFF = re.compile(r"-?\d+(?:\.\d+)?e-(?:1[3-9]|[2-9]\d)|-?0\.0+e[+-]00")
+ROUNDOFF = re.compile(r"-?\d+(?:\.\d+)?e-(?:1[3-9]|[2-9]\d)|-?0\.0+e[+-]00"
+                      # a value the check itself prints as 0 or ~0 ("n=80: 0," on NumPy 1.24, "n=80: ~0," on 2.x)
+                      r"|(?<=: )0(?=[,)])")
 
 
 def normalise(text):
