@@ -38,7 +38,7 @@ Changelog = "https://github.com/rcgiri-physics/physverify/blob/main/CHANGELOG.md
 
 [project.optional-dependencies]
 symbolic = ["sympy>=1.12"]
-dev = ["pytest>=8", "pytest-cov>=6.1", "hypothesis>=6", "sympy>=1.12", "ruff>=0.6", "mypy>=1.10"]
+dev = ["pytest>=8", "coverage>=7.10", "hypothesis>=6", "sympy>=1.12", "ruff>=0.6", "mypy>=1.10"]
 docs = ["mkdocs>=1.6,<2", "mkdocs-material>=9.5,<10", "mkdocstrings[python]>=1.0.8,<2"]
 
 [project.scripts]
@@ -90,3 +90,18 @@ files = [
 ]
 follow_imports = "silent"
 ignore_missing_imports = true
+
+[tool.coverage.run]
+# Measure with `coverage run -m pytest`, not pytest-cov: the pytest plugin
+# imports physverify before pytest-cov starts, so module-level code read as
+# unrun. The subprocess patch follows the probes into their child processes.
+source = ["src/physverify"]
+patch = ["subprocess"]
+# Run by scripts/reproduce_all.py to regenerate results/, not by the tests.
+omit = ["src/physverify/stochastic/calibrate.py", "src/physverify/stochastic/ising.py"]
+
+[tool.coverage.report]
+skip_covered = true
+show_missing = true
+# Measured at 90% (2026-11-23); the floor leaves room for small changes.
+fail_under = 85
