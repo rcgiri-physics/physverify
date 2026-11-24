@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **`scan.py` and `probes.py` split by stage.** Each static stage is now a module in `physverify.stages` (`tables`, `stepper_tables`, `grid`, `pairs`, `constants`, `names`, `api`, `literals`, `units`, `flow`) and each probe one in `physverify.probing`; `physverify.lint` and `physverify.flow` are gone (their code is in `physverify.stages`). `physverify.scan` and `physverify.probes` keep their public names. On 147 corpus repositories the findings are the same before and after.
+- **`scan` "did you mean" hints no longer change between runs:** with two equally close names (`sin` and `sign` for `sgn`), the hint depended on Python's string hashing; it now takes the first in alphabetical order.
 - **`scan` in CI: SARIF, changed files, and an Action mode.** `--sarif FILE` writes SARIF 2.1.0 for GitHub code scanning; `--changed-since REF` reports only findings in files changed since a git revision. The GitHub Action gains `scan`, `scan-baseline`, `scan-changed-only` and `scan-sarif` inputs, and `specs: ""` runs a scan-only job.
 - **`scan`: `# pv: ignore[RULE]` comments and a baseline file.** `--write-baseline FILE` records the current findings; `--baseline FILE` then reports only new ones, matched by file, rule and line text so moved lines stay matched. The summary line says how many were hidden.
 - **Stable rule IDs for `scan`.** Every finding names its rule (`PV101` to `PV910`, in `physverify.rules`), shown as `[PV401]` in the text output and as `rule` in the JSON. `docs/scan-rules.md` lists what each rule looks for and what the 2026-10 corpus rescan measured for its stage.

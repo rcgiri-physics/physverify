@@ -27,7 +27,7 @@ import ast
 import re
 from pathlib import Path
 
-from .scan import NOTE, WARN, Finding, all_nodes
+from .common import NOTE, WARN, Finding, all_nodes
 
 _FUNCS = (ast.FunctionDef, ast.AsyncFunctionDef)
 
