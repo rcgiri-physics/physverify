@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import numpy as np
 
 from .checks import EXACT, FAIL, INCONCLUSIVE, PASS, OrderResult
@@ -93,7 +95,7 @@ def check_exact(hs, errors, *, floor: float = 1e-12, scale: float = 1.0) -> Orde
     errs = np.abs(np.asarray(errors, dtype=float))  # a signed error of -1 is a large error, not a small one
     order = np.argsort(-hs)
     hs, errs = hs[order], errs[order]
-    base = dict(expected=float("inf"), hs=tuple(hs), errors=tuple(errs),
+    base: dict[str, Any] = dict(expected=float("inf"), hs=tuple(hs), errors=tuple(errs),
                 acceptance=f"every error at most {floor:.2g} (round-off)")
     if not np.all(np.isfinite(errs)):
         return OrderResult(FAIL, "non-finite error: the solution diverged or produced NaN", **base)
@@ -154,7 +156,7 @@ def check_order(
                            expected=float(expected), hs=tuple(hs), errors=tuple(errs))
     order = np.argsort(-hs)  # coarse to fine
     hs, errs = hs[order], errs[order]
-    base = dict(expected=float(expected), hs=tuple(hs), errors=tuple(errs),
+    base: dict[str, Any] = dict(expected=float(expected), hs=tuple(hs), errors=tuple(errs),
                 acceptance=f"fitted order within [{expected - tol_low:g}, {expected + tol_high:g}] on errors above {floor:.2g}")
 
     if not np.all(np.isfinite(hs) & (hs > 0)):

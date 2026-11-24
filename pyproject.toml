@@ -38,7 +38,7 @@ Changelog = "https://github.com/rcgiri-physics/physverify/blob/main/CHANGELOG.md
 
 [project.optional-dependencies]
 symbolic = ["sympy>=1.12"]
-dev = ["pytest>=8", "coverage>=7.10", "hypothesis>=6", "sympy>=1.12", "ruff>=0.6"]
+dev = ["pytest>=8", "coverage>=7.10", "hypothesis>=6", "sympy>=1.12", "ruff>=0.6", "mypy>=1.10"]
 docs = ["mkdocs>=1.6,<2", "mkdocs-material>=9.5,<10", "mkdocstrings[python]>=1.0.8,<2"]
 
 [project.scripts]
@@ -49,6 +49,9 @@ physverify = "physverify.pytest_plugin"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+physverify = ["py.typed"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -72,6 +75,21 @@ known-first-party = ["physverify", "pvbench"]
 "sandbox/probe.py" = ["F401", "I001"]
 # short teaching examples; the closure is called inside its loop
 "docs/examples/*" = ["B023"]
+
+[tool.mypy]
+# The public API (what `import physverify` and physverify.butcher export) is
+# type checked in CI. The other modules still have errors; add each here once
+# it is clean.
+files = [
+    "src/physverify/__init__.py",
+    "src/physverify/checks.py",
+    "src/physverify/mms.py",
+    "src/physverify/order.py",
+    "src/physverify/studies.py",
+    "src/physverify/butcher.py",
+]
+follow_imports = "silent"
+ignore_missing_imports = true
 
 [tool.coverage.run]
 # Measure with `coverage run -m pytest`, not pytest-cov: the pytest plugin
