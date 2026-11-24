@@ -7,7 +7,7 @@ E[I_ij^2] = h^2/2, E[I_ijk^2] = h^3/6 for every index choice.
 Generators with several noises use a truncated series, so an identity may hold only as the series grows: a truncation
 error falls with the series length and a wrong formula does not. In the corpus session of 2026-11-06 one generator had
 an I_111 residual of 0.079 and 0.081 RMS at series lengths 10 and 20, and E[I_ijk^2] from 0.116 to 0.206 instead of 1/6.
-False alarms on correct integrals are measured in tests/test_new_checks_2026_11.py and stated in docs/checks/numerical-controls.md.
+False alarms on correct integrals are measured in tests/test_ito.py and stated in docs/checks/numerical-controls.md.
 """
 
 from __future__ import annotations
