@@ -63,3 +63,42 @@ def test_cli_rejects_a_broken_baseline(tmp_path):
     bad = tmp_path / "bad.json"
     bad.write_text('{"version": 99, "findings": []}')
     assert main(["scan", str(root / "m.py"), "--baseline", str(bad)]) == 2
+
+
+def _git(root, *args):
+    import subprocess
+    subprocess.run(["git", *args], cwd=root, check=True, capture_output=True,
+                   env={**__import__("os").environ, "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t",
+                        "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t"})
+
+
+def test_changed_since_reports_only_changed_and_new_files(tmp_path, capsys):
+    root = _project(tmp_path)
+    (root / "old.py").write_text("x = np.NaN\n", encoding="utf-8")
+    _git(root, "init", "-q")
+    _git(root, "add", ".")
+    _git(root, "commit", "-qm", "start")
+    (root / "m.py").write_text(CODE + "z = w\n", encoding="utf-8")   # changed
+    (root / "new.py").write_text("q = r\n", encoding="utf-8")        # untracked
+    assert main(["scan", str(root), "--changed-since", "HEAD"]) == 1
+    out = capsys.readouterr().out
+    assert "old.py" not in out and "m.py" in out and "new.py" in out
+    assert "in files unchanged since HEAD not shown" in out
+    assert main(["scan", str(root), "--changed-since", "no-such-ref"]) == 2
+
+
+def test_sarif_has_rules_levels_and_locations(tmp_path, monkeypatch):
+    (tmp_path / "proj").mkdir()
+    _project(tmp_path / "proj")
+    monkeypatch.chdir(tmp_path)
+    out = tmp_path / "scan.sarif"
+    assert main(["scan", "proj", "--sarif", str(out)]) == 1
+    run = json.loads(out.read_text())["runs"][0]
+    assert json.loads(out.read_text())["version"] == "2.1.0"
+    assert [r["id"] for r in run["tool"]["driver"]["rules"]] == ["PV401", "PV502"]
+    res = sorted(run["results"], key=lambda r: r["ruleId"])
+    assert [(r["ruleId"], r["level"]) for r in res] == [("PV401", "warning"), ("PV502", "warning")]
+    loc = res[0]["locations"][0]["physicalLocation"]
+    assert loc == {"artifactLocation": {"uri": "proj/m.py"}, "region": {"startLine": 5}}
+    for r in res:
+        assert run["tool"]["driver"]["rules"][r["ruleIndex"]]["id"] == r["ruleId"]

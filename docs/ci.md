@@ -62,6 +62,38 @@ If your job already sets up an environment (conda, a compiled extension), set `p
       - run: physverify run "tests/verify_*.py" --markdown "$GITHUB_STEP_SUMMARY" --html physverify.html
 ```
 
+## 2a. `physverify scan` in GitHub Actions
+
+The same action can scan the code without running it (the scan inputs are new after 0.9.1). This job reports only findings in the files a pull request changes, leaves out the ones recorded in a baseline, and shows the rest in the pull request through GitHub code scanning:
+
+```yaml
+# .github/workflows/physverify-scan.yml
+name: physverify scan
+on: [pull_request]
+permissions:
+  contents: read
+  security-events: write   # for the SARIF upload
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - id: pv
+        uses: rcgiri-physics/physverify@v0
+        with:
+          specs: ""                      # scan only
+          scan: src
+          scan-baseline: scan-baseline.json
+          scan-changed-only: "true"
+          scan-sarif: physverify.sarif
+      - if: always() && steps.pv.outputs.sarif != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: physverify.sarif
+```
+
+A scan WARN fails the job; NOTEs do not. The rule IDs and what each looks for are in [Scan rules](scan-rules.md).
+
 ## 3. pre-commit
 
 ```yaml

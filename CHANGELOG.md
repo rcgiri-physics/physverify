@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **`scan` in CI: SARIF, changed files, and an Action mode.** `--sarif FILE` writes SARIF 2.1.0 for GitHub code scanning; `--changed-since REF` reports only findings in files changed since a git revision. The GitHub Action gains `scan`, `scan-baseline`, `scan-changed-only` and `scan-sarif` inputs, and `specs: ""` runs a scan-only job.
 - **`scan`: `# pv: ignore[RULE]` comments and a baseline file.** `--write-baseline FILE` records the current findings; `--baseline FILE` then reports only new ones, matched by file, rule and line text so moved lines stay matched. The summary line says how many were hidden.
 - **Stable rule IDs for `scan`.** Every finding names its rule (`PV101` to `PV910`, in `physverify.rules`), shown as `[PV401]` in the text output and as `rule` in the JSON. `docs/scan-rules.md` lists what each rule looks for and what the 2026-10 corpus rescan measured for its stage.
 - **Type information ships with the package (`py.typed`).** The public API (`physverify`, `physverify.butcher`) passes mypy, which now runs in CI; the other modules are added as they are cleaned up.

@@ -1,5 +1,5 @@
 name: physverify
-description: Run physverify code-verification specs in CI; a failed check fails the job.
+description: Run physverify code-verification specs, and optionally physverify scan, in CI; a failed check or a scan warning fails the job.
 author: Ram Chandra Giri
 branding:
   icon: check-circle
@@ -7,7 +7,7 @@ branding:
 
 inputs:
   specs:
-    description: Spec files or glob patterns, separated by spaces. Patterns are expanded by physverify, so quote nothing.
+    description: Spec files or glob patterns, separated by spaces. Patterns are expanded by physverify, so quote nothing. Empty runs no specs (for a scan-only job).
     default: "**/verify_*.py"
   python-version:
     description: Python version to set up. Leave empty to use the Python already on the runner (for example one your job set up with its dependencies).
@@ -24,11 +24,26 @@ inputs:
   html-report:
     description: Name of the uploaded HTML report artifact (with convergence plots). Empty uploads nothing.
     default: physverify-report
+  scan:
+    description: Folder or file for `physverify scan` (reads the code, runs nothing). Empty skips the scan.
+    default: ""
+  scan-baseline:
+    description: Baseline file from `physverify scan --write-baseline`; only findings not in it are reported.
+    default: ""
+  scan-changed-only:
+    description: On a pull request, report only findings in Python files the pull request changes ("true" or "false").
+    default: "false"
+  scan-sarif:
+    description: Path to write the scan findings as SARIF, relative to working-directory. Upload it with github/codeql-action/upload-sarif (needs `security-events write`). Empty writes none.
+    default: ""
 
 outputs:
   json:
     description: Path of the JSON results file.
     value: ${{ steps.run.outputs.json }}
+  sarif:
+    description: Path of the SARIF file, when scan-sarif is set.
+    value: ${{ steps.scan.outputs.sarif }}
 
 runs:
   using: composite
@@ -62,6 +77,7 @@ runs:
 
     - name: Run physverify
       id: run
+      if: inputs.specs != ''
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       env:
@@ -72,6 +88,30 @@ runs:
         mkdir -p "$PV_OUT"
         echo "json=$PV_OUT/physverify.json" >> "$GITHUB_OUTPUT"
         physverify run $PV_SPECS --json "$PV_OUT/physverify.json" --html "$PV_OUT/physverify.html" --markdown "$GITHUB_STEP_SUMMARY"
+
+    - name: Scan with physverify
+      id: scan
+      if: always() && inputs.scan != ''
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        PV_SCAN: ${{ inputs.scan }}
+        PV_BASELINE: ${{ inputs.scan-baseline }}
+        PV_CHANGED: ${{ inputs.scan-changed-only }}
+        PV_SARIF: ${{ inputs.scan-sarif }}
+        PV_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      run: |
+        args=()
+        [ -n "$PV_BASELINE" ] && args+=(--baseline "$PV_BASELINE")
+        if [ -n "$PV_SARIF" ]; then
+          args+=(--sarif "$PV_SARIF")
+          echo "sarif=$PV_SARIF" >> "$GITHUB_OUTPUT"
+        fi
+        if [ "$PV_CHANGED" = "true" ] && [ -n "$PV_BASE_SHA" ]; then
+          git fetch --no-tags --depth=1 origin "$PV_BASE_SHA"  # a shallow checkout lacks the base commit
+          args+=(--changed-since "$PV_BASE_SHA")
+        fi
+        physverify scan "$PV_SCAN" "${args[@]}"
 
     - if: always() && inputs.html-report != ''
       uses: actions/upload-artifact@v7

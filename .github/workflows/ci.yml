@@ -115,6 +115,18 @@ jobs:
         with:
           specs: examples/verify_*.py
           html-report: physverify-report-${{ matrix.os }}
+      - id: scan
+        name: Scan only, with a SARIF file
+        uses: ./
+        with:
+          specs: ""
+          scan: examples
+          scan-sarif: physverify.sarif
+          python-version: ""
+          html-report: ""
+      - name: The scan must write SARIF with a rule list
+        shell: bash
+        run: python -c "import json; d = json.load(open('physverify.sarif')); assert d['version'] == '2.1.0' and 'rules' in d['runs'][0]['tool']['driver']"
       - name: Break the example solver
         shell: bash
         run: sed -i.bak 's/damping = 2.0 \* GAMMA/damping = 2.0 * GAMMA * 1.1/' examples/damped_oscillator.py

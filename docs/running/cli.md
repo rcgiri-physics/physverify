@@ -80,6 +80,8 @@ physverify scan src --baseline scan-baseline.json         # in CI: exit 1 only f
 
 A baseline entry matches a finding by file, rule and the text of its line, so it still matches after lines above it move. Each entry matches one finding: a second copy of a known pattern is reported.
 
+`--changed-since REF` reports only findings in Python files changed since the git revision `REF`, and in new untracked files; the whole project is still read, so a grid defined in an unchanged file still counts. `--sarif FILE` also writes the findings as SARIF 2.1.0 for GitHub code scanning ([CI setup](../ci.md)).
+
 Exit code 1 if there is any WARN, 0 otherwise, 2 for a bad path or stage name. Files that do not parse are listed, not skipped silently. A clean scan means only that these patterns were not found. Stages are read only for explicit methods on one state variable: implicit methods and systems split into parts (`x` and `v` advanced side by side) are skipped, and no check of the physics is made.
 
 ### `physverify scan --run`: probes that call the code
