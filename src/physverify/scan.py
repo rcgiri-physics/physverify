@@ -43,9 +43,11 @@ class Finding:
     line: int
     message: str
     table: dict | None = field(default=None, repr=False)  # the Runge-Kutta table a "tables" finding was made from
+    rule: str = field(default="", kw_only=True)  # the stable ID in physverify.rules ("" for a SKIP)
 
     def __str__(self):
-        return f"{self.level} {self.stage:9s} {self.path}:{self.line}: {self.message}"
+        rule = f" [{self.rule}]" if self.rule else ""
+        return f"{self.level} {self.stage:9s} {self.path}:{self.line}:{rule} {self.message}"
 
 
 def python_files(path) -> list[Path]:
@@ -372,7 +374,7 @@ def _check_table(lits, name, doc, stem, stated, rel, *, kind="table", stated_emb
                  "error_weights": {en: e for en, (e, _l) in lits.items()
                                    if (_E_NAMES.match(en) or en == "<e>") and _vector(e, s) and en != bn},
                  "order": p}
-        found.append(Finding("tables", level, rel, line, f"{where}: " + "; ".join(msgs), table))
+        found.append(Finding("tables", level, rel, line, f"{where}: " + "; ".join(msgs), table, rule="PV101"))
     return found
 
 
@@ -757,7 +759,7 @@ def scan_code_tables(path: Path, tree, rel: str) -> list[Finding]:
                  "claimed": claimed if claimed is not None and claimed <= 6 else None, "claim_source": why,
                  "stated_embedded": None, "embedded": {}, "error_weights": {}, "order": p,
                  "docstring_table": {"A": drawn[0], "b": drawn[1]} if drawn is not None and len(drawn[1]) == s else None}
-        found.append(Finding("tables", level, rel, line, f"{fn.name}: " + "; ".join(msgs), table))
+        found.append(Finding("tables", level, rel, line, f"{fn.name}: " + "; ".join(msgs), table, rule="PV102"))
     return found
 
 
@@ -924,7 +926,7 @@ def _grid_findings(grids, divs, rel_div, rel_grid=None, seen=None) -> list[Findi
                 found.append(Finding("grid", level, rel_div, dline,
                                      f"spacing {_src(div)} with linspace({_src(a)}, {_src(b)}, {_src(m)}){where},"
                                      f" whose spacing is {width}/({_src(m)}-1)"
-                                     + ("" if rel_grid is None else "; different files, so check that they describe the same grid")))
+                                     + ("" if rel_grid is None else "; different files, so check that they describe the same grid"), rule="PV201"))
     return found
 
 
@@ -952,7 +954,7 @@ def scan_pairs(path: Path, tree, rel: str) -> list[Finding]:
             seen.add(frozenset((fname, other)))
             found.append(Finding("pairs", NOTE, rel, line,
                                  f"{fname} and {other} look like inverses: run"
-                                 f" physverify.identities.check_roundtrip({fname}, {other}, inputs) on typical inputs"))
+                                 f" physverify.identities.check_roundtrip({fname}, {other}, inputs) on typical inputs", rule="PV202"))
     return found
 
 
@@ -1050,13 +1052,13 @@ def scan_constants(path: Path, tree, rel: str) -> list[Finding]:
         first = min(w[0][0] for w in hits.values())
         return [Finding("constants", NOTE, rel, first,
                         f"{len(hits)} different numbers in this file are close to physical constants; so many usually means"
-                        " the file holds data (fits, tables, generated code), so they are not listed one by one")]
+                        " the file holds data (fits, tables, generated code), so they are not listed one by one", rule="PV302")]
     out = []
     for (name, literal), where in sorted(hits.items(), key=lambda kv: kv[1][0][0]):
         line, ref, r, comment = where[0]
         more = f" (also lines {', '.join(str(w[0]) for w in where[1:6])}{', ...' if len(where) > 6 else ''})" if len(where) > 1 else ""
         out.append(Finding("constants", NOTE, rel, line,
-                           f"{literal} is {r:+.2g} relative to {name} ({ref:.10g}){more}; {comment}"))
+                           f"{literal} is {r:+.2g} relative to {name} ({ref:.10g}){more}; {comment}", rule="PV301"))
     return out
 
 
@@ -1155,7 +1157,7 @@ def _snippet_folders(findings, parsed, root=None):
             notes.append(Finding("names", NOTE, sorted(files)[0], min(f.line for f in fs),
                                  f"{len(fs)} undefined names in {len(files)} files of {d or '.'}, most of them defined in a"
                                  " sibling file: this looks like a folder of snippets meant to be run together, so they are"
-                                 " not reported one by one"))
+                                 " not reported one by one", rule="PV406"))
     return [f for f in findings if id(f) not in drop] + notes
 
 

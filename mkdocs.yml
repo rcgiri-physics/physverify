@@ -89,6 +89,7 @@ nav:
   - Troubleshooting: troubleshooting.md
   - Running physverify:
       - Command line: running/cli.md
+      - Scan rules: scan-rules.md
       - Continuous integration: ci.md
       - AI coding assistants: agent.md
       - Checking an AI code review: ai-review.md

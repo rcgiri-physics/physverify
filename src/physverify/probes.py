@@ -273,22 +273,22 @@ def _probe_dead(f, args, y0, out, rel):
         if _reads(f.node, p) and side:
             out.append(Finding("deadargs", NOTE, rel, line,
                                f"{f.name}: changing {p} leaves the result unchanged at the inputs tried; it is read only"
-                               f" {side}, so it may matter only for other inputs"))
+                               f" {side}, so it may matter only for other inputs", rule="PV901"))
         elif _reads(f.node, p) and not _in_clamp(f.node, p) and not isinstance(args[p], (int, np.integer)):
             out.append(Finding("deadargs", WARN, rel, line,
                                f"{f.name}: changing {p} (from {_short(args[p])}) leaves the result unchanged, although"
-                               f" the function reads it and other arguments ({', '.join(changed[:3])}) do change it"))
+                               f" the function reads it and other arguments ({', '.join(changed[:3])}) do change it", rule="PV901"))
         elif _reads(f.node, p) and isinstance(args[p], (int, np.integer)):
             out.append(Finding("deadargs", NOTE, rel, line,
                                f"{f.name}: changing the integer {p} (from {args[p]}) leaves the result unchanged at the"
-                               " inputs tried; it may matter only for larger inputs"))
+                               " inputs tried; it may matter only for larger inputs", rule="PV901"))
         elif _reads(f.node, p):
             out.append(Finding("deadargs", NOTE, rel, line,
                                f"{f.name}: changing {p} leaves the result unchanged at the inputs tried; it enters a"
-                               " max, min or clip, so it may matter only beyond a threshold"))
+                               " max, min or clip, so it may matter only beyond a threshold", rule="PV901"))
         else:
             out.append(Finding("deadargs", NOTE, rel, line,
-                               f"{f.name}: argument {p} is never used in the function body"))
+                               f"{f.name}: argument {p} is never used in the function body", rule="PV901"))
 
 
 def _tainted(node, name) -> set[str]:
@@ -429,7 +429,7 @@ def _probe_edges(f, args, y0, out, rel):
             if y is not None and not _finite(y):
                 out.append(Finding("edges", NOTE, rel, f.node.lineno,
                                    f"{f.name}: with {p} = {what} ({_short(x)}) and the other inputs unchanged, the result"
-                                   " has NaN or infinite values without an error; check that the documentation excludes this input"))
+                                   " has NaN or infinite values without an error; check that the documentation excludes this input", rule="PV902"))
                 break
 
 
@@ -520,7 +520,7 @@ def _probe_branches(f, args, y0, out, rel):
             out.append(Finding("branches", NOTE, rel, line,
                                f"{f.name}: the result jumps by {jump:.3g} (relative {jump / scale:.2g}) as {p} crosses"
                                f" {ast.unparse(expr)} = {a:.6g}, where the code switches formula; a physical quantity"
-                               " should be continuous there unless the model has a real step"))
+                               " should be continuous there unless the model has a real step", rule="PV903"))
 
 
 def _probe_roundtrips(fns, out, rel):
@@ -552,7 +552,7 @@ def _probe_roundtrips(fns, out, rel):
         if bad:
             out.append(Finding("roundtrip", WARN, rel, f.node.lineno,
                                f"{other}({name}({p})) differs from {p} by {bad[1]:.2g} (relative) for {p} = {_short(bad[0])};"
-                               " the two names say they are inverses"))
+                               " the two names say they are inverses", rule="PV904"))
 
 
 def _import(path: Path, root: Path):
@@ -669,7 +669,7 @@ def _probe_siblings(allfns, out, rel):
                 given = ", ".join(f"{k}={_short(v)}" for k, v in args.items())
                 out.append(Finding("siblings", WARN, rel, g.node.lineno,
                                    f"{ref.name} and {g.name} differ by {d:.2g} (relative) for the same arguments ({given});"
-                                   " their names say they are two versions of one computation"))
+                                   " their names say they are two versions of one computation", rule="PV905"))
 
 
 def _string_options(f):
@@ -701,7 +701,7 @@ def _probe_options(f, args, y0, out, rel):
             if d is not None and d > _AGREE:
                 out.append(Finding("siblings", NOTE, rel, f.node.lineno,
                                    f"{f.name}: {p}={names[0]!r} and {p}={v!r} differ by {d:.2g} (relative) for the same"
-                                   " other arguments; check whether the options are meant to give the same answer"))
+                                   " other arguments; check whether the options are meant to give the same answer", rule="PV906"))
 
 
 # --- known answers: a fast operation against its slow definition ----------------------------------
@@ -813,7 +813,7 @@ def _probe_known(f, out, rel):
     # an autocorrelation may return any number of lags: compare the first ones
     if not _matches(got.real if np.iscomplexobj(got) else got, refs, prefix=kind == "autocorr"):
         out.append(Finding("known", WARN if kind == "cumtrapz" else NOTE, rel, f.node.lineno,
-                           f"{f.name}: on random data the result matches none of {what}; check its definition"))
+                           f"{f.name}: on random data the result matches none of {what}; check its definition", rule="PV907"))
 
 
 # --- monotone: a direction fixed by a law or stated in the docstring -------------------------------
@@ -894,7 +894,7 @@ def _probe_monotone(f, args, y0, out, rel):
             word = "rise" if sign > 0 else "fall"
             out.append(Finding("monotone", level, rel, f.node.lineno,
                                f"{f.name}: the result should {word} as {p} rises ({why}), but from {p} = {xs[0]:.3g} to"
-                               f" {xs[-1]:.3g} it goes {', '.join(f'{t:.4g}' for t in ys[:4])}, ..."))
+                               f" {xs[-1]:.3g} it goes {', '.join(f'{t:.4g}' for t in ys[:4])}, ...", rule="PV908"))
 
 
 def worker(path: str, root: str, rel: str, probes) -> list[Finding]:
@@ -965,7 +965,7 @@ def _collect_tests(root: Path, timeout: float) -> list[Finding]:
     if "No module named pytest" in p.stderr:
         return [Finding("smoke", SKIP, "tests", 1, "pytest is not installed, so the project's tests were not collected")]
     return [Finding("smoke", NOTE, ln.split()[1].split("::")[0], 1,
-                    f"the project's own test file does not import under pytest: {ln[6:][:200]}") for ln in errors[:20]]
+                    f"the project's own test file does not import under pytest: {ln[6:][:200]}", rule="PV909") for ln in errors[:20]]
 
 
 _CODE_ERRORS = ("NameError", "TypeError", "AttributeError", "IndexError", "ZeroDivisionError", "UnboundLocalError",
@@ -1019,7 +1019,7 @@ def probe(path, *, probes=PROBES, timeout: float = 60.0) -> list[Finding]:
                     out.append(Finding("smoke", SKIP, rel, 1, f"the script was still running after {timeout:g} s"))
                 elif r.outcome != OK:
                     level = WARN if _code_error(r.detail, f.read_text(encoding="utf-8", errors="replace")) else NOTE
-                    out.append(Finding("smoke", level, rel, 1, f"the script stops with an error: {r.detail}"))
+                    out.append(Finding("smoke", level, rel, 1, f"the script stops with an error: {r.detail}", rule="PV910"))
             if not _safe_module(tree):
                 continue
         func_probes = [p for p in probes if p != "smoke"]
