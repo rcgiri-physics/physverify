@@ -3,7 +3,7 @@
 import ast
 import textwrap
 
-from physverify.flow import scan_flow
+from physverify.stages.flow import scan_flow
 
 
 def flow(src):

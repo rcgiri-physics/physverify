@@ -10,8 +10,9 @@ SRC = Path(__file__).resolve().parents[1] / "src" / "physverify"
 
 
 def _finding_calls():
-    for name in ("scan.py", "lint.py", "flow.py", "probes.py"):
-        tree = ast.parse((SRC / name).read_text(encoding="utf-8"))
+    for path in sorted(SRC.rglob("*.py")):
+        name = path.relative_to(SRC).as_posix()
+        tree = ast.parse(path.read_text(encoding="utf-8"))
         for n in ast.walk(tree):
             if isinstance(n, ast.Call) and getattr(n.func, "id", "") == "Finding" and n.args:
                 yield name, n
