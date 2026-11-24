@@ -1,0 +1,5 @@
+# The oldest versions pyproject.toml allows for the runtime dependencies.
+# The "oldest" CI job installs with these as constraints, so a use of a
+# newer NumPy feature fails there instead of for a user on NumPy 1.24.
+numpy==1.24.0
+tomli==1.1.0
