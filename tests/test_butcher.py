@@ -27,6 +27,14 @@ def test_published_tables_and_their_embedded_orders():
         assert r.ok, r.message
 
 
+def test_compare_tableau_rejects_nonfinite_weights():
+    rk4 = TABLES["rk4"]
+    weights = np.array(rk4["b"])
+    weights[0] = np.nan
+    result = compare_tableau(rk4["A"], weights, "rk4")
+    assert result.status == FAIL and "non-finite" in result.message
+
+
 def test_scipy_tables_when_available():
     integrate = pytest.importorskip("scipy.integrate")
     for cls, order, emb in ((integrate.RK23, 3, 2), (integrate.RK45, 5, 4)):

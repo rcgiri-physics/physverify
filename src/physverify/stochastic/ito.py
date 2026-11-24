@@ -63,6 +63,9 @@ def check_ito_integrals(generate, ps=(None,), *, h: float = 1.0, rtol: float = 0
         w = np.asarray(w, dtype=float)
         i2 = None if i2 is None else np.asarray(i2, dtype=float)
         i3 = None if i3 is None else np.asarray(i3, dtype=float)
+        for name, samples in (("W", w), ("I2", i2), ("I3", i3)):
+            if samples is not None and not np.all(np.isfinite(samples)):
+                return Result(FAIL, f"Ito integral generator returned non-finite {name} samples at p={p}")
         results.append(_residuals(w, i2, i3, h))
     m = w.shape[1]
     last, first = results[-1], results[0]

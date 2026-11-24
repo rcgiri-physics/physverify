@@ -28,8 +28,8 @@ def fit_order_error(hs, errors) -> tuple[float, float]:
     x, y = np.log(np.asarray(hs, float)), np.log(np.asarray(errors, float))
     if x.size < 3:
         return fit_order(hs, errors), float("nan")
-    (slope, icpt), = [np.polyfit(x, y, 1)]
-    resid = y - (slope * x + icpt)
+    slope, intercept = np.polyfit(x, y, 1)
+    resid = y - (slope * x + intercept)
     se = float(np.sqrt(np.sum(resid ** 2) / (x.size - 2) / np.sum((x - x.mean()) ** 2)))
     return float(slope), se
 
@@ -75,6 +75,21 @@ def effective_floor(floor: float, scale: float, rel: float = 1e-13) -> float:
     return max(floor, rel * scale)
 
 
+def _order_inputs(hs, errors, expected: float) -> tuple[np.ndarray, np.ndarray] | OrderResult:
+    """Validate paired measurements before sorting them from coarse to fine."""
+    hs = np.asarray(hs, dtype=float)
+    errs = np.abs(np.asarray(errors, dtype=float))
+    if hs.ndim != 1 or errs.ndim != 1:
+        return OrderResult(INCONCLUSIVE, "step sizes and errors must be one-dimensional", expected=expected)
+    if hs.shape != errs.shape:
+        return OrderResult(INCONCLUSIVE, f"{hs.size} step sizes but {errs.size} errors; they must match",
+                           expected=expected, hs=tuple(hs), errors=tuple(errs))
+    if hs.size == 0:
+        return OrderResult(INCONCLUSIVE, "no step sizes or errors were measured", expected=expected)
+    order = np.argsort(-hs)
+    return hs[order], errs[order]
+
+
 def check_exact(hs, errors, *, floor: float = 1e-12, scale: float = 1.0) -> OrderResult:
     """Require the error to be at round-off level at every resolution.
 
@@ -87,14 +102,15 @@ def check_exact(hs, errors, *, floor: float = 1e-12, scale: float = 1.0) -> Orde
 
     EXACT  every error is at most `floor` in size
     FAIL   some error is larger, or non-finite
+    INCONCLUSIVE  no paired measurements are available
 
     `scale` is the size of the solution; see `effective_floor`.
     """
+    measurements = _order_inputs(hs, errors, float("inf"))
+    if isinstance(measurements, OrderResult):
+        return measurements
+    hs, errs = measurements
     floor = effective_floor(floor, scale)
-    hs = np.asarray(hs, dtype=float)
-    errs = np.abs(np.asarray(errors, dtype=float))  # a signed error of -1 is a large error, not a small one
-    order = np.argsort(-hs)
-    hs, errs = hs[order], errs[order]
     base: dict[str, Any] = dict(expected=float("inf"), hs=tuple(hs), errors=tuple(errs),
                 acceptance=f"every error at most {floor:.2g} (round-off)")
     if not np.all(np.isfinite(errs)):
@@ -105,7 +121,7 @@ def check_exact(hs, errors, *, floor: float = 1e-12, scale: float = 1.0) -> Orde
     msg = f"expected an exact solution to round-off, but the error reaches {worst:.3g}"
     measurable = errs > floor
     fitted = float("nan")
-    if measurable.sum() >= 3:
+    if measurable.sum() >= 3 and len(np.unique(hs[measurable])) >= 2:
         fitted = fit_order(hs[measurable], errs[measurable])
         msg += f" and shrinks at about order {fitted:.2f}"
     return OrderResult(FAIL, msg, fitted=fitted, **base)
@@ -129,7 +145,7 @@ def check_order(
     PASS      fitted order lies in [expected - tol_low, expected + tol_high]
     EXACT     every error is below `floor`, so the order cannot be measured
     FAIL      order too low or too high, error plateau, or non-finite error
-    INCONCLUSIVE  fewer than two resolutions are above the noise floor
+    INCONCLUSIVE  fewer than two distinct step sizes are available for the fit
 
     Errors may be signed (computed minus exact): their sizes are used, so a large negative error is not
     taken for round-off.
@@ -148,14 +164,11 @@ def check_order(
     """
     if tol is not None:
         tol_low = tol_high = float(tol)
+    measurements = _order_inputs(hs, errors, float(expected))
+    if isinstance(measurements, OrderResult):
+        return measurements
+    hs, errs = measurements
     floor = effective_floor(floor, scale)
-    hs = np.asarray(hs, dtype=float)
-    errs = np.abs(np.asarray(errors, dtype=float))
-    if hs.shape != errs.shape:
-        return OrderResult(INCONCLUSIVE, f"{hs.size} step sizes but {errs.size} errors; they must match",
-                           expected=float(expected), hs=tuple(hs), errors=tuple(errs))
-    order = np.argsort(-hs)  # coarse to fine
-    hs, errs = hs[order], errs[order]
     base: dict[str, Any] = dict(expected=float(expected), hs=tuple(hs), errors=tuple(errs),
                 acceptance=f"fitted order within [{expected - tol_low:g}, {expected + tol_high:g}] on errors above {floor:.2g}")
 
@@ -207,8 +220,11 @@ def check_order(
     else:
         near_floor = 0
     h_f, e_f = h_m[-fit_points:], e_m[-fit_points:]
-    p, se = fit_order_error(h_f, e_f)
     distinct = len(np.unique(h_f))
+    if distinct < 2:
+        return OrderResult(INCONCLUSIVE, "the fit needs at least two distinct step sizes above the noise floor;"
+                           " use different resolutions or increase fit_points", **base)
+    p, se = fit_order_error(h_f, e_f)
     if p < expected - tol_low:
         msg = f"observed order {p:.2f} is below the expected {expected:g}"
         pairs = pairwise_orders(h_f, e_f)
@@ -245,8 +261,9 @@ def check_order(
         if finest > atol:
             if status == PASS:
                 msg = (f"observed order {p:.2f} is as claimed ({expected:g}), but the finest error {finest:.3g} is above"
-                       f" the absolute tolerance {atol:g}: only the accuracy requirement fails, not the convergence; at"
-                       f" this order it needs about {(finest / atol) ** (1 / p):.2g} times smaller steps")
+                       f" the absolute tolerance {atol:g}: only the accuracy requirement fails, not the convergence")
+                if atol > 0 and p > 0:
+                    msg += f"; at this order it needs about {(finest / atol) ** (1 / p):.2g} times smaller steps"
             else:
                 msg += f"; the finest error {finest:.3g} is also above the absolute tolerance {atol:g}"
             status = FAIL

@@ -175,8 +175,14 @@ def time_grid_check(times_of_run: Callable, t_start: float, t_stop: float, ns, *
     bad = []
     for n in ns:
         t = np.asarray(times_of_run(n), dtype=float)
+        if t.ndim == 2 and t.shape[1] == 1:
+            t = t[:, 0]  # a column of times is still one time per step
         h = abs(t_stop - t_start) / n
-        if len(t) != n + 1 or abs(t[-1] - t_stop) > tol * max(1.0, abs(t_stop)):
+        if t.size == 0:
+            bad.append(f"h={h:g}: no times returned (expected {n + 1})")
+        elif t.ndim != 1 or not np.all(np.isfinite(t)):
+            bad.append(f"h={h:g}: expected a one-dimensional time grid with no non-finite values")
+        elif len(t) != n + 1 or not abs(t[-1] - t_stop) <= tol * max(1.0, abs(t_stop)):
             bad.append(f"h={h:g}: {len(t) - 1} steps ending at t={t[-1]:.6g} (expected {n} ending at {t_stop:g})")
     if bad:
         return Result(FAIL, "; ".join(bad))

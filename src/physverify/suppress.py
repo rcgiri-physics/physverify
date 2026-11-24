@@ -9,7 +9,9 @@ the text of its line, not by the line number, so it stays matched when lines abo
 from __future__ import annotations
 
 import json
+import os
 import re
+import subprocess
 from collections import Counter
 from pathlib import Path
 
@@ -85,17 +87,17 @@ def apply_baseline(findings, path, baseline) -> tuple[list, int]:
 def changed_files(path, ref: str) -> set[str]:
     """Python files under `path` that differ from the git revision `ref` (or are new and untracked), as paths
     relative to `path` like the findings use. Raises RuntimeError when git cannot answer."""
-    import subprocess
-
     root = Path(path)
     where = root if root.is_dir() else root.parent
     out = set()
-    for cmd in (["git", "diff", "--name-only", "--relative", "--diff-filter=ACMR", ref, "--"],
-                ["git", "ls-files", "--others", "--exclude-standard"]):
-        r = subprocess.run(cmd, cwd=where, capture_output=True, text=True, stdin=subprocess.DEVNULL)
+    # NUL-delimited paths are emitted verbatim, including non-ASCII and newline characters.
+    for cmd in (["git", "diff", "--name-only", "-z", "--relative", "--diff-filter=ACMR", ref, "--"],
+                ["git", "ls-files", "-z", "--others", "--exclude-standard"]):
+        r = subprocess.run(cmd, cwd=where, capture_output=True, stdin=subprocess.DEVNULL)
         if r.returncode != 0:
-            raise RuntimeError(f"{' '.join(cmd[:2])} failed: {r.stderr.strip()[:200]}")
-        out |= {Path(x).as_posix() for x in r.stdout.splitlines() if x.endswith(".py")}
+            detail = os.fsdecode(r.stderr).strip()[:200]
+            raise RuntimeError(f"{' '.join(cmd[:2])} failed: {detail}")
+        out.update(Path(os.fsdecode(name)).as_posix() for name in r.stdout.split(b"\0") if name.endswith(b".py"))
     if not root.is_dir():
         return {root.name} & out  # git ran in the file's folder, so the file is listed by its name
     return out

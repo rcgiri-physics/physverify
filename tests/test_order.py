@@ -89,6 +89,11 @@ def test_check_exact_fails_on_non_finite_error():
     assert check_exact(HS, [1e-15, float("nan"), 1e-15, 1e-15]).status == FAIL
 
 
+@pytest.mark.parametrize(("hs", "errors"), [([0.1], [0.0, 1.0]), ([], []), ([[0.1]], [[0.0]])])
+def test_check_exact_requires_nonempty_paired_measurements(hs, errors):
+    assert check_exact(hs, errors).status == INCONCLUSIVE
+
+
 def test_only_points_above_the_floor_are_fitted():
     hs = [0.2, 0.1, 0.05, 0.025, 0.0125]
     errs = [3.0 * h**4 for h in hs]
@@ -137,6 +142,17 @@ def test_pass_from_two_step_sizes_says_so():
 def test_repeated_step_sizes_are_not_counted_as_evidence():
     r = check_order([0.1, 0.1, 0.05, 0.05], [1e-2, 1e-2, 2.5e-3, 2.5e-3], expected=2)
     assert r.status == PASS and "only 2 distinct step sizes" in r.message
+
+
+def test_fit_at_only_one_distinct_step_size_is_inconclusive():
+    hs = [0.5, 0.25, 0.125, 0.125, 0.125, 0.125]
+    r = check_order(hs, [h**2 for h in hs], expected=2)
+    assert r.status == INCONCLUSIVE and math.isnan(r.fitted)
+
+
+def test_zero_absolute_tolerance_reports_inexact_results_without_dividing_by_zero():
+    r = check_order(HS, [h**2 for h in HS], expected=2, atol=0)
+    assert r.status == FAIL and "absolute tolerance" in r.message
 
 
 def test_wide_standard_error_is_reported():

@@ -4,7 +4,18 @@ from fractions import Fraction
 
 import numpy as np
 
+from physverify.checks import FAIL
 from physverify.stencils import check_stencil, stencil_order
+
+
+def test_check_stencil_rejects_nonfinite_weights():
+    result = check_stencil([-1, 0, 1], [-0.5, np.nan, 0.5], 1, claimed=2)
+    assert result.status == FAIL and "finite" in result.message
+
+
+def test_check_stencil_accepts_exact_weights_too_large_for_a_float():
+    big = 10**400
+    assert check_stencil([-1, 0, 1], [-big, 0, big], 1, claimed=2, divisor=2 * big).ok
 
 
 def _dy_buggy(Lx, Ly, n):

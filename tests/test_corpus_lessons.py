@@ -36,6 +36,18 @@ def test_time_grid_check_catches_the_extra_step_only_for_exact_binary_steps():
     assert time_grid_check(lambda n: counted_times(0.0, 2.0, n), 0.0, 2.0, (4, 8, 20)).status == PASS
 
 
+def test_time_grid_check_reports_empty_and_nonfinite_times():
+    empty = time_grid_check(lambda n: [], 0.0, 1.0, (2,))
+    assert empty.status == FAIL and "no times" in empty.message
+    for times in ([0.0, 0.5, np.nan], [0.0, np.inf, 1.0]):
+        invalid = time_grid_check(lambda n, times=times: times, 0.0, 1.0, (2,))
+        assert invalid.status == FAIL and "non-finite" in invalid.message
+
+
+def test_time_grid_check_accepts_a_column_of_times():
+    assert time_grid_check(lambda n: np.linspace(0.0, 1.0, n + 1)[:, None], 0.0, 1.0, (4, 8)).status == PASS
+
+
 MMS = ManufacturedODE(lambda t: np.array([np.exp(np.sin(t))]), lambda t, y: np.array([y[0] * np.cos(t)]))
 
 

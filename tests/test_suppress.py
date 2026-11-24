@@ -4,7 +4,12 @@ import json
 
 from physverify.cli import main
 from physverify.scan import scan
-from physverify.suppress import apply_baseline, apply_ignores, write_baseline
+from physverify.suppress import (
+    apply_baseline,
+    apply_ignores,
+    changed_files,
+    write_baseline,
+)
 
 CODE = "import numpy as np\n\n\ndef f(x):\n    return np.NaN + y\n"
 
@@ -85,6 +90,20 @@ def test_changed_since_reports_only_changed_and_new_files(tmp_path, capsys):
     assert "old.py" not in out and "m.py" in out and "new.py" in out
     assert "in files unchanged since HEAD not shown" in out
     assert main(["scan", str(root), "--changed-since", "no-such-ref"]) == 2
+
+
+def test_changed_files_handles_non_ascii_paths(tmp_path):
+    root = tmp_path / "src"
+    root.mkdir()
+    tracked = root / "é.py"
+    tracked.write_text("x = 1\n", encoding="utf-8")
+    _git(tmp_path, "init", "-q")
+    _git(tmp_path, "add", ".")
+    _git(tmp_path, "commit", "-qm", "start")
+    tracked.write_text("x = 2\n", encoding="utf-8")
+    (root / "β.py").write_text("y = 1\n", encoding="utf-8")
+    assert changed_files(root, "HEAD") == {"é.py", "β.py"}
+    assert changed_files(tracked, "HEAD") == {"é.py"}
 
 
 def test_sarif_has_rules_levels_and_locations(tmp_path, monkeypatch):
