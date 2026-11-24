@@ -76,7 +76,7 @@ Adapter mistakes were again found before reporting and are not counted as bugs. 
 
 ## What physverify gained from this
 
-Each item has a test in `tests/test_batch7_lessons.py`:
+Each item has a test in `tests/`, in the file named after the check (until 2026-11-23 all were in `tests/test_batch7_lessons.py`):
 
 - `physverify smoke PATH`: compiles each script and runs it with a time limit, stdin closed and plotting off, and reports parse errors, crashes, scripts that wait for input and NaN warnings (J147-J149, J156, J157, J159, J265, J290). It runs the code: trusted code or the sandbox only.
 - `physverify references` lists the exact references. New ones: Morse levels and turning-point width (J222, J414), Schwarzschild quasinormal frequencies for scalar and gravitational fields (J216), the Kerr ISCO (J116), exact Schwarzschild light deflection (J243), the inhour asymptotic period for either sign of reactivity (J192).
