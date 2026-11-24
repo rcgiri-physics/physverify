@@ -168,9 +168,16 @@ def _cmd_scan(args) -> int:
     if probes:
         print("physverify: --run calls the code; use it only on code you trust or inside the sandbox", file=sys.stderr)
         findings += probe(args.path, probes=probes, timeout=args.timeout)
-    from .suppress import apply_baseline, apply_ignores, write_baseline
+    from .suppress import apply_baseline, apply_ignores, only_changed, write_baseline
 
     findings, hidden = apply_ignores(findings, args.path)
+    unchanged = 0
+    if args.changed_since:
+        try:
+            findings, unchanged = only_changed(findings, args.path, args.changed_since)
+        except (OSError, RuntimeError) as exc:
+            print(f"physverify: cannot list the files changed since {args.changed_since}: {exc}", file=sys.stderr)
+            return 2
     if args.write_baseline:
         n = write_baseline(findings, args.path, args.write_baseline)
         print(f"physverify: wrote {n} findings to the baseline {args.write_baseline}; later scans with"
@@ -183,6 +190,10 @@ def _cmd_scan(args) -> int:
         except (OSError, ValueError, KeyError) as exc:
             print(f"physverify: cannot read the baseline {args.baseline}: {exc}", file=sys.stderr)
             return 2
+    if args.sarif:
+        from .sarif import write_sarif
+
+        write_sarif(findings, args.path, args.sarif)
     if args.json:
         text = json.dumps({**to_dict(findings, unparsed), "files_scanned": count}, indent=1)
         if args.json == "-":
@@ -203,7 +214,8 @@ def _cmd_scan(args) -> int:
             print(f"physverify: no Python files found in {args.path}; nothing was scanned")
             return 0
         left_out = "".join([f", {hidden} hidden by # pv: ignore" if hidden else "",
-                            f", {known} in the baseline not shown" if args.baseline else ""])
+                            f", {known} in the baseline not shown" if args.baseline else "",
+                            f", {unchanged} in files unchanged since {args.changed_since} not shown" if args.changed_since else ""])
         print(f"{count} files scanned: {warn} warnings, {len(findings) - warn - skip} notes{ran}, {broken} files not parsed"
               f"{left_out} ({how}; a clean scan means only that these patterns were not found)")
     return 1 if any(f.level == WARN for f in findings) else 0
@@ -318,6 +330,8 @@ def build_parser() -> argparse.ArgumentParser:
     sc.add_argument("--timeout", type=float, default=60.0, help="with --run: seconds per script or file of functions (default 60)")
     sc.add_argument("--baseline", metavar="FILE", help="leave out the findings listed in FILE (see --write-baseline); report only new ones")
     sc.add_argument("--write-baseline", metavar="FILE", help="write the current findings to FILE as a baseline and exit 0")
+    sc.add_argument("--sarif", metavar="FILE", help="also write the findings as SARIF 2.1.0 to FILE, for GitHub code scanning")
+    sc.add_argument("--changed-since", metavar="REF", help="report only findings in Python files changed since the git revision REF (the whole project is still read)")
     sc.set_defaults(func=_cmd_scan)
 
     cf = sub.add_parser("confirm", help="judge one suspected defect against a reference from the physics and record the verdict"

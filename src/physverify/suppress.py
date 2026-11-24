@@ -80,3 +80,29 @@ def apply_baseline(findings, path, baseline) -> tuple[list, int]:
         else:
             kept.append(f)
     return kept, len(findings) - len(kept)
+
+
+def changed_files(path, ref: str) -> set[str]:
+    """Python files under `path` that differ from the git revision `ref` (or are new and untracked), as paths
+    relative to `path` like the findings use. Raises RuntimeError when git cannot answer."""
+    import subprocess
+
+    root = Path(path)
+    where = root if root.is_dir() else root.parent
+    out = set()
+    for cmd in (["git", "diff", "--name-only", "--relative", "--diff-filter=ACMR", ref, "--"],
+                ["git", "ls-files", "--others", "--exclude-standard"]):
+        r = subprocess.run(cmd, cwd=where, capture_output=True, text=True, stdin=subprocess.DEVNULL)
+        if r.returncode != 0:
+            raise RuntimeError(f"{' '.join(cmd[:2])} failed: {r.stderr.strip()[:200]}")
+        out |= {Path(x).as_posix() for x in r.stdout.splitlines() if x.endswith(".py")}
+    if not root.is_dir():
+        return {root.name} & out  # git ran in the file's folder, so the file is listed by its name
+    return out
+
+
+def only_changed(findings, path, ref: str) -> tuple[list, int]:
+    """The findings in files changed since `ref`, and how many in unchanged files were left out."""
+    changed = changed_files(path, ref)
+    kept = [f for f in findings if Path(f.path).as_posix() in changed]
+    return kept, len(findings) - len(kept)
