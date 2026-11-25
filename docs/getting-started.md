@@ -55,6 +55,8 @@ physverify init verify_solver.py --solver mysolver --order 4
 
 This writes a spec for `mysolver.integrate` with the step counts filled in. Fill in the two places marked TODO (the equations and a starting state); until then every check reports ERROR.
 
+If you would rather not write Python, the equations can go in `pyproject.toml` as text: see [A spec in pyproject.toml](declarative.md).
+
 ## 4. Other ways to run it
 
 ```bash

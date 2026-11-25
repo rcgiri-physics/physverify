@@ -14,7 +14,8 @@
 
 `run` exits 0 when no check fails (PASS, EXACT or SKIP), 1 when any does not,
 and 2 when a spec cannot be loaded. A spec is a Python file defining
-`checks()`; see examples/verify_damped_oscillator.py.
+`checks()`; see examples/verify_damped_oscillator.py. A pyproject.toml with
+[[tool.physverify.ode]] tables is also a spec (docs/declarative.md).
 """
 
 from __future__ import annotations
@@ -71,7 +72,7 @@ def _cmd_run(args) -> int:
             print(f"physverify: cannot load {spec}: {type(exc).__name__}: {exc}", file=sys.stderr)
             return 2
         if not checks:
-            print(f"physverify: {spec}: checks() returned no checks, so nothing was tested", file=sys.stderr)
+            print(f"physverify: {spec}: it defines no checks (checks() returned no checks), so nothing was tested", file=sys.stderr)
             return 2
         outcomes += run_checks(checks, args.budget)
         from .specscan import reference_notes
@@ -287,7 +288,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
 
     run = sub.add_parser("run", help="run the checks defined in one or more spec files")
-    run.add_argument("specs", nargs="+", help="Python files that define checks(); glob patterns such as '**/verify_*.py' are expanded")
+    run.add_argument("specs", nargs="+", help="Python files that define checks(), or a pyproject.toml with [[tool.physverify.ode]] tables; glob patterns such as '**/verify_*.py' are expanded")
     run.add_argument("--json", metavar="FILE", help="write results as JSON to FILE, or to stdout with -")
     run.add_argument("--html", metavar="FILE", help="write a self-contained HTML report")
     run.add_argument("--markdown", metavar="FILE", help="append a Markdown table to FILE (for $GITHUB_STEP_SUMMARY)")

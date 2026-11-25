@@ -26,7 +26,8 @@ MCP server (`physverify mcp`)
 
 Specs are found in this order: `[tool.physverify] specs = [...]` in the nearest
 pyproject.toml, otherwise every verify_*.py under the project folder (skipping
-hidden folders, virtual environments and build output).
+hidden folders, virtual environments and build output). A pyproject.toml with
+[[tool.physverify.ode]] tables is a spec too (physverify.declarative).
 """
 
 from __future__ import annotations
@@ -50,28 +51,28 @@ def find_project_root(start: Path) -> Path:
 
 def find_specs(root: Path) -> list[Path]:
     root = Path(root)
+    declared: list[Path] = []
     pyproject = root / "pyproject.toml"
     if pyproject.is_file():
         try:
-            try:
-                import tomllib
-            except ImportError:  # Python 3.10
-                import tomli as tomllib
+            from .declarative import read_config
 
-            config = tomllib.loads(pyproject.read_text(encoding="utf-8")).get("tool", {}).get("physverify", {})
+            config = read_config(pyproject)
         except Exception:
             config = {}
+        if config.get("ode"):
+            declared = [pyproject.resolve()]
         if config.get("specs"):
             # Entries that leave the root are dropped (GCVE-110-VULN-PYPI-2026-000391).
             inside = root.resolve()
-            return [p for p in ((root / s).resolve() for s in config["specs"]) if p.is_relative_to(inside)]
+            return [p for p in ((root / s).resolve() for s in config["specs"]) if p.is_relative_to(inside)] + declared
     specs = []
     for path in sorted(root.rglob("verify_*.py")):
         parts = path.relative_to(root).parts[:-1]
         if any(p.startswith(".") or p in SKIP_DIRS for p in parts):
             continue
         specs.append(path)
-    return specs
+    return specs + declared
 
 
 def run_specs(specs) -> dict:

@@ -20,6 +20,8 @@ The hook and the MCP tool find specs in this order:
 1. `[tool.physverify] specs = ["path/verify_x.py", ...]` in the project's `pyproject.toml`;
 2. otherwise, every `verify_*.py` under the project folder. Hidden folders, virtual environments and build output are skipped.
 
+In both cases a `pyproject.toml` with [`[[tool.physverify.ode]]` tables](declarative.md) is run too.
+
 ## 2. Claude Code hook
 
 Add this to `.claude/settings.json` in your project, or to your user settings:

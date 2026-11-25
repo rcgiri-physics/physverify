@@ -69,6 +69,7 @@ nav:
   - Home: index.md
   - Start here: start-here.md
   - Getting started: getting-started.md
+  - A spec in pyproject.toml: declarative.md
   - How it works: how-it-works.md
   - What a PASS means: assumptions.md
   - Checks with examples:

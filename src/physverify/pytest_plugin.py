@@ -5,6 +5,7 @@ A `verify_*.py` file defines `checks()`, returning a list of physverify.Check
 `pytest` collects them; do not also pass `-p physverify.pytest_plugin`, because
 pytest then stops with "Plugin already registered". Without installing, use
 `pytest -p physverify.pytest_plugin`.
+A pyproject.toml with [[tool.physverify.ode]] tables is collected the same way.
 Files named verify_*.py that do not define checks() are skipped. Turn the
 plugin off with `-p no:physverify`.
 """
@@ -19,7 +20,18 @@ from .checks import SKIP, OrderResult, run_check
 def pytest_collect_file(file_path, parent):
     if file_path.suffix == ".py" and file_path.name.startswith("verify_"):
         return VerifyFile.from_parent(parent, path=file_path)
+    if file_path.name == "pyproject.toml" and _declares_checks(file_path):
+        return VerifyFile.from_parent(parent, path=file_path)
     return None
+
+
+def _declares_checks(path) -> bool:
+    from .declarative import read_config
+
+    try:
+        return bool(read_config(path).get("ode"))
+    except (OSError, ValueError):  # not readable as TOML: not ours to report
+        return False
 
 
 class CheckFailed(Exception):
