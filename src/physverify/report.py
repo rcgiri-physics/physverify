@@ -42,6 +42,10 @@ def load_spec(path):
     import sys
 
     path = Path(path).resolve()
+    if path.suffix == ".toml":  # [[tool.physverify.ode]] tables
+        from .declarative import load_toml_spec
+
+        return load_toml_spec(path)
     folder = str(path.parent)
     if folder not in sys.path:
         sys.path.insert(0, folder)
