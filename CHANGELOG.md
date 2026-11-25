@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Agent skill** in `skills/physverify/` (issue #36): the AGENTS.md steps for checking a project, as a folder to copy into an assistant's skills folder. `docs/agent.md` says where.
 - **Invalid measurements no longer pass or crash.** `check_exact` and `check_order` return INCONCLUSIVE for empty, unpaired or multi-dimensional input (`check_exact` could report EXACT on unpaired data); `check_order` does not fit an order to copies of one step size, and `atol=0` no longer divides by zero. `time_grid_check` fails on empty grids and non-finite times. `compare_tableau`, `check_stencil` and `check_ito_integrals` fail on NaN or inf input, which could pass before.
 - **`scan --changed-since` includes Python files with non-ASCII names**, which were silently left out.
 - **`scan.py` and `probes.py` split by stage.** Each static stage is now a module in `physverify.stages` (`tables`, `stepper_tables`, `grid`, `pairs`, `constants`, `names`, `api`, `literals`, `units`, `flow`) and each probe one in `physverify.probing`; `physverify.lint` and `physverify.flow` are gone (their code is in `physverify.stages`). `physverify.scan` and `physverify.probes` keep their public names. On 147 corpus repositories the findings are the same before and after.

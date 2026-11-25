@@ -12,6 +12,10 @@ Neither is switched on by installing the package. You add them to your own assis
 
 [Start here](start-here.md#with-an-ai-assistant) has a prompt that asks an assistant to find what the code claims, write each reference from the physics (not from the code), test the claims as pytest tests and report what was and was not tested. An assistant working on physverify itself should read [AGENTS.md](https://github.com/rcgiri-physics/physverify/blob/main/AGENTS.md) in the repository.
 
+### As an agent skill
+
+The same rules are packaged as an [agent skill](https://agentskills.io): the folder [skills/physverify](https://github.com/rcgiri-physics/physverify/tree/main/skills/physverify). Copy that folder into your assistant's skills folder; for Claude Code that is `~/.claude/skills/` (all your projects) or `.claude/skills/` in one project. The assistant then loads it when you ask it to verify a solver. The skill is instructions only and contains no scripts; the steps it describes run your code.
+
 ## 1. Write a spec next to the solver
 
 A spec is a `verify_*.py` file that defines `checks()`. [examples/verify_damped_oscillator.py](../examples/verify_damped_oscillator.py) is a complete one. The reference right-hand side in the spec must be written independently of the solver. If the assistant writes both, ask it to derive the reference from the equations, not from its solver.
