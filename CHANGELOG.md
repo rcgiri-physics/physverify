@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **`physverify mutate`** (first part of issue #28): changes the solver one small step at a time (constants scaled by 1.1, `+`/`-` and `*`/`/` swapped, a unary minus dropped), runs the specs on each changed copy in a fresh process and reports which changes they caught. The file is restored afterwards. See `docs/mutate.md`.
 - **Agent skill** in `skills/physverify/` (issue #36): the AGENTS.md steps for checking a project, as a folder to copy into an assistant's skills folder. `docs/agent.md` says where.
 - **Invalid measurements no longer pass or crash.** `check_exact` and `check_order` return INCONCLUSIVE for empty, unpaired or multi-dimensional input (`check_exact` could report EXACT on unpaired data); `check_order` does not fit an order to copies of one step size, and `atol=0` no longer divides by zero. `time_grid_check` fails on empty grids and non-finite times. `compare_tableau`, `check_stencil` and `check_ito_integrals` fail on NaN or inf input, which could pass before.
 - **`scan --changed-since` includes Python files with non-ASCII names**, which were silently left out.
