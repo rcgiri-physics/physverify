@@ -9,6 +9,9 @@
                            (judge one suspected defect; runs the code; exit 0 rejected, 1 confirmed,
                            2 not decidable; see docs/confirm.md)
     physverify confirm init CLAIM.py --text "..." --file F --line N
+    physverify mutate SPEC.py [SPEC.py ...] --target FILE [--timeout S] [--limit N]
+                           (change FILE one small step at a time and report which changes the specs catch;
+                           runs the code; see docs/mutate.md)
     physverify hook        (Claude Code PostToolUse hook; see docs/agent.md)
     physverify mcp         (MCP server on stdio; see docs/agent.md)
 
@@ -272,6 +275,27 @@ def _cmd_confirm(args) -> int:
     return EXIT_CODES[record["verdict"]]
 
 
+def _cmd_mutate(args) -> int:
+    from .mutate import format_report, run_mutants
+
+    try:
+        specs = expand_specs(args.specs)
+    except FileNotFoundError as exc:
+        print(f"physverify: {exc}", file=sys.stderr)
+        return 2
+    if not Path(args.target).is_file():
+        print(f"physverify: {args.target} is not a file", file=sys.stderr)
+        return 2
+    try:
+        _, found = run_mutants(specs, args.target, args.timeout, args.limit,
+                               progress=lambda m: print(f"  {m.line}:{m.col} {m.status}", file=sys.stderr))
+    except (RuntimeError, SyntaxError, UnicodeDecodeError) as exc:
+        print(f"physverify mutate: {exc}", file=sys.stderr)
+        return 2
+    print(format_report(args.target, found))
+    return 0 if all(m.status != "survived" for m in found) else 1
+
+
 def _cmd_references(args) -> int:
     from . import references
 
@@ -349,6 +373,14 @@ def build_parser() -> argparse.ArgumentParser:
     cf.add_argument("--file", help="with init: the file the claim is about, relative to the repository root")
     cf.add_argument("--line", type=int, help="with init: the line in that file")
     cf.set_defaults(func=_cmd_confirm)
+
+    mu = sub.add_parser("mutate", help="change the solver one small step at a time and report which changes the specs"
+                                       " catch (runs the code: trusted code or the sandbox only); see docs/mutate.md")
+    mu.add_argument("specs", nargs="+", help="spec files, as for run")
+    mu.add_argument("--target", required=True, help="the solver file to change (restored afterwards)")
+    mu.add_argument("--timeout", type=_seconds, default=120.0, help="seconds per run of the specs (default 120)")
+    mu.add_argument("--limit", type=int, help="try only the first N changes")
+    mu.set_defaults(func=_cmd_mutate)
 
     r = sub.add_parser("references", help="list the exact reference solutions in physverify.references")
     r.set_defaults(func=_cmd_references)
