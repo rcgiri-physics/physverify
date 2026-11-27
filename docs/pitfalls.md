@@ -56,6 +56,33 @@ When fitting a decay or relaxation rate from a run that starts from equilibrium,
 
 Symmetric defaults hide bugs: an aspect ratio of 1, equal grid sizes, zero boundary data, one polarisation, a lossless medium. In the October 2026 corpus sessions 7 confirmed bugs passed at the example values and failed as soon as one parameter changed. Rerun a passing check with each such parameter changed on its own (`identities.vary_one`).
 
+## JAX: checks run outside jit, and subtract in float64
+
+physverify checks are host-side NumPy code. Calling one inside a `jax.jit` function raises
+`TracerArrayConversionError`, because the values there are tracers, not arrays. Solve under jit, then
+pass the results to the check as NumPy arrays:
+
+```python
+import jax
+import numpy as np
+from physverify import check_order
+
+jax.config.update("jax_enable_x64", True)   # before any array is made
+
+solve = jax.jit(my_solver)                  # jit the solver, not the check
+hs, errors = [], []
+for n in (32, 64, 128, 256):
+    u = np.asarray(solve(n), dtype=np.float64)      # leave jit here
+    errors.append(np.max(np.abs(u - exact(n))))     # subtract in float64, in NumPy
+    hs.append(1.0 / n)
+print(check_order(hs, errors, expected=2))
+```
+
+Subtract the reference in float64. If the difference is taken in float32, errors below about 1e-7 of the
+solution are lost before the check sees them: the measured errors stall at that level and the verdict is
+INCONCLUSIVE or a plateau FAIL, although the solver converges. A solver that itself computes in float32
+can be checked only down to that level; say so in the test, and stop the resolutions there.
+
 ## Spec mistakes seen in the October 2026 sessions
 
 Each of these made a correct code look wrong until the spec was fixed:

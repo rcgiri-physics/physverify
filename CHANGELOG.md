@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Docs: JAX** (issue #110): `docs/pitfalls.md` shows how to keep checks outside `jax.jit` and why the reference must be subtracted in float64.
 - **Compiled solvers through the command line** (issue #38): `physverify.bridge.command` runs a program (no shell) and reads every number it prints, Fortran `D` exponents included; `command_integrate` wraps it as `integrate(source, y0, t_end, n_steps)` for the reference and invariant studies, and refuses a non-zero Python source. See `docs/compiled.md`.
 - **Mutation score of the benchmark** (issue #101): `physverify mutate --function NAME` changes only the named functions; `python -m pvbench.mutation` runs it on the five seeded-bug problems. The specs caught 122 of 154 changes on lines they run; the 32 survivors are reviewed in `results/mutation/REVIEW.md` (27 cannot change the result, 5 are consistent schemes of the same order).
 - **Comparison with units** (issue #27): `physverify.quantities.compare_quantities(value, expected)` converts pint quantities to the reference's units before comparing and FAILs on different dimensions or units on one side only. pint is optional (`pip install physverify[units]`).
