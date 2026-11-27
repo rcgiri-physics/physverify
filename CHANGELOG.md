@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Comparison with units** (issue #27): `physverify.quantities.compare_quantities(value, expected)` converts pint quantities to the reference's units before comparing and FAILs on different dimensions or units on one side only. pint is optional (`pip install physverify[units]`).
 - **2D and 3D heat equation checks** (issue #24): `physverify.heat` with manufactured solutions for Dirichlet, zero-flux Neumann and periodic boundaries, `check_laplacian` and `check_heat_order` (order studies that name the kind of node, corner, edge, face or interior, with the largest error) and `check_source_balance` (a uniform source in an insulated box). See `docs/checks/heat.md`.
 - **`physverify mutate`: more kinds of change and JSON** (issue #100): `<`/`<=` and `>`/`>=` swaps, constant indices moved by one (`y[0]` to `y[1]`), keyword defaults scaled like other constants, and `--json` with one record per change.
 - **`physverify mutate` survivors** (issue #99): changes on lines the specs never run are reported as NOT RUN (found by tracing the run on the unchanged code) instead of being run, and `x * 1` / `x / 1` swaps, which cannot change the result, are no longer made.

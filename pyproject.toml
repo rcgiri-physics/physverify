@@ -38,7 +38,8 @@ Changelog = "https://github.com/rcgiri-physics/physverify/blob/main/CHANGELOG.md
 
 [project.optional-dependencies]
 symbolic = ["sympy>=1.12"]
-dev = ["pytest>=8", "coverage>=7.10", "hypothesis>=6", "sympy>=1.12", "ruff>=0.6", "mypy>=1.10"]
+units = ["pint>=0.23"]
+dev = ["pytest>=8", "coverage>=7.10", "hypothesis>=6", "sympy>=1.12", "pint>=0.23", "ruff>=0.6", "mypy>=1.10"]
 docs = ["mkdocs>=1.6,<2", "mkdocs-material>=9.5,<10", "mkdocstrings[python]>=1.0.8,<2"]
 
 [project.scripts]
