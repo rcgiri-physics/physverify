@@ -86,16 +86,101 @@ def reference_notes(path, roots=None) -> list[str]:
     solver = _local(_solver_modules(tree), roots)
     if not solver:
         return []
+    derived = _derived(tree, solver)
     notes = []
     for f in ast.walk(tree):
         if not (isinstance(f, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)) and _REFERENCE.search(getattr(f, "name", ""))):
             continue
-        used = sorted({n.id for n in ast.walk(f) if isinstance(n, ast.Name) and n.id in solver})
-        if used:
-            notes.append(f"{path.name}:{f.lineno}: the reference {f.name}() uses {', '.join(used)}, which the spec imports"
-                         " as the code under test; a reference computed with the solver passes even when the solver is"
-                         " wrong (derive it from the physics instead, or say why this use is safe)")
+        local = _local_names(f)
+        names = {n.id for n in ast.walk(f) if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load)} - local
+        used = sorted(names & solver)
+        via = sorted((names & set(derived)) - solver)
+        consts = sorted(_constants_read(f, solver - local, set(via)))
+        calls = sorted(_called_bases(f, set(used) | set(via)))
+        if not (used or via):
+            continue
+        if calls:
+            msg = (f"the reference {f.name}() calls {', '.join(calls)}, which the spec imports as the code under test;"
+                   " a reference computed with the solver passes even when the solver is wrong (derive it from the"
+                   " physics instead, or say why this use is safe)")
+            if consts:
+                msg += f"; it also reads {', '.join(consts)} from the code under test"
+        elif consts:
+            src_ = ", ".join(used + [f"{v} (built from {derived[v]})" for v in via])
+            msg = (f"the reference {f.name}() reads {', '.join(consts)} from {src_}, which come from the code under"
+                   " test; a wrong constant or setting in the solver is then copied into the reference and the check"
+                   " passes (write the values from the paper or textbook in the spec, and say where they came from)")
+        else:
+            src_ = ", ".join(used + [f"{v} (built from {derived[v]})" for v in via])
+            msg = (f"the reference {f.name}() uses {src_}, which the spec imports as the code under test; a reference"
+                   " computed with the solver passes even when the solver is wrong (derive it from the physics instead,"
+                   " or say why this use is safe)")
+        notes.append(f"{path.name}:{f.lineno}: {msg}")
     return notes
+
+
+def _derived(tree, solver: set[str]) -> dict[str, str]:
+    """Module-level names assigned from an expression that uses the code under test (sim = solver.Sim(); g = sim.g),
+    each with the solver name it came from. Followed to a fixed point, so chains of assignments count."""
+    out: dict[str, str] = {}
+    assigns = [n for n in tree.body if isinstance(n, (ast.Assign, ast.AnnAssign)) and n.value is not None]
+    changed = True
+    while changed:
+        changed = False
+        for n in assigns:
+            srcs = [m.id for m in ast.walk(n.value) if isinstance(m, ast.Name) and (m.id in solver or m.id in out)]
+            if not srcs:
+                continue
+            origin = srcs[0] if srcs[0] in solver else out[srcs[0]]
+            for t in (n.targets if isinstance(n, ast.Assign) else [n.target]):
+                for m in ast.walk(t):
+                    if isinstance(m, ast.Name) and m.id not in out and m.id not in solver:
+                        out[m.id] = origin
+                        changed = True
+    return out
+
+
+def _local_names(f) -> set[str]:
+    """Parameters of f and names it assigns: these shadow module-level names of the same spelling."""
+    a = f.args
+    out = {x.arg for x in a.posonlyargs + a.args + a.kwonlyargs}
+    out |= {x.arg for x in (a.vararg, a.kwarg) if x is not None}
+    out |= {n.id for n in ast.walk(f) if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Store)}
+    return out
+
+
+def _called_bases(f, names: set[str]) -> set[str]:
+    """Names in `names` that f calls, directly or through attributes (solver.run(...), sim.step(...))."""
+    out = set()
+    for n in ast.walk(f):
+        if isinstance(n, ast.Call):
+            base = n.func
+            while isinstance(base, ast.Attribute):
+                base = base.value
+            if isinstance(base, ast.Name) and base.id in names:
+                out.add(ast.unparse(n.func))
+    return out
+
+
+def _constants_read(f, modules: set[str], objects: set[str]) -> set[str]:
+    """Attributes and subscripts read (not called) inside f: UPPER_CASE attributes of a solver module (solver.G; a
+    module's other attributes are mostly types and submodules, jnp.float32), any attribute of an object built from
+    the solver (sim.mass), and string-keyed subscripts of either (sim.params["g"])."""
+    names = modules | objects
+    called = {id(n.func) for n in ast.walk(f) if isinstance(n, ast.Call)}
+    out = set()
+    for n in ast.walk(f):
+        if (isinstance(n, ast.Attribute) and id(n) not in called and isinstance(n.value, ast.Name) and n.value.id in names
+                and (n.value.id in objects or n.attr.isupper())):
+            out.add(f"{n.value.id}.{n.attr}")
+        elif (isinstance(n, ast.Subscript) and isinstance(n.slice, ast.Constant) and isinstance(n.slice.value, str)
+              and isinstance(n.value, (ast.Name, ast.Attribute))):
+            base = n.value
+            while isinstance(base, ast.Attribute):
+                base = base.value
+            if isinstance(base, ast.Name) and base.id in names:
+                out.add(f"{ast.unparse(n.value)}[{n.slice.value!r}]")
+    return out
 
 
 def _local(modules: dict, roots) -> set[str]:
