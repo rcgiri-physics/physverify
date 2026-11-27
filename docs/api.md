@@ -25,6 +25,7 @@ The functions most specs need. Each has a docstring with the details, collected 
 | `patch_study(integrate, rhs_ref, y0, slope, t_end, ns)` | A linear solution reproduced to round-off. |
 | `trajectory_order_study(runs, exact, t_compare, order, period=None)` | From whole trajectories, at one fixed time. |
 | `check_order(hs, errors, expected, atol=None)` | The verdict from step sizes and errors; `atol` adds an accuracy requirement on the finest grid, reported apart from the order. |
+| `check_order_mc(hs, errors, stderr, expected, level=0.99)` | The verdict for Monte Carlo errors with standard errors (strong order of SDE schemes): PASS when the confidence interval of the fitted order lies inside the band, FAIL when outside, INCONCLUSIVE when it overlaps the edge. False-alarm rate measured in its docstring. |
 | `check_exact(hs, errors)` | The verdict when every error should be at round-off. |
 | `fit_order_error(hs, errors)` | The fitted order and its standard error. |
 | `gci(f_fine, f_medium, f_coarse, r)` | Grid convergence index (Roache; Celik et al. 2008): observed order, Richardson extrapolate, error band. |
