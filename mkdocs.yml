@@ -76,6 +76,7 @@ nav:
   - Checks with examples:
       - Manufactured solutions: checks/manufactured-solutions.md
       - Order of convergence: checks/order.md
+      - 2D and 3D heat equation: checks/heat.md
       - Reference solutions: checks/reference.md
       - Conserved quantities and budgets: checks/conservation.md
       - Exact patch tests: checks/patch.md
