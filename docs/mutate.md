@@ -13,10 +13,11 @@ The changes made in the target file:
 - `+` swapped with `-`, and `*` with `/`;
 - a unary minus dropped.
 
-Constants inside an index (`y[0]`) or a `range(...)` call are left alone: changing them mostly gives an
+Changes that cannot alter the result are not made (`x * 1` to `x / 1`). Constants inside an index (`y[0]`) or a `range(...)` call are left alone: changing them mostly gives an
 `IndexError` or a shorter loop. Each change is reported as CAUGHT (a check failed, or the spec could not
-run), TIMEOUT (counted as caught) or SURVIVED (every check passed). The exit code is 0 when nothing
-survived and 1 otherwise; 2 when the specs do not pass on the unchanged code, since a mutation run then
+run), TIMEOUT (counted as caught), NOT RUN (the specs never run that line, found by tracing the run on
+the unchanged code, so the change is not tried) or SURVIVED (every check passed). The exit code is 0
+when everything was caught and 1 otherwise; 2 when the specs do not pass on the unchanged code, since a mutation run then
 says nothing.
 
 **This runs the code under test** (trusted code or the sandbox only). The target file is changed in place
@@ -26,7 +27,8 @@ control anyway.
 ## Reading the survivors
 
 A survivor is either a gap in the specs or a change that does not alter what the code computes (an
-equivalent mutant). Look at each one before calling it a gap.
+equivalent mutant). Look at each one before calling it a gap. A NOT RUN line is a clearer case: no
+test runs that code at all.
 
 On `examples/damped_oscillator.py` the example spec catches 22 of 25 changes. The three survivors all
 change the stage time in `rhs(t + 0.5 * h, mid)`. The oscillator's right-hand side does not depend on t,

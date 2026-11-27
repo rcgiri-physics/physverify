@@ -101,9 +101,38 @@ def child_main(argv) -> int:
             from .agent import run_specs
 
             result = run_specs([Path(s) for s in rest])
+        elif mode == "specs_lines":  # the first argument is a file whose executed lines are recorded too
+            result = _run_tracing_lines(Path(rest[0]), [Path(s) for s in rest[1:]])
         else:
             print(f"physverify.isolate: unknown mode {mode!r}", file=sys.stderr)
             return 2
     real_stdout.write("\n" + MARKER + json.dumps(result) + "\n")
     real_stdout.flush()
     return 0
+
+
+def _run_tracing_lines(target: Path, specs) -> dict:
+    """run_specs, also recording which lines of `target` ran (for physverify mutate)."""
+    import threading
+
+    from .agent import run_specs
+
+    want = os.path.normcase(str(target.resolve()))
+    lines: set[int] = set()
+
+    def tracer(frame, event, arg):
+        if os.path.normcase(os.path.abspath(frame.f_code.co_filename)) != want:
+            return None
+        if event in ("call", "line"):
+            lines.add(frame.f_lineno)
+        return tracer
+
+    sys.settrace(tracer)
+    threading.settrace(tracer)
+    try:
+        result = run_specs(specs)
+    finally:
+        sys.settrace(None)
+        threading.settrace(None)  # type: ignore[arg-type]
+    result["target_lines"] = sorted(lines)
+    return result
