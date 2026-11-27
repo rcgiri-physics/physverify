@@ -268,3 +268,87 @@ def check_order(
                 msg += f"; the finest error {finest:.3g} is also above the absolute tolerance {atol:g}"
             status = FAIL
     return OrderResult(status, msg, fitted=p, fitted_se=se, **base)
+
+
+def _normal_quantile(p: float) -> float:
+    """Inverse of the standard normal CDF (Acklam's rational approximation, relative error below 1.2e-9)."""
+    a = (-3.969683028665376e01, 2.209460984245205e02, -2.759285104469687e02, 1.383577518672690e02,
+         -3.066479806614716e01, 2.506628277459239e00)
+    b = (-5.447609879822406e01, 1.615858368580409e02, -1.556989798598866e02, 6.680131188771972e01,
+         -1.328068155288572e01)
+    c = (-7.784894002430293e-03, -3.223964580411365e-01, -2.400758277161838e00, -2.549732539343734e00,
+         4.374664141464968e00, 2.938163982698783e00)
+    d = (7.784695709041462e-03, 3.224671290700398e-01, 2.445134137142996e00, 3.754408661907416e00)
+    if p < 0.02425:
+        q = np.sqrt(-2 * np.log(p))
+        return float((((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5])
+                     / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1))
+    if p > 1 - 0.02425:
+        return -_normal_quantile(1 - p)
+    q = p - 0.5
+    r = q * q
+    return float((((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q
+                 / (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1))
+
+
+def check_order_mc(hs, errors, stderr, expected: float, *, tol_low: float = 0.3, tol_high: float = 1.0,
+                   tol: float | None = None, level: float = 0.99) -> OrderResult:
+    """The order verdict for errors estimated by Monte Carlo, each with a standard error (strong order of an
+    SDE scheme, a sampled error norm).
+
+    Fits log(error) against log(h) by weighted least squares, with the standard error of each log(error) from
+    the delta method, se/error. The slope's standard error is the larger of the one the supplied standard errors
+    give and the one the scatter about the line gives (so errors that do not lie on a line are not hidden by
+    small error bars). With the two-sided `level` confidence interval of the slope:
+
+    PASS          the interval lies inside [expected - tol_low, expected + tol_high]
+    FAIL          the interval lies wholly outside it
+    INCONCLUSIVE  the interval overlaps the edge of the band: the error bars are too wide to tell, or the
+                  input is unusable (fewer than three step sizes, non-positive errors or standard errors)
+
+    Measured on synthetic data (2026-11-27; tests/test_order_mc.py repeats smaller runs), 20000 runs each, step
+    sizes halving, Gaussian noise of 10% on each error with that standard error supplied, claim 1, default band:
+    true order 1, 4 step sizes: no FAIL (1662 INCONCLUSIVE); true order 0.7, on the band's edge: 48 FAIL (0.24%,
+    below the 0.5% the 99% interval allows); true order 0.5, 4 step sizes: 58% FAIL, the rest INCONCLUSIVE,
+    no PASS; the same with 6 step sizes: 99.3% FAIL. These rates hold for this noise model, not in general."""
+    if tol is not None:
+        tol_low = tol_high = tol
+    h = np.asarray(hs, dtype=float).ravel()
+    e = np.asarray(errors, dtype=float).ravel()
+    s = np.asarray(stderr, dtype=float).ravel()
+    base: dict[str, Any] = dict(expected=expected, hs=tuple(h.tolist()), errors=tuple(e.tolist()))
+    band = f"[{expected - tol_low:g}, {expected + tol_high:g}]"
+    accept = f"the {level:.0%} confidence interval of the fitted order within {band}"
+    if not (h.size == e.size == s.size):
+        return OrderResult(INCONCLUSIVE, f"{h.size} step sizes, {e.size} errors and {s.size} standard errors: these"
+                                         " must pair up", acceptance=accept, **base)
+    if not (np.all(np.isfinite(h)) and np.all(np.isfinite(e)) and np.all(np.isfinite(s))):
+        return OrderResult(FAIL, "a step size, error or standard error is NaN or inf", acceptance=accept, **base)
+    if np.any(h <= 0) or np.any(e <= 0) or np.any(s <= 0):
+        return OrderResult(INCONCLUSIVE, "step sizes, errors and standard errors must all be positive",
+                           acceptance=accept, **base)
+    if np.unique(h).size < 3:
+        return OrderResult(INCONCLUSIVE, "fewer than three distinct step sizes: a slope and its uncertainty cannot"
+                                         " both be estimated", acceptance=accept, **base)
+    if not 0.5 < level < 1:
+        raise ValueError(f"level must be between 0.5 and 1, not {level}")
+    x, y, w = np.log(h), np.log(e), (e / s) ** 2  # weight 1 / var(log e)
+    xm = float((w * x).sum() / w.sum())
+    sxx = float((w * (x - xm) ** 2).sum())
+    p = float((w * (x - xm) * (y - (w * y).sum() / w.sum())).sum() / sxx)
+    resid = y - ((w * y).sum() / w.sum() + p * (x - xm))
+    chi2_dof = float((w * resid**2).sum() / (x.size - 2))
+    se = float(np.sqrt(max(1.0, chi2_dof) / sxx))
+    z = _normal_quantile(0.5 + level / 2)
+    lo, hi = p - z * se, p + z * se
+    a, b = expected - tol_low, expected + tol_high
+    scatter = f"; the scatter about the line is {np.sqrt(chi2_dof):.2g} times the error bars" if chi2_dof > 1 else ""
+    msg = f"fitted order {p:.3g} +- {se:.2g}, {level:.0%} interval [{lo:.3g}, {hi:.3g}] (expected {expected:g}, band {band}){scatter}"
+    if a <= lo and hi <= b:
+        status = PASS
+    elif hi < a or lo > b:
+        status = FAIL
+    else:
+        status = INCONCLUSIVE
+        msg += "; the interval overlaps the edge of the band, so more samples or more step sizes are needed"
+    return OrderResult(status, msg, fitted=p, fitted_se=se, acceptance=accept, **base)

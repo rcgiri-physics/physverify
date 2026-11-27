@@ -30,3 +30,13 @@ Output:
 ## How sure is the fitted order?
 
 `physverify.order.fit_order_error(hs, errors)` returns the fitted order with its standard error from the scatter about the line: 3.9 with 0.05 supports order 4, 3.9 with 0.6 supports nothing yet. For three solutions of a quantity on grids refined by a constant ratio, `gci(f_fine, f_medium, f_coarse, r)` gives the observed order, the Richardson extrapolate and the grid convergence index, a relative error band on the fine solution (Roache 1994; Celik et al., *J. Fluids Eng.* 130, 078001, 2008), and says when the convergence is oscillatory.
+
+
+## Errors estimated by Monte Carlo
+
+When each error is a sample mean (the strong error of an SDE scheme, E|X_N - X(T)|), pass its standard
+error too: `check_order_mc(hs, errors, stderr, expected)`. It fits the order with weights from the standard
+errors and gives PASS only when the 99% confidence interval of the order lies inside the band, FAIL when the
+interval lies wholly outside, and INCONCLUSIVE in between: then more paths or more step sizes are needed.
+The rates measured on synthetic data are in its docstring. Use the same Brownian path for the scheme and the
+exact solution (geometric Brownian motion has one), or the error includes the sampling difference.
