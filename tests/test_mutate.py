@@ -106,3 +106,11 @@ def test_json_report_counts():
     d = json.loads(to_json("s.py", found))
     assert (d["total"], d["caught"], d["survived"], d["not_run"]) == (3, 1, 1, 1)
     assert [r["line"] for r in d["mutants"]] == [2, 3, 4]
+
+
+def test_function_filter_leaves_other_code_alone():
+    src = "def reference(x):\n    return 2.0 * x\n\n\ndef solver(x, a=3.0):\n    return 2.0 * x + a\n"
+    found = mutants(src, functions=("solver",))
+    assert found and all(m.line == 6 for m in found)  # not the reference, not the default on line 5
+    for m in found:
+        assert "return 2.0 * x\n" in mutant_source(src, m.index, functions=("solver",))

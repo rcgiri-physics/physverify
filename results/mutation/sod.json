@@ -1,0 +1,524 @@
+{
+  "target": "benchmark/pvbench/problems/sod.py",
+  "total": 73,
+  "caught": 37,
+  "not_run": 27,
+  "survived": 9,
+  "mutants": [
+    {
+      "line": 189,
+      "col": 18,
+      "change": "operator / -> *",
+      "status": "survived",
+      "detail": "all 5 checks passed"
+    },
+    {
+      "line": 189,
+      "col": 18,
+      "change": "constant 5.0 -> 5.5",
+      "status": "survived",
+      "detail": "all 5 checks passed"
+    },
+    {
+      "line": 189,
+      "col": 24,
+      "change": "constant 3.0 -> 3.3000000000000003",
+      "status": "survived",
+      "detail": "all 5 checks passed"
+    },
+    {
+      "line": 190,
+      "col": 10,
+      "change": "operator / -> *",
+      "status": "caught",
+      "detail": "FAIL smooth density wave, periodic"
+    },
+    {
+      "line": 190,
+      "col": 10,
+      "change": "constant 1.0 -> 1.1",
+      "status": "caught",
+      "detail": "FAIL smooth density wave, periodic"
+    },
+    {
+      "line": 191,
+      "col": 9,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL smooth density wave, periodic"
+    },
+    {
+      "line": 191,
+      "col": 10,
+      "change": "operator + -> -",
+      "status": "survived",
+      "detail": "all 5 checks passed"
+    },
+    {
+      "line": 191,
+      "col": 31,
+      "change": "constant 0.5 -> 0.55",
+      "status": "survived",
+      "detail": "all 5 checks passed"
+    },
+    {
+      "line": 195,
+      "col": 15,
+      "change": "comparison < -> <=",
+      "status": "timeout",
+      "detail": "timed out after 600 s; the run was stopped"
+    },
+    {
+      "line": 197,
+      "col": 67,
+      "change": "constant 1 -> 1.1",
+      "status": "caught",
+      "detail": "ERROR smooth density wave, periodic"
+    },
+    {
+      "line": 199,
+      "col": 67,
+      "change": "constant 1 -> 1.1",
+      "status": "caught",
+      "detail": "ERROR Sod shock tube, density L1"
+    },
+    {
+      "line": 201,
+      "col": 41,
+      "change": "unary minus removed",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 201,
+      "col": 51,
+      "change": "unary minus removed",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 203,
+      "col": 17,
+      "change": "operator / -> *",
+      "status": "timeout",
+      "detail": "timed out after 600 s; the run was stopped"
+    },
+    {
+      "line": 204,
+      "col": 17,
+      "change": "operator * -> /",
+      "status": "timeout",
+      "detail": "timed out after 600 s; the run was stopped"
+    },
+    {
+      "line": 204,
+      "col": 18,
+      "change": "operator - -> +",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 204,
+      "col": 31,
+      "change": "constant 1.0 -> 1.1",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 204,
+      "col": 39,
+      "change": "operator - -> +",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 204,
+      "col": 43,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 204,
+      "col": 43,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 204,
+      "col": 43,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 204,
+      "col": 43,
+      "change": "constant 0.5 -> 0.55",
+      "status": "caught",
+      "detail": "FAIL smooth density wave, periodic"
+    },
+    {
+      "line": 205,
+      "col": 25,
+      "change": "operator / -> *",
+      "status": "survived",
+      "detail": "all 5 checks passed"
+    },
+    {
+      "line": 205,
+      "col": 25,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL discrete conservation of mass, momentum, energy"
+    },
+    {
+      "line": 206,
+      "col": 28,
+      "change": "operator + -> -",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 207,
+      "col": 42,
+      "change": "comparison <= -> <",
+      "status": "survived",
+      "detail": "all 5 checks passed"
+    },
+    {
+      "line": 209,
+      "col": 18,
+      "change": "operator / -> *",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 209,
+      "col": 18,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 210,
+      "col": 16,
+      "change": "comparison > -> >=",
+      "status": "survived",
+      "detail": "all 5 checks passed"
+    },
+    {
+      "line": 210,
+      "col": 16,
+      "change": "operator + -> -",
+      "status": "caught",
+      "detail": "FAIL discrete conservation of mass, momentum, energy"
+    },
+    {
+      "line": 211,
+      "col": 22,
+      "change": "operator - -> +",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 212,
+      "col": 32,
+      "change": "operator + -> -",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 212,
+      "col": 32,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 212,
+      "col": 45,
+      "change": "operator * -> /",
+      "status": "timeout",
+      "detail": "timed out after 600 s; the run was stopped"
+    },
+    {
+      "line": 212,
+      "col": 46,
+      "change": "operator + -> -",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 213,
+      "col": 73,
+      "change": "operator + -> -",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 215,
+      "col": 20,
+      "change": "operator - -> +",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 215,
+      "col": 20,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 215,
+      "col": 20,
+      "change": "constant 0.5 -> 0.55",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 215,
+      "col": 27,
+      "change": "operator + -> -",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 215,
+      "col": 51,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 215,
+      "col": 51,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 215,
+      "col": 51,
+      "change": "constant 0.5 -> 0.55",
+      "status": "survived",
+      "detail": "all 5 checks passed"
+    },
+    {
+      "line": 215,
+      "col": 62,
+      "change": "operator - -> +",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 216,
+      "col": 21,
+      "change": "operator - -> +",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 216,
+      "col": 25,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 216,
+      "col": 25,
+      "change": "operator / -> *",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 216,
+      "col": 36,
+      "change": "operator - -> +",
+      "status": "caught",
+      "detail": "FAIL Sod shock tube, density L1"
+    },
+    {
+      "line": 220,
+      "col": 22,
+      "change": "operator * -> /",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 220,
+      "col": 22,
+      "change": "constant 0.5 -> 0.55",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 220,
+      "col": 29,
+      "change": "operator - -> +",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 221,
+      "col": 22,
+      "change": "operator * -> /",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 221,
+      "col": 22,
+      "change": "constant 0.5 -> 0.55",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 221,
+      "col": 29,
+      "change": "operator - -> +",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 222,
+      "col": 25,
+      "change": "operator + -> -",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 222,
+      "col": 25,
+      "change": "operator - -> +",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 222,
+      "col": 30,
+      "change": "operator * -> /",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 222,
+      "col": 30,
+      "change": "operator / -> *",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 222,
+      "col": 41,
+      "change": "operator + -> -",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 222,
+      "col": 41,
+      "change": "operator * -> /",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 222,
+      "col": 51,
+      "change": "operator / -> *",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 222,
+      "col": 69,
+      "change": "operator * -> /",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 222,
+      "col": 69,
+      "change": "operator * -> /",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 222,
+      "col": 69,
+      "change": "operator / -> *",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 222,
+      "col": 69,
+      "change": "operator * -> /",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 222,
+      "col": 69,
+      "change": "constant 0.5 -> 0.55",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 222,
+      "col": 96,
+      "change": "operator + -> -",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 222,
+      "col": 96,
+      "change": "operator - -> +",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 222,
+      "col": 104,
+      "change": "operator * -> /",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 222,
+      "col": 104,
+      "change": "constant 2 -> 2.2",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 223,
+      "col": 17,
+      "change": "index [1] -> [2]",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 223,
+      "col": 28,
+      "change": "operator * -> /",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 223,
+      "col": 28,
+      "change": "index [0] -> [1]",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    }
+  ],
+  "functions": [
+    "solve"
+  ],
+  "seconds": 2465.0
+}
