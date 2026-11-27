@@ -80,3 +80,29 @@ def test_lines_the_specs_never_run_are_reported(tmp_path, capsys, monkeypatch):
     out = capsys.readouterr().out
     assert solver.read_bytes() == original
     assert "NOT RUN" in out and "never run" in out and code == 1
+
+
+def test_comparisons_and_constant_indices_are_mutated():
+    src = "def f(y, t, t_end):\n    if t < t_end:\n        return y[0] + y[-1]\n    return y[1:]\n"
+    kinds = {m.description for m in mutants(src)}
+    assert {"comparison < -> <=", "index [0] -> [1]", "index [-1] -> [-2]"} <= kinds
+    assert not any("[1:]" in k or "constant 1 " in k for k in kinds)  # slices are left alone
+    for m in mutants(src):
+        compile(mutant_source(src, m.index), "<mutant>", "exec")
+    changed = [mutant_source(src, m.index) for m in mutants(src) if m.description == "index [-1] -> [-2]"][0]
+    assert "y[-2]" in changed
+
+
+def test_keyword_defaults_are_scaled():
+    assert "constant 0.5 -> 0.55" in {m.description for m in mutants("def f(x, theta=0.5):\n    return x\n")}
+
+
+def test_json_report_counts():
+    import json
+
+    from physverify.mutate import Mutant, to_json
+    found = [Mutant(0, 3, 1, "a", status="caught"), Mutant(1, 2, 1, "b", status="survived"),
+             Mutant(2, 4, 1, "c", status="not run")]
+    d = json.loads(to_json("s.py", found))
+    assert (d["total"], d["caught"], d["survived"], d["not_run"]) == (3, 1, 1, 1)
+    assert [r["line"] for r in d["mutants"]] == [2, 3, 4]
