@@ -70,6 +70,7 @@ nav:
   - Start here: start-here.md
   - Getting started: getting-started.md
   - A spec in pyproject.toml: declarative.md
+  - Compiled solvers (C, C++, Fortran, Julia): compiled.md
   - Can the spec fail? physverify mutate: mutate.md
   - How it works: how-it-works.md
   - What a PASS means: assumptions.md
