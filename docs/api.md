@@ -41,6 +41,17 @@ The functions most specs need. Each has a docstring with the details, collected 
 | `decay_rate(t, y, t_skip=None)` | Exponential decay rate, skipping the start-up transient (found automatically when `t_skip` is not given). |
 | `residual_check(solve, residual, tols)` | An iterative solver's residual follows the tolerance it was asked for. |
 
+## 2D and 3D heat equation (`physverify.heat`)
+
+| Name | What it does |
+|---|---|
+| `check_laplacian(apply, dim, bc, ns=(8, 16, 32), order=2)` | Discrete Laplacian against the exact one, boundary nodes included; names the node kind with the largest error. |
+| `check_heat_order(solve, dim, bc, ns=(8, 16, 32), order=2, steps=None)` | Whole-solver order study on a manufactured solution. |
+| `check_source_balance(solve, dim)` | Uniform source in an insulated box: mean of u grows by q t. |
+| `heat_problem(dim, bc, n)` | The manufactured problem on one grid. |
+
+See [2D and 3D heat equation](checks/heat.md).
+
 ## Long-time behaviour (`physverify.longtime`)
 
 | Name | What it does |
