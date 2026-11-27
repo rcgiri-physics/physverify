@@ -59,3 +59,24 @@ def test_mutate_refuses_when_baseline_fails(tmp_path, capsys, monkeypatch):
     assert main(["mutate", "verify_bad.py", "--target", "solver.py"]) == 2
     assert "unchanged code" in capsys.readouterr().err
     assert (tmp_path / "solver.py").read_text(encoding="utf-8") == "X = 1.0\n"
+
+
+def test_times_one_is_not_mutated():
+    assert not [m for m in mutants("def f(x):\n    return x * 1\n") if m.description.startswith("operator")]
+
+
+@pytest.mark.slow
+def test_lines_the_specs_never_run_are_reported(tmp_path, capsys, monkeypatch):
+    examples = Path(__file__).resolve().parents[1] / "examples"
+    for name in ("damped_oscillator.py", "verify_damped_oscillator.py"):
+        shutil.copy(examples / name, tmp_path / name)
+    solver = tmp_path / "damped_oscillator.py"
+    solver.write_text(solver.read_text(encoding="utf-8") + "\n\ndef unused(y):\n    return -y\n", encoding="utf-8")
+    original = solver.read_bytes()
+    monkeypatch.chdir(tmp_path)
+    found = mutants(original.decode())
+    last = len(found)  # the unused function holds the last change
+    code = main(["mutate", "verify_damped_oscillator.py", "--target", "damped_oscillator.py", "--limit", str(last)])
+    out = capsys.readouterr().out
+    assert solver.read_bytes() == original
+    assert "NOT RUN" in out and "never run" in out and code == 1

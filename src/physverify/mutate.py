@@ -28,7 +28,8 @@ class Mutant:
     line: int
     col: int
     description: str
-    status: str = ""  # "caught", "survived", "timeout"
+    stmt_line: int = 0  # first line of the statement the change is in
+    status: str = ""  # "caught", "survived", "timeout", "not run"
     detail: str = ""
 
 
@@ -47,11 +48,29 @@ def _skip_subscript_parents(tree) -> set[int]:
     return skip
 
 
+def _is_one(node) -> bool:
+    return isinstance(node, ast.Constant) and type(node.value) in (int, float) and node.value == 1
+
+
+def _statement_lines(tree) -> dict[int, int]:
+    """id of each node -> first line of the innermost statement that holds it."""
+    out: dict[int, int] = {}
+    for stmt in ast.walk(tree):
+        if isinstance(stmt, ast.stmt):
+            for n in ast.walk(stmt):
+                out[id(n)] = stmt.lineno  # inner statements come later in the walk and overwrite
+    return out
+
+
 def _sites(tree):
-    """Yield (node, kind, description) for every change made, in a fixed order."""
+    """Yield (node, kind, description) for every change made, in a fixed order.
+
+    Changes that cannot alter the result are not made: x * 1 and x / 1 are the same number."""
     skip = _skip_subscript_parents(tree)
     for node in ast.walk(tree):
         if id(node) in skip:
+            continue
+        if isinstance(node, ast.BinOp) and isinstance(node.op, (ast.Mult, ast.Div)) and _is_one(node.right):
             continue
         if isinstance(node, ast.Constant) and type(node.value) in (int, float) and node.value != 0:
             yield node, "scale", f"constant {node.value!r} -> {node.value * SCALE!r}"
@@ -85,7 +104,9 @@ class _Replace(ast.NodeTransformer):
 def mutants(source: str) -> list[Mutant]:
     """The changes `mutate` makes in `source`, with the line and column of each in the original."""
     tree = ast.parse(source)
-    return [Mutant(i, n.lineno, n.col_offset + 1, d) for i, (n, _, d) in enumerate(_sites(tree))]
+    stmts = _statement_lines(tree)
+    return [Mutant(i, n.lineno, n.col_offset + 1, d, stmts.get(id(n), n.lineno))
+            for i, (n, _, d) in enumerate(_sites(tree))]
 
 
 def mutant_source(source: str, index: int) -> str:
@@ -121,13 +142,19 @@ def run_mutants(specs, target, timeout: float = 120.0, limit: int | None = None,
     target = Path(target)
     original = target.read_bytes()
     source = original.decode("utf-8")
-    baseline = run_specs_isolated(specs, timeout)
+    baseline = _traced_baseline(specs, target, timeout)
     status, detail = _verdict(baseline)
     if status != "survived":
         raise RuntimeError(f"the specs do not pass on the unchanged code ({detail}), so a mutation run would say nothing")
+    ran = baseline.get("target_lines")
     found = mutants(source)[:limit]
     try:
         for m in found:
+            if ran is not None and m.stmt_line not in ran and m.line not in ran:
+                m.status, m.detail = "not run", "the specs never run this line, so no change here can be caught"
+                if progress:
+                    progress(m)
+                continue
             target.write_text(mutant_source(source, m.index), encoding="utf-8")
             m.status, m.detail = _verdict(run_specs_isolated(specs, timeout))
             if progress:
@@ -137,13 +164,29 @@ def run_mutants(specs, target, timeout: float = 120.0, limit: int | None = None,
     return baseline, found
 
 
+def _traced_baseline(specs, target, timeout):
+    """The specs on the unchanged code, with the lines of `target` that ran (key "target_lines").
+    Without that key when the traced run failed; the untraced result is returned then."""
+    from .agent import run_specs_isolated
+    from .isolate import run_isolated
+
+    run = run_isolated("specs_lines", [Path(target).resolve(), *[Path(s).resolve() for s in specs]],
+                       None if timeout is None else 4 * timeout)  # tracing makes the run slower
+    if run["status"] == "done":
+        return run["result"]
+    return run_specs_isolated(specs, timeout)
+
+
 def format_report(target, found) -> str:
     caught = sum(m.status in ("caught", "timeout") for m in found)
-    lines = [f"{target}:{m.line}:{m.col}: {m.status.upper():8} {m.description} ({m.detail})"
+    not_run = sum(m.status == "not run" for m in found)
+    lines = [f"{target}:{m.line}:{m.col}: {m.status.upper():9} {m.description} ({m.detail})"
              for m in sorted(found, key=lambda m: (m.line, m.col, m.index))]
     lines.append(f"physverify mutate: the specs caught {caught} of {len(found)} changes to {target}"
                  " (a timeout counts as caught).")
-    if caught < len(found):
+    if not_run:
+        lines.append(f"{not_run} change(s) are on lines the specs never run: a test that runs that code is missing.")
+    if caught + not_run < len(found):
         lines.append("A survivor is either a gap in the specs or a change that does not alter what the code"
                      " computes; look at each one before calling it a gap.")
     return "\n".join(lines)

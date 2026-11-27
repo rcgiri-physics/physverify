@@ -293,7 +293,7 @@ def _cmd_mutate(args) -> int:
         print(f"physverify mutate: {exc}", file=sys.stderr)
         return 2
     print(format_report(args.target, found))
-    return 0 if all(m.status != "survived" for m in found) else 1
+    return 0 if all(m.status in ("caught", "timeout") for m in found) else 1
 
 
 def _cmd_references(args) -> int:
