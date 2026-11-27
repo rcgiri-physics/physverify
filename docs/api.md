@@ -41,6 +41,13 @@ The functions most specs need. Each has a docstring with the details, collected 
 | `decay_rate(t, y, t_skip=None)` | Exponential decay rate, skipping the start-up transient (found automatically when `t_skip` is not given). |
 | `residual_check(solve, residual, tols)` | An iterative solver's residual follows the tolerance it was asked for. |
 
+## Long-time behaviour (`physverify.longtime`)
+
+| Name | What it does |
+|---|---|
+| `check_energy_drift(t, q, expect="bounded", max_rel=0.1, qscale=None)` | One long run: is the error of a conserved quantity bounded (symplectic) or growing (secular drift)? Fits \|q - q0\| ~ t^k over doubling time windows; a bounded PASS also needs the largest relative error at most `max_rel`. |
+| `drift_exponent(t, q, windows=8)` | The fitted growth exponent k and the window envelope. |
+
 ## Identities and round trips (`physverify.identities`)
 
 | Name | What it does |
