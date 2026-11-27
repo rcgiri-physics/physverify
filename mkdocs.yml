@@ -105,6 +105,7 @@ nav:
       - Ising checks: ising.md
       - Technical details: technical.md
   - Results on real code: results.md
+  - Held-out measurement plan: heldout-plan.md
   - Confirmed by maintainers: confirmed.md
   - Runge–Kutta table census: census.md
   - Related work and credits: related-work.md
