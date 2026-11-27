@@ -6,7 +6,7 @@
 
 A simulation can run, give plausible numbers and still be wrong: a sign slip, a missing factor of 2, one coefficient copied with a digit dropped. Comparing with one stored answer rarely shows it, because nobody knows the exact answer for a real simulation. The mathematics still predicts things you can test: the error must shrink at the method's order, a manufactured solution must come back, an insulated domain must keep its heat, a Runge–Kutta table must satisfy its order conditions. physverify runs those tests and says in plain words what was tested and what came out: PASS, FAIL, EXACT or INCONCLUSIVE, with the numbers.
 
-Its strongest coverage is ODE time integration; PDEs are covered in selected cases (1D heat and transport). It needs only NumPy and runs from Python, the command line, pytest or GitHub Actions. Current release: 0.9.1 (v0.9.1); actively developed, feedback welcome.
+Its strongest coverage is ODE time integration; PDEs are covered in selected cases (1D heat and transport). It needs only NumPy and runs from Python, the command line, pytest or GitHub Actions. Current release: 0.10.0 (v0.10.0); actively developed, feedback welcome.
 
 ## Try it
 
@@ -60,7 +60,7 @@ Change the last row of `A` to `[0, 0, 0.9, 0]` and the verdict is FAIL: the tabl
 **On every push.** A failed check fails the job, like a broken unit test ([CI guide](https://rcgiri-physics.github.io/physverify/ci/)):
 
 ```yaml
-      - uses: rcgiri-physics/physverify@v0.9.1
+      - uses: rcgiri-physics/physverify@v0.10.0
         with:
           specs: tests/verify_*.py
 ```

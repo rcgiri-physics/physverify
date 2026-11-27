@@ -32,13 +32,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: rcgiri-physics/physverify@v0.9.1
+      - uses: rcgiri-physics/physverify@v0.10.0
         with:
           specs: tests/verify_*.py   # default: **/verify_*.py
           install: -e .              # your package and its dependencies
 ```
 
-Which tag to use: `@v0.9.1` runs exactly that version until you change it. `@v0` always runs the newest 0.x release, so you get fixes (and new checks, which can turn a passing job red) without editing the workflow.
+Which tag to use: `@v0.10.0` runs exactly that version until you change it. `@v0` always runs the newest 0.x release, so you get fixes (and new checks, which can turn a passing job red) without editing the workflow.
 
 The job fails when any check fails, is INCONCLUSIVE or raises, or when no spec matches. A SKIP (an optional dependency missing) does not fail the job; run `physverify run --strict` yourself when every check must execute. The result table appears on the run's summary page, and an HTML report with convergence plots is uploaded as an artifact.
 
@@ -49,7 +49,7 @@ Inputs:
 | `specs` | `**/verify_*.py` | Spec files or glob patterns, separated by spaces. |
 | `install` | empty | Arguments for `pip install` for your own code, for example `-e .` or `-r requirements.txt`. |
 | `python-version` | `3.12` | Python to set up. Empty uses the Python already on the runner, for example one your job set up with its own dependencies. |
-| `version` | empty | physverify version from PyPI. Empty installs the copy at the action's ref, so `@v0.9.1` runs physverify 0.9.1. |
+| `version` | empty | physverify version from PyPI. Empty installs the copy at the action's ref, so `@v0.10.0` runs physverify 0.10.0. |
 | `working-directory` | `.` | Folder to run in. |
 | `html-report` | `physverify-report` | Name of the uploaded HTML report. Empty uploads nothing. |
 
@@ -64,7 +64,7 @@ If your job already sets up an environment (conda, a compiled extension), set `p
 
 ## 2a. `physverify scan` in GitHub Actions
 
-The same action can scan the code without running it (the scan inputs are new after 0.9.1). This job reports only findings in the files a pull request changes, leaves out the ones recorded in a baseline, and shows the rest in the pull request through GitHub code scanning:
+The same action can scan the code without running it (the scan inputs are new in 0.10.0). This job reports only findings in the files a pull request changes, leaves out the ones recorded in a baseline, and shows the rest in the pull request through GitHub code scanning:
 
 ```yaml
 # .github/workflows/physverify-scan.yml
@@ -100,7 +100,7 @@ A scan WARN fails the job; NOTEs do not. The rule IDs and what each looks for ar
 # .pre-commit-config.yaml
 repos:
   - repo: https://github.com/rcgiri-physics/physverify
-    rev: v0.9.1
+    rev: v0.10.0
     hooks:
       - id: physverify
         args: ["tests/verify_*.py"]

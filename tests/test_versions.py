@@ -22,7 +22,9 @@ def test_versions_agree():
     for name in ("docs/ci.md", "packaging/mcp-registry/server.json"):
         assert set(re.findall(r'@v(\d+\.\d+\.\d+)|"version": "(\d+\.\d+\.\d+)"|rev: v(\d+\.\d+\.\d+)', _read(name))) <= {
             (v, "", ""), ("", v, ""), ("", "", v)}, f"update the version in {name}"
-    recipe = re.search(r'^  version: "([^"]+)"', _read("packaging/conda-forge/recipe.yaml"), re.M).group(1)
-    assert recipe == v, "update the version and sha256 in packaging/conda-forge/recipe.yaml"
     released = re.findall(r"^## (\d+\.\d+\.\d+)", _read("CHANGELOG.md"), re.M)
     assert released[0] == v, "add a CHANGELOG section for this version"
+    recipe = re.search(r'^  version: "([^"]+)"', _read("packaging/conda-forge/recipe.yaml"), re.M).group(1)
+    # the sha256 is that of the sdist on PyPI, known only after the release is published, so the recipe may
+    # lag one release behind until the follow-up update
+    assert recipe in (v, released[1]), "update the version and sha256 in packaging/conda-forge/recipe.yaml"

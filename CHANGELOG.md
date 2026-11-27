@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.10.0 (2026-11-27)
+
+New: `physverify mutate` (does a spec fail on broken code?), declarative specs in `pyproject.toml`, an agent skill, `check_energy_drift`, and `scan` rule IDs, ignores, baselines and SARIF. Invalid measurements no longer pass.
 
 - **`physverify mutate` survivors** (issue #99): changes on lines the specs never run are reported as NOT RUN (found by tracing the run on the unchanged code) instead of being run, and `x * 1` / `x / 1` swaps, which cannot change the result, are no longer made.
 - **New `physverify.longtime.check_energy_drift`:** from one long run, tells a bounded energy error (symplectic, time-reversible) from secular drift by the growth exponent of the error envelope. Leapfrog on the pendulum gives k = 0.01, RK4 and explicit RK2 k = 1. A bounded PASS also needs the largest relative error at most `max_rel` (0.1), so an energy that decays and levels off FAILs; non-finite values FAIL; fewer than 200 samples, or q0 = 0 without `qscale`, are INCONCLUSIVE.
