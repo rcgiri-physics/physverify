@@ -9,7 +9,7 @@
                            (judge one suspected defect; runs the code; exit 0 rejected, 1 confirmed,
                            2 not decidable; see docs/confirm.md)
     physverify confirm init CLAIM.py --text "..." --file F --line N
-    physverify mutate SPEC.py [SPEC.py ...] --target FILE [--timeout S] [--limit N] [--json FILE|-]
+    physverify mutate SPEC.py [SPEC.py ...] --target FILE [--function NAME] [--timeout S] [--limit N] [--json FILE|-]
                            (change FILE one small step at a time and report which changes the specs catch;
                            runs the code; see docs/mutate.md)
     physverify hook        (Claude Code PostToolUse hook; see docs/agent.md)
@@ -288,7 +288,8 @@ def _cmd_mutate(args) -> int:
         return 2
     try:
         _, found = run_mutants(specs, args.target, args.timeout, args.limit,
-                               progress=lambda m: print(f"  {m.line}:{m.col} {m.status}", file=sys.stderr))
+                               progress=lambda m: print(f"  {m.line}:{m.col} {m.status}", file=sys.stderr),
+                               functions=tuple(args.function or ()))
     except (RuntimeError, SyntaxError, UnicodeDecodeError) as exc:
         print(f"physverify mutate: {exc}", file=sys.stderr)
         return 2
@@ -385,6 +386,9 @@ def build_parser() -> argparse.ArgumentParser:
     mu.add_argument("--target", required=True, help="the solver file to change (restored afterwards)")
     mu.add_argument("--timeout", type=_seconds, default=120.0, help="seconds per run of the specs (default 120)")
     mu.add_argument("--limit", type=int, help="try only the first N changes")
+    mu.add_argument("--function", action="append", metavar="NAME",
+                    help="change only the body of this function (repeat for more); for a file that also holds"
+                         " reference code, which must not be changed")
     mu.add_argument("--json", metavar="FILE", help="write one record per change as JSON to FILE, or to stdout with -")
     mu.set_defaults(func=_cmd_mutate)
 

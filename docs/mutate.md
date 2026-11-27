@@ -26,6 +26,9 @@ says nothing.
 during the run and restored afterwards, also when the run is stopped with Ctrl-C. Keep it under version
 control anyway.
 
+`--function NAME` (repeatable) changes only the body of that function, for a file that also holds
+reference code, which must not be changed.
+
 `--json FILE` (or `--json -` for stdout) writes one record per change, with the counts, so that
 mutation scores can be kept and compared.
 
@@ -40,6 +43,14 @@ change the stage time in `rhs(t + 0.5 * h, mid)`. The oscillator's right-hand si
 so these changes do not alter the result for that problem, but they would for a forced one: the
 spec only exercises the stage time through the source term. This is the reason AGENTS.md asks for a
 problem where f depends on t.
+
+## The benchmark
+
+`python -m pvbench.mutation results/mutation` (run from `benchmark/`) does this for the five seeded-bug
+problems, changing only the code under test. On 2026-11-27 the specs caught 122 of the 154 changes on lines
+they run; of the 32 survivors, 27 cannot change the result for these specs and 5 are consistent schemes
+that converge at the same order (`results/mutation/REVIEW.md`). The changes are made by a program, so this
+measures these changes, not bugs in general.
 
 ## Prior work
 

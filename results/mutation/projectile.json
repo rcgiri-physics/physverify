@@ -1,0 +1,280 @@
+{
+  "target": "benchmark/pvbench/problems/projectile.py",
+  "total": 38,
+  "caught": 31,
+  "not_run": 1,
+  "survived": 6,
+  "mutants": [
+    {
+      "line": 92,
+      "col": 12,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL quadratic/rk4"
+    },
+    {
+      "line": 92,
+      "col": 12,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL quadratic/rk4"
+    },
+    {
+      "line": 93,
+      "col": 58,
+      "change": "operator / -> *",
+      "status": "caught",
+      "detail": "FAIL linear/rk4"
+    },
+    {
+      "line": 94,
+      "col": 15,
+      "change": "operator / -> *",
+      "status": "survived",
+      "detail": "all 24 checks passed"
+    },
+    {
+      "line": 94,
+      "col": 15,
+      "change": "operator * -> /",
+      "status": "survived",
+      "detail": "all 24 checks passed"
+    },
+    {
+      "line": 94,
+      "col": 15,
+      "change": "operator * -> /",
+      "status": "survived",
+      "detail": "all 24 checks passed"
+    },
+    {
+      "line": 94,
+      "col": 76,
+      "change": "operator / -> *",
+      "status": "caught",
+      "detail": "FAIL quadratic/rk4"
+    },
+    {
+      "line": 94,
+      "col": 76,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL quadratic/rk4"
+    },
+    {
+      "line": 94,
+      "col": 76,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL quadratic/rk4"
+    },
+    {
+      "line": 94,
+      "col": 76,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL quadratic/rk4"
+    },
+    {
+      "line": 94,
+      "col": 76,
+      "change": "constant 0.5 -> 0.55",
+      "status": "caught",
+      "detail": "FAIL quadratic/rk4"
+    },
+    {
+      "line": 95,
+      "col": 48,
+      "change": "unary minus removed",
+      "status": "caught",
+      "detail": "FAIL vacuum/rk4"
+    },
+    {
+      "line": 98,
+      "col": 18,
+      "change": "index [2] -> [3]",
+      "status": "caught",
+      "detail": "FAIL vacuum/rk4"
+    },
+    {
+      "line": 98,
+      "col": 24,
+      "change": "index [3] -> [4]",
+      "status": "caught",
+      "detail": "ERROR vacuum/rk4"
+    },
+    {
+      "line": 101,
+      "col": 19,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL linear/rk4"
+    },
+    {
+      "line": 102,
+      "col": 19,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL linear/rk4"
+    },
+    {
+      "line": 106,
+      "col": 19,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL quadratic/rk4"
+    },
+    {
+      "line": 106,
+      "col": 19,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL quadratic/rk4"
+    },
+    {
+      "line": 107,
+      "col": 19,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL quadratic/rk4"
+    },
+    {
+      "line": 107,
+      "col": 19,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL quadratic/rk4"
+    },
+    {
+      "line": 156,
+      "col": 29,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL vacuum/rk4 range"
+    },
+    {
+      "line": 156,
+      "col": 49,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL vacuum/rk4 range"
+    },
+    {
+      "line": 158,
+      "col": 11,
+      "change": "comparison < -> <=",
+      "status": "survived",
+      "detail": "all 24 checks passed"
+    },
+    {
+      "line": 158,
+      "col": 15,
+      "change": "constant 100.0 -> 110.00000000000001",
+      "status": "survived",
+      "detail": "all 24 checks passed"
+    },
+    {
+      "line": 161,
+      "col": 12,
+      "change": "comparison < -> <=",
+      "status": "survived",
+      "detail": "all 24 checks passed"
+    },
+    {
+      "line": 161,
+      "col": 12,
+      "change": "index [1] -> [2]",
+      "status": "caught",
+      "detail": "ERROR vacuum/rk4 range"
+    },
+    {
+      "line": 163,
+      "col": 24,
+      "change": "index [0] -> [1]",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 164,
+      "col": 20,
+      "change": "operator / -> *",
+      "status": "caught",
+      "detail": "FAIL vacuum/rk4 range"
+    },
+    {
+      "line": 164,
+      "col": 20,
+      "change": "index [1] -> [2]",
+      "status": "caught",
+      "detail": "FAIL vacuum/rk4 range"
+    },
+    {
+      "line": 164,
+      "col": 28,
+      "change": "operator - -> +",
+      "status": "caught",
+      "detail": "FAIL vacuum/rk4 range"
+    },
+    {
+      "line": 164,
+      "col": 28,
+      "change": "index [1] -> [2]",
+      "status": "caught",
+      "detail": "FAIL vacuum/rk4 range"
+    },
+    {
+      "line": 164,
+      "col": 35,
+      "change": "index [1] -> [2]",
+      "status": "caught",
+      "detail": "FAIL vacuum/rk4 range"
+    },
+    {
+      "line": 165,
+      "col": 20,
+      "change": "operator + -> -",
+      "status": "caught",
+      "detail": "FAIL vacuum/rk4 range"
+    },
+    {
+      "line": 165,
+      "col": 20,
+      "change": "index [0] -> [1]",
+      "status": "caught",
+      "detail": "FAIL vacuum/rk4 range"
+    },
+    {
+      "line": 165,
+      "col": 27,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL vacuum/rk4 range"
+    },
+    {
+      "line": 165,
+      "col": 35,
+      "change": "operator - -> +",
+      "status": "caught",
+      "detail": "FAIL vacuum/rk4 range"
+    },
+    {
+      "line": 165,
+      "col": 35,
+      "change": "index [0] -> [1]",
+      "status": "caught",
+      "detail": "FAIL vacuum/rk4 range"
+    },
+    {
+      "line": 165,
+      "col": 46,
+      "change": "index [0] -> [1]",
+      "status": "caught",
+      "detail": "FAIL vacuum/rk4 range"
+    }
+  ],
+  "functions": [
+    "rhs_seeded",
+    "range_seeded"
+  ],
+  "seconds": 106.2
+}

@@ -78,13 +78,26 @@ def _statement_lines(tree) -> dict[int, int]:
     return out
 
 
-def _sites(tree):
-    """Yield (node, kind, description) for every change made, in a fixed order.
+def _inside_functions(tree, names) -> set[int] | None:
+    """ids of nodes inside a function (or method) with one of `names`; None when `names` is empty."""
+    if not names:
+        return None
+    inside: set[int] = set()
+    for f in ast.walk(tree):
+        if isinstance(f, (ast.FunctionDef, ast.AsyncFunctionDef)) and f.name in names:
+            for part in f.body:  # the body only: defaults and decorators are evaluated outside the call
+                inside.update(id(n) for n in ast.walk(part))
+    return inside
+
+
+def _sites(tree, functions=()):
+    """Yield (node, kind, description) for every change made, in a fixed order; only inside `functions` if given.
 
     Changes that cannot alter the result are not made: x * 1 and x / 1 are the same number."""
     skip = _skip_subscript_parents(tree)
+    inside = _inside_functions(tree, set(functions))
     for node in ast.walk(tree):
-        if id(node) in skip:
+        if id(node) in skip or (inside is not None and id(node) not in inside):
             continue
         if isinstance(node, ast.BinOp) and isinstance(node.op, (ast.Mult, ast.Div)) and _is_one(node.right):
             continue
@@ -130,18 +143,19 @@ class _Replace(ast.NodeTransformer):
         return self.generic_visit(node)
 
 
-def mutants(source: str) -> list[Mutant]:
-    """The changes `mutate` makes in `source`, with the line and column of each in the original."""
+def mutants(source: str, functions=()) -> list[Mutant]:
+    """The changes `mutate` makes in `source` (only inside `functions` if given), with the line and column of
+    each in the original."""
     tree = ast.parse(source)
     stmts = _statement_lines(tree)
     return [Mutant(i, n.lineno, n.col_offset + 1, d, stmts.get(id(n), n.lineno))
-            for i, (n, _, d) in enumerate(_sites(tree))]
+            for i, (n, _, d) in enumerate(_sites(tree, functions))]
 
 
-def mutant_source(source: str, index: int) -> str:
+def mutant_source(source: str, index: int, functions=()) -> str:
     """`source` with change number `index` made (as Python source; comments and layout are not kept)."""
     tree = ast.parse(source)
-    for i, (node, kind, _) in enumerate(_sites(tree)):
+    for i, (node, kind, _) in enumerate(_sites(tree, functions)):
         if i == index:
             tree = _Replace(node, kind).visit(tree)
             return ast.unparse(ast.fix_missing_locations(tree))
@@ -160,7 +174,7 @@ def _verdict(report: dict) -> tuple[str, str]:
     return "survived", f"all {len(report['checks'])} checks passed"
 
 
-def run_mutants(specs, target, timeout: float = 120.0, limit: int | None = None, progress=None):
+def run_mutants(specs, target, timeout: float = 120.0, limit: int | None = None, progress=None, functions=()):
     """Run `specs` on the unchanged target, then on each mutant of it. Returns (baseline report, mutants).
 
     Raises RuntimeError when the specs do not pass on the unchanged code: a mutation run then says nothing.
@@ -176,7 +190,9 @@ def run_mutants(specs, target, timeout: float = 120.0, limit: int | None = None,
     if status != "survived":
         raise RuntimeError(f"the specs do not pass on the unchanged code ({detail}), so a mutation run would say nothing")
     ran = baseline.get("target_lines")
-    found = mutants(source)[:limit]
+    found = mutants(source, functions)[:limit]
+    if functions and not found:
+        raise RuntimeError(f"no change can be made inside {', '.join(functions)} in {target}; check the names")
     try:
         for m in found:
             if ran is not None and m.stmt_line not in ran and m.line not in ran:
@@ -184,7 +200,7 @@ def run_mutants(specs, target, timeout: float = 120.0, limit: int | None = None,
                 if progress:
                     progress(m)
                 continue
-            target.write_text(mutant_source(source, m.index), encoding="utf-8")
+            target.write_text(mutant_source(source, m.index, functions), encoding="utf-8")
             m.status, m.detail = _verdict(run_specs_isolated(specs, timeout))
             if progress:
                 progress(m)

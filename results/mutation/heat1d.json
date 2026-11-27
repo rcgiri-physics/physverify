@@ -1,0 +1,230 @@
+{
+  "target": "benchmark/pvbench/problems/heat1d.py",
+  "total": 31,
+  "caught": 22,
+  "not_run": 1,
+  "survived": 8,
+  "mutants": [
+    {
+      "line": 128,
+      "col": 26,
+      "change": "constant 1.0 -> 1.1",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 129,
+      "col": 18,
+      "change": "operator / -> *",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 129,
+      "col": 18,
+      "change": "constant 1.0 -> 1.1",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 129,
+      "col": 25,
+      "change": "operator - -> +",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 129,
+      "col": 35,
+      "change": "constant 1 -> 1.1",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 131,
+      "col": 18,
+      "change": "constant 0.6 -> 0.66",
+      "status": "survived",
+      "detail": "all 5 checks passed"
+    },
+    {
+      "line": 132,
+      "col": 29,
+      "change": "operator / -> *",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 132,
+      "col": 38,
+      "change": "operator / -> *",
+      "status": "survived",
+      "detail": "all 5 checks passed"
+    },
+    {
+      "line": 132,
+      "col": 38,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 132,
+      "col": 59,
+      "change": "constant 2 -> 2.2",
+      "status": "caught",
+      "detail": "FAIL FTCS eigenmode decay"
+    },
+    {
+      "line": 133,
+      "col": 10,
+      "change": "operator / -> *",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 135,
+      "col": 20,
+      "change": "constant 1 -> 1.1",
+      "status": "not run",
+      "detail": "the specs never run this line, so no change here can be caught"
+    },
+    {
+      "line": 136,
+      "col": 10,
+      "change": "operator / -> *",
+      "status": "survived",
+      "detail": "all 5 checks passed"
+    },
+    {
+      "line": 136,
+      "col": 10,
+      "change": "constant 1.0 -> 1.1",
+      "status": "survived",
+      "detail": "all 5 checks passed"
+    },
+    {
+      "line": 137,
+      "col": 18,
+      "change": "constant 1.0 -> 1.1",
+      "status": "survived",
+      "detail": "all 5 checks passed"
+    },
+    {
+      "line": 138,
+      "col": 9,
+      "change": "operator / -> *",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 138,
+      "col": 9,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 138,
+      "col": 31,
+      "change": "constant 2 -> 2.2",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 142,
+      "col": 19,
+      "change": "operator + -> -",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 142,
+      "col": 19,
+      "change": "operator - -> +",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 142,
+      "col": 27,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 142,
+      "col": 27,
+      "change": "constant 2.0 -> 2.2",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 144,
+      "col": 25,
+      "change": "operator + -> -",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 144,
+      "col": 35,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 146,
+      "col": 28,
+      "change": "operator * -> /",
+      "status": "survived",
+      "detail": "all 5 checks passed"
+    },
+    {
+      "line": 146,
+      "col": 29,
+      "change": "operator + -> -",
+      "status": "survived",
+      "detail": "all 5 checks passed"
+    },
+    {
+      "line": 146,
+      "col": 33,
+      "change": "constant 1 -> 1.1",
+      "status": "survived",
+      "detail": "all 5 checks passed"
+    },
+    {
+      "line": 146,
+      "col": 77,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 147,
+      "col": 30,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 148,
+      "col": 13,
+      "change": "index [0] -> [1]",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    },
+    {
+      "line": 148,
+      "col": 22,
+      "change": "index [-1] -> [-2]",
+      "status": "caught",
+      "detail": "FAIL FTCS coupled dt ~ dx^2"
+    }
+  ],
+  "functions": [
+    "solve"
+  ],
+  "seconds": 43.8
+}

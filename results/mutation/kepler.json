@@ -1,0 +1,132 @@
+{
+  "target": "benchmark/pvbench/problems/kepler.py",
+  "total": 17,
+  "caught": 11,
+  "not_run": 0,
+  "survived": 6,
+  "mutants": [
+    {
+      "line": 65,
+      "col": 15,
+      "change": "operator * -> /",
+      "status": "survived",
+      "detail": "all 7 checks passed"
+    },
+    {
+      "line": 65,
+      "col": 20,
+      "change": "constant 1.01 -> 1.1110000000000002",
+      "status": "survived",
+      "detail": "all 7 checks passed"
+    },
+    {
+      "line": 66,
+      "col": 23,
+      "change": "constant 2 -> 2.2",
+      "status": "survived",
+      "detail": "all 7 checks passed"
+    },
+    {
+      "line": 70,
+      "col": 23,
+      "change": "operator + -> -",
+      "status": "survived",
+      "detail": "all 7 checks passed"
+    },
+    {
+      "line": 70,
+      "col": 23,
+      "change": "operator + -> -",
+      "status": "caught",
+      "detail": "ERROR rk4"
+    },
+    {
+      "line": 70,
+      "col": 23,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL rk4"
+    },
+    {
+      "line": 70,
+      "col": 31,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL rk4"
+    },
+    {
+      "line": 71,
+      "col": 21,
+      "change": "operator / -> *",
+      "status": "survived",
+      "detail": "all 7 checks passed"
+    },
+    {
+      "line": 71,
+      "col": 67,
+      "change": "operator / -> *",
+      "status": "caught",
+      "detail": "FAIL rk4"
+    },
+    {
+      "line": 71,
+      "col": 78,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL rk4"
+    },
+    {
+      "line": 72,
+      "col": 18,
+      "change": "operator / -> *",
+      "status": "caught",
+      "detail": "FAIL rk4"
+    },
+    {
+      "line": 72,
+      "col": 25,
+      "change": "operator / -> *",
+      "status": "caught",
+      "detail": "FAIL rk4"
+    },
+    {
+      "line": 73,
+      "col": 14,
+      "change": "operator * -> /",
+      "status": "survived",
+      "detail": "all 7 checks passed"
+    },
+    {
+      "line": 73,
+      "col": 60,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL rk4"
+    },
+    {
+      "line": 73,
+      "col": 60,
+      "change": "unary minus removed",
+      "status": "caught",
+      "detail": "FAIL rk4"
+    },
+    {
+      "line": 74,
+      "col": 34,
+      "change": "operator * -> /",
+      "status": "caught",
+      "detail": "FAIL rk4"
+    },
+    {
+      "line": 74,
+      "col": 34,
+      "change": "unary minus removed",
+      "status": "caught",
+      "detail": "FAIL rk4"
+    }
+  ],
+  "functions": [
+    "rhs_seeded"
+  ],
+  "seconds": 32.4
+}
