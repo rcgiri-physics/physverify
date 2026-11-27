@@ -1,8 +1,9 @@
 """Mutation runs: does a spec fail when the solver is broken on purpose?
 
 A PASS means more when the same spec is shown to fail on broken code. `physverify mutate SPEC --target FILE`
-makes one small change at a time in FILE (a numeric constant scaled by 1.1, + swapped with -, * with /,
-a unary minus dropped), runs the spec on each changed copy in a fresh process and reports which changes the
+makes one small change at a time in FILE (a numeric constant scaled by 1.1, keyword defaults and arguments
+included; + swapped with -, * with /; < with <=, > with >=; a constant index moved by one; a unary minus
+dropped), runs the spec on each changed copy in a fresh process and reports which changes the
 spec caught. The idea follows mutation testing as applied to numerical code by Wu and Mitchell (NSV 2019);
 fineness gates its checks the same way.
 
@@ -20,6 +21,21 @@ from pathlib import Path
 SCALE = 1.1
 _SWAP = {ast.Add: ast.Sub, ast.Sub: ast.Add, ast.Mult: ast.Div, ast.Div: ast.Mult}
 _NAMES = {ast.Add: "+", ast.Sub: "-", ast.Mult: "*", ast.Div: "/"}
+_CMP = {ast.Lt: ast.LtE, ast.LtE: ast.Lt, ast.Gt: ast.GtE, ast.GtE: ast.Gt}
+_CMP_NAMES = {ast.Lt: "<", ast.LtE: "<=", ast.Gt: ">", ast.GtE: ">="}
+
+
+def _int_index(node) -> bool:
+    """y[0], y[-1]: a subscript whose index is one integer constant."""
+    s = node.slice
+    if isinstance(s, ast.UnaryOp) and isinstance(s.op, ast.USub):
+        s = s.operand
+    return isinstance(s, ast.Constant) and type(s.value) is int
+
+
+def _index_value(node) -> int:
+    s = node.slice
+    return -s.operand.value if isinstance(s, ast.UnaryOp) else s.value
 
 
 @dataclass
@@ -72,7 +88,13 @@ def _sites(tree):
             continue
         if isinstance(node, ast.BinOp) and isinstance(node.op, (ast.Mult, ast.Div)) and _is_one(node.right):
             continue
-        if isinstance(node, ast.Constant) and type(node.value) in (int, float) and node.value != 0:
+        if isinstance(node, ast.Subscript) and _int_index(node):
+            i = _index_value(node)
+            yield node, "index", f"index [{i}] -> [{i + 1 if i >= 0 else i - 1}]"
+        if isinstance(node, ast.Compare) and len(node.ops) == 1 and type(node.ops[0]) in _CMP:
+            old = type(node.ops[0])
+            yield node, "cmp", f"comparison {_CMP_NAMES[old]} -> {_CMP_NAMES[_CMP[old]]}"
+        elif isinstance(node, ast.Constant) and type(node.value) in (int, float) and node.value != 0:
             yield node, "scale", f"constant {node.value!r} -> {node.value * SCALE!r}"
         elif isinstance(node, ast.BinOp) and type(node.op) in _SWAP:
             new = _SWAP[type(node.op)]
@@ -87,6 +109,13 @@ def _apply(node, kind):
         return node
     if kind == "swap":
         node.op = _SWAP[type(node.op)]()
+        return node
+    if kind == "cmp":
+        node.ops = [_CMP[type(node.ops[0])]()]
+        return node
+    if kind == "index":  # away from zero, so y[0] -> y[1] and y[-1] -> y[-2]
+        i = _index_value(node)
+        node.slice = ast.Constant(i + 1 if i >= 0 else i - 1)
         return node
     return node.operand  # "neg"
 
@@ -175,6 +204,19 @@ def _traced_baseline(specs, target, timeout):
     if run["status"] == "done":
         return run["result"]
     return run_specs_isolated(specs, timeout)
+
+
+def to_json(target, found) -> str:
+    """One record per change, for recording mutation scores."""
+    import json
+
+    caught = sum(m.status in ("caught", "timeout") for m in found)
+    return json.dumps({"target": str(target), "total": len(found), "caught": caught,
+                       "not_run": sum(m.status == "not run" for m in found),
+                       "survived": sum(m.status == "survived" for m in found),
+                       "mutants": [{"line": m.line, "col": m.col, "change": m.description, "status": m.status,
+                                    "detail": m.detail} for m in sorted(found, key=lambda m: (m.line, m.col, m.index))]},
+                      indent=2)
 
 
 def format_report(target, found) -> str:

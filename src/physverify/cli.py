@@ -9,7 +9,7 @@
                            (judge one suspected defect; runs the code; exit 0 rejected, 1 confirmed,
                            2 not decidable; see docs/confirm.md)
     physverify confirm init CLAIM.py --text "..." --file F --line N
-    physverify mutate SPEC.py [SPEC.py ...] --target FILE [--timeout S] [--limit N]
+    physverify mutate SPEC.py [SPEC.py ...] --target FILE [--timeout S] [--limit N] [--json FILE|-]
                            (change FILE one small step at a time and report which changes the specs catch;
                            runs the code; see docs/mutate.md)
     physverify hook        (Claude Code PostToolUse hook; see docs/agent.md)
@@ -276,7 +276,7 @@ def _cmd_confirm(args) -> int:
 
 
 def _cmd_mutate(args) -> int:
-    from .mutate import format_report, run_mutants
+    from .mutate import format_report, run_mutants, to_json
 
     try:
         specs = expand_specs(args.specs)
@@ -292,7 +292,12 @@ def _cmd_mutate(args) -> int:
     except (RuntimeError, SyntaxError, UnicodeDecodeError) as exc:
         print(f"physverify mutate: {exc}", file=sys.stderr)
         return 2
-    print(format_report(args.target, found))
+    if args.json == "-":
+        print(to_json(args.target, found))
+    else:
+        print(format_report(args.target, found))
+        if args.json:
+            Path(args.json).write_text(to_json(args.target, found), encoding="utf-8")
     return 0 if all(m.status in ("caught", "timeout") for m in found) else 1
 
 
@@ -380,6 +385,7 @@ def build_parser() -> argparse.ArgumentParser:
     mu.add_argument("--target", required=True, help="the solver file to change (restored afterwards)")
     mu.add_argument("--timeout", type=_seconds, default=120.0, help="seconds per run of the specs (default 120)")
     mu.add_argument("--limit", type=int, help="try only the first N changes")
+    mu.add_argument("--json", metavar="FILE", help="write one record per change as JSON to FILE, or to stdout with -")
     mu.set_defaults(func=_cmd_mutate)
 
     r = sub.add_parser("references", help="list the exact reference solutions in physverify.references")

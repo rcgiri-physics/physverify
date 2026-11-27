@@ -9,11 +9,13 @@ physverify mutate verify_solver.py --target solver.py
 
 The changes made in the target file:
 
-- every non-zero numeric constant scaled by 1.1;
+- every non-zero numeric constant scaled by 1.1, keyword defaults (`theta=0.5`) and keyword arguments included;
 - `+` swapped with `-`, and `*` with `/`;
+- `<` swapped with `<=`, and `>` with `>=` (an off-by-one in a loop or a stopping test);
+- a constant index moved by one, away from zero (`y[0]` to `y[1]`, `y[-1]` to `y[-2]`);
 - a unary minus dropped.
 
-Changes that cannot alter the result are not made (`x * 1` to `x / 1`). Constants inside an index (`y[0]`) or a `range(...)` call are left alone: changing them mostly gives an
+Changes that cannot alter the result are not made (`x * 1` to `x / 1`). Other constants inside an index or slice (`y[1:]`) or a `range(...)` call are left alone: changing them mostly gives an
 `IndexError` or a shorter loop. Each change is reported as CAUGHT (a check failed, or the spec could not
 run), TIMEOUT (counted as caught), NOT RUN (the specs never run that line, found by tracing the run on
 the unchanged code, so the change is not tried) or SURVIVED (every check passed). The exit code is 0
@@ -23,6 +25,9 @@ says nothing.
 **This runs the code under test** (trusted code or the sandbox only). The target file is changed in place
 during the run and restored afterwards, also when the run is stopped with Ctrl-C. Keep it under version
 control anyway.
+
+`--json FILE` (or `--json -` for stdout) writes one record per change, with the counts, so that
+mutation scores can be kept and compared.
 
 ## Reading the survivors
 
