@@ -41,6 +41,12 @@ The functions most specs need. Each has a docstring with the details, collected 
 | `decay_rate(t, y, t_skip=None)` | Exponential decay rate, skipping the start-up transient (found automatically when `t_skip` is not given). |
 | `residual_check(solve, residual, tols)` | An iterative solver's residual follows the tolerance it was asked for. |
 
+## Units (`physverify.quantities`)
+
+| Name | What it does |
+|---|---|
+| `compare_quantities(value, expected, rtol=1e-8, atol=0)` | Compares values that may carry pint units: converts to the reference's units, FAILs on different dimensions or units on one side only. pint is optional (`pip install physverify[units]`). |
+
 ## 2D and 3D heat equation (`physverify.heat`)
 
 | Name | What it does |
