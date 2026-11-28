@@ -39,7 +39,7 @@ pytest examples/verify_damped_oscillator.py                         # each check
 
 Without installing, use `python -m physverify` for `physverify` and `pytest -p physverify.pytest_plugin` for pytest. Once the package is installed, plain `pytest` is enough; adding `-p physverify.pytest_plugin` as well makes pytest stop with "Plugin already registered". Change the damping in `examples/damped_oscillator.py` by 10% and every family flags it.
 
-For an AI coding assistant there is a Claude Code hook (`physverify hook`, runs the checks after each edit and reports failures back) and a minimal MCP server (`physverify mcp`); see [docs/agent.md](agent.md).
+For an AI coding assistant there is a Claude Code hook (`physverify hook`, runs the checks after each edit and reports failures back) and a minimal MCP server (`physverify mcp`, deprecated, planned for removal in 0.11.0); see [docs/agent.md](agent.md).
 
 The benchmark and the test suite:
 

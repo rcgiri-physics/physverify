@@ -100,6 +100,19 @@ def test_mcp_lists_and_runs_the_tool(project):
     assert report["summary"]["not_ok"] == 4
 
 
+def test_mcp_server_says_it_is_deprecated(capsys):
+    """The notice reaches the person (stderr) and the assistant (instructions and tool descriptions)."""
+    from physverify.agent import DEPRECATION_ISSUE
+    init = handle({"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2025-06-18"}})
+    assert "deprecated" in init["result"]["instructions"] and DEPRECATION_ISSUE in init["result"]["instructions"]
+    tools = handle({"jsonrpc": "2.0", "id": 2, "method": "tools/list"})["result"]["tools"]
+    assert all(t["description"].startswith("Deprecated: ") for t in tools)
+    out = io.StringIO()
+    mcp_main(io.StringIO(""), out)
+    assert out.getvalue() == ""  # nothing on the protocol stream
+    assert "deprecated" in capsys.readouterr().err
+
+
 def test_mcp_errors_are_json_rpc_errors():
     assert handle({"jsonrpc": "2.0", "id": 1, "method": "nope"})["error"]["code"] == -32601
     out = io.StringIO()

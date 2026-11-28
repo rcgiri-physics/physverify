@@ -2,7 +2,7 @@
 
 An assistant that writes simulation code can make the same mistakes a person does: a wrong sign, a missing factor, an RK stage at the wrong time. physverify gives it two ways to find out:
 - a **hook** that runs the checks after every edit;
-- an **MCP tool** the assistant can call when it chooses.
+- an **MCP tool** the assistant can call when it chooses. It is deprecated and planned for removal in 0.11.0 (see section 3).
 
 Both call the same code as `physverify run`. Neither needs anything beyond physverify itself.
 
@@ -61,6 +61,8 @@ Run `physverify run <spec> --html report.html` for convergence plots.
 The checks run on every Python edit. For a slow suite, list only the fast specs under `[tool.physverify] specs`.
 
 ## 3. MCP server
+
+**Deprecated in 0.10.0, planned for removal in 0.11.0.** We know of no one who uses it, and an assistant can run `physverify run` or pytest directly (see [AGENTS.md](https://github.com/rcgiri-physics/physverify/blob/main/AGENTS.md)). The server prints a warning on start and tells the assistant in its instructions and tool descriptions. If you use it, please say so at [issue 123](https://github.com/rcgiri-physics/physverify/issues/123); if someone does, it stays.
 
 ```bash
 claude mcp add physverify -- physverify mcp

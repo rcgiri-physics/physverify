@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **`physverify mcp` is deprecated** (issue #123) and planned for removal in 0.11.0: no use of it is known. It prints a warning on stderr and says so in its instructions and tool descriptions; the README no longer shows it. The hook, `physverify run` and pytest are unchanged. `glama.json` is removed.
 - **`check_order_mc` for errors with standard errors** (issue #109): weighted fit of the order with a confidence interval, for strong-order tests of SDE schemes; PASS, FAIL or INCONCLUSIVE by where the 99% interval lies against the band. False-alarm rate and power measured on synthetic data (no FAIL in 20000 runs at the claimed order; 0.24% on the band's edge), and tested on geometric Brownian motion (Euler-Maruyama 0.5, Milstein 1.0, Milstein with half its correction fails).
 - **Docs: JAX** (issue #110): `docs/pitfalls.md` shows how to keep checks outside `jax.jit` and why the reference must be subtracted in float64.
 - **Compiled solvers through the command line** (issue #38): `physverify.bridge.command` runs a program (no shell) and reads every number it prints, Fortran `D` exponents included; `command_integrate` wraps it as `integrate(source, y0, t_end, n_steps)` for the reference and invariant studies, and refuses a non-zero Python source. See `docs/compiled.md`.
