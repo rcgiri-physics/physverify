@@ -20,7 +20,7 @@ physverify is code verification for numerical simulation: it tests whether code 
    | Is energy, mass or heat kept? | the conservation and budget checks in `docs/checks/conservation.md` |
 
    Always include a problem where f depends on t (for example y' = y cos t): a wrong stage time or a missing df/dt term is invisible on y' = lambda y.
-5. `physverify run`, `physverify smoke`, `confirm`, the hook and the MCP server **run** the code. Use them only on code the user trusts, or inside the container in `sandbox/` (see `sandbox/README.md`). `physverify scan PATH` reads without running and can point at places worth testing, but a clean scan says little.
+5. `physverify run`, `physverify smoke`, `confirm` and the hook **run** the code. Use them only on code the user trusts, or inside the container in `sandbox/` (see `sandbox/README.md`). `physverify scan PATH` reads without running and can point at places worth testing, but a clean scan says little.
 6. When a check fails, suspect the test first: units, sign conventions, time origin, the step counts, CODATA edition. `docs/troubleshooting.md` and `docs/pitfalls.md` list the mistakes that were made most often. In the corpus study, adapters written with an AI assistant were wrong about 28 times before they were right.
 7. Report what was tested and what was not. A PASS is a bounded claim (`docs/assumptions.md`).
 8. Do not post issues, comments or pull requests on other people's projects without the user's explicit approval of the exact text.

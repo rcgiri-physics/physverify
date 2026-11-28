@@ -13,7 +13,7 @@
                            (change FILE one small step at a time and report which changes the specs catch;
                            runs the code; see docs/mutate.md)
     physverify hook        (Claude Code PostToolUse hook; see docs/agent.md)
-    physverify mcp         (MCP server on stdio; see docs/agent.md)
+    physverify mcp         (deprecated MCP server on stdio; see docs/agent.md)
 
 `run` exits 0 when no check fails (PASS, EXACT or SKIP), 1 when any does not,
 and 2 when a spec cannot be loaded. A spec is a Python file defining
@@ -395,7 +395,7 @@ def build_parser() -> argparse.ArgumentParser:
     r = sub.add_parser("references", help="list the exact reference solutions in physverify.references")
     r.set_defaults(func=_cmd_references)
 
-    s = sub.add_parser("mcp", help="run a minimal MCP server on stdio with the tools run_checks and confirm_claim")
+    s = sub.add_parser("mcp", help="(deprecated, to be removed in 0.11.0) run a minimal MCP server on stdio")
     s.set_defaults(func=_cmd_mcp)
     return parser
 

@@ -100,15 +100,7 @@ https://github.com/rcgiri-physics/physverify/blob/main/AGENTS.md).
 6. Do not change the solver. Report what was tested, what was not, and what each PASS covers.
 ```
 
-[AGENTS.md](https://github.com/rcgiri-physics/physverify/blob/main/AGENTS.md) gives an assistant the rules and a table of which check answers which question. To let an assistant call the checks itself, `physverify mcp` is a local MCP server (`run_checks` runs a project's `verify_*.py` specs); add it to your client's MCP settings ([guide](https://rcgiri-physics.github.io/physverify/agent/), also in the [official MCP registry](https://registry.modelcontextprotocol.io) as `io.github.rcgiri-physics/physverify`):
-
-```json
-{
-  "mcpServers": {
-    "physverify": { "command": "physverify", "args": ["mcp"] }
-  }
-}
-```
+[AGENTS.md](https://github.com/rcgiri-physics/physverify/blob/main/AGENTS.md) gives an assistant the rules and a table of which check answers which question. An assistant can run the checks itself with `physverify run` or pytest; the [guide](https://rcgiri-physics.github.io/physverify/agent/) also shows a Claude Code hook that runs them after every edit.
 
 The checks run your project's Python code on your computer, so use them on projects you trust, or inside the [sandbox](https://github.com/rcgiri-physics/physverify/tree/main/sandbox).
 

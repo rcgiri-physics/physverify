@@ -10,6 +10,7 @@ Hook (`physverify hook`)
     assistant. Otherwise it exits 0 and prints nothing. See docs/agent.md.
 
 MCP server (`physverify mcp`)
+    Deprecated in 0.10.0 and planned for removal in 0.11.0 (DEPRECATION below).
     Model Context Protocol over stdio (newline-delimited JSON-RPC 2.0), with two
     tools: `run_checks`, that takes spec paths and returns the JSON report, and
     `confirm_claim`, that judges one claim file (docs/confirm.md). Both run the code
@@ -157,8 +158,15 @@ INVALID_PARAMS = -32602
 INTERNAL_ERROR = -32603
 UNSUPPORTED_PROTOCOL_VERSION = -32022
 
+DEPRECATION_ISSUE = "https://github.com/rcgiri-physics/physverify/issues/123"
+DEPRECATION = (
+    "physverify mcp is deprecated and planned for removal in physverify 0.11.0. "
+    "Run the checks with `physverify run` or pytest instead (see AGENTS.md). "
+    f"If you use this server, please say so at {DEPRECATION_ISSUE}"
+)
+
 CACHE_HINTS = {"ttlMs": 300_000, "cacheScope": "public"}  # the tool list does not change while the server runs
-INSTRUCTIONS = (
+INSTRUCTIONS = DEPRECATION + " " + (
     "Run physverify checks on physics simulation code after writing or editing it. "
     "The tools execute the project's verify_*.py spec files and claim files (Python), so use them only on projects you trust."
 )
@@ -204,6 +212,8 @@ TOOLS = [
         },
     },
 ]
+for _tool in TOOLS:
+    _tool["description"] = "Deprecated: " + DEPRECATION + " " + _tool["description"]
 
 
 def _error(msg_id, code: int, message: str, data=None) -> dict:
@@ -307,7 +317,8 @@ def handle(message: dict):
     if method == "initialize":
         requested = params.get("protocolVersion")
         version = requested if requested in LEGACY_VERSIONS else LEGACY_VERSIONS[0]
-        return ok({"protocolVersion": version, "capabilities": {"tools": {}}, "serverInfo": server_info})
+        return ok({"protocolVersion": version, "capabilities": {"tools": {}}, "serverInfo": server_info,
+                   "instructions": INSTRUCTIONS})
 
     # Modern era: no handshake; the request itself says which version it speaks.
     # `server/discover` exists only in this era, so it is always treated as modern.
@@ -363,6 +374,7 @@ def _respond(message):
 def mcp_main(stdin=None, stdout=None) -> int:
     stdin = stdin or sys.stdin
     stdout = stdout or sys.stdout
+    print(f"warning: {DEPRECATION}", file=sys.stderr, flush=True)  # stdout carries the protocol
     for line in stdin:
         line = line.strip()
         if not line:
